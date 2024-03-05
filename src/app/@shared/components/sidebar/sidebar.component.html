@@ -1,0 +1,110 @@
+<div class="mode-over" *ngIf="!openOrClose"></div>
+<div
+  class="container-sidebar disable-selection"
+  *ngIf="!openOrClose"
+>
+  <ng-container *ngIf="isHiddenHeader">
+    <aside class="nav-header" [ngClass]="!collapsed ? 'sidenav-collapsed' : ''">
+      <div class="event-name">
+        <div
+          class="btn-custom"
+          matRipple
+          *ngIf="collapsed && page == 'event'"
+          [ngClass]="!collapsed ? 'full-width' : ''"
+        >
+          <a
+            [routerLink]="headerRoute"
+            class="event-arrow"
+            (click)="closeSidebarMobile()"
+          >
+            <img [src]="headerIcon" class="event-arrow-icon" />
+          </a>
+        </div>
+
+        <div *ngIf="collapsed && page == 'event'" class="vertical-line"></div>
+
+        <!-- Event -->
+        <div
+          class="event-name-right"
+          *ngIf="collapsed && page == 'event'"
+          [@fadeInLeft]
+        >
+          <span>Evento</span>
+        </div>
+
+        <app-producer-select
+          *ngIf="page == 'producer'"
+          (switchSelectProducer)="switchSelectProducer()"
+        ></app-producer-select>
+      </div>
+    </aside>
+  </ng-container>
+
+  <ng-container *ngIf="isHiddenSubHeader && !isSelectProducer"  >
+    <aside class="nav-items disable-selection" [ngClass]="!collapsed ? 'sidenav-collapsed' : ''">
+      <ul class="sidenav-nav">
+        <li class="sidenav-nav-item" matRipple>
+          <a
+            class="sidenav-nav-link"
+            [routerLink]="subHeaderRoute"
+            routerLinkActive="active"
+            (click)="closeSidebarMobile()"
+          >
+            <img [src]="subHeaderIcon" class="sidenav-link-icon" />
+            <span
+              class="sidenav-link-text"
+              [@fadeInOutInsideCollapsed]="collapsed ? 'true' : 'false'"
+            >
+              {{ subHeaderTitle }}
+            </span>
+          </a>
+        </li>
+      </ul>
+    </aside>
+  </ng-container>
+
+  <!-- Content -->
+  <ng-container *ngIf="isHiddenItems ">
+    <aside class="nav-items disable-selection" [ngClass]="!collapsed ? 'sidenav-collapsed' : ''">
+      <ul class="sidenav-nav">
+        <li class="sidenav-nav-item" matRipple *ngFor="let data of navData">
+          <a
+            [ngClass]="data?.disabled ? 'disabled' : ''"
+            class="sidenav-nav-link"
+            [routerLink]="[data.routeLink]"
+            (click)="closeSidebarMobile()"
+            routerLinkActive="active"
+            [routerLinkActiveOptions]="{ exact: true }"
+          >
+            <img [src]="[data.icon]" class="sidenav-link-icon" />
+            <span
+              class="sidenav-link-text"
+              [@fadeInOutInsideCollapsed]="collapsed ? 'true' : 'false'"
+            >
+              {{ data.label }}
+            </span>
+          </a>
+        </li>
+      </ul>
+    </aside>
+  </ng-container>
+
+  <aside class="nav-items" [ngClass]="!collapsed ? 'sidenav-collapsed' : ''">
+    <ul class="sidenav-nav">
+      <li class="sidenav-nav-item" matRipple>
+        <a class="sidenav-nav-link" (click)="publish()">
+          <img
+            src="../../../../assets/icons/send-2.svg"
+            class="sidenav-link-icon"
+          />
+          <span
+            class="sidenav-link-text"
+            [@fadeInOutInsideCollapsed]="collapsed ? 'true' : 'false'"
+          >
+            Publicar
+          </span>
+        </a>
+      </li>
+    </ul>
+  </aside>
+</div>
