@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
+import { HeaderComponent } from '../core/components/header/header.component';
 
 @Component({
   selector: 'app-public',
   standalone: true,
-  imports: [],
+  imports: [RouterOutlet, HeaderComponent],
   templateUrl: './public.component.html',
-  styleUrl: './public.component.scss'
+  styleUrl: './public.component.scss',
 })
-export class PublicComponent {
-
-}
+export default class PublicComponent {}
