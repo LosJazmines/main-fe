@@ -79,13 +79,13 @@ export const routes: Routes = [
       {
         path: 'users',
         loadComponent: () => import('./@admin/pages/users/users.component'),
-        title: 'Users',
+        title: 'Admin - Users',
       },
       {
         path: 'payments',
         loadComponent: () =>
           import('./@admin/pages/payments/payments.component'),
-        title: 'Payments',
+        title: 'Admin - Payments',
       },
     ],
   },
