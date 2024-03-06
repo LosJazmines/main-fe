@@ -14,7 +14,7 @@
     height: 100%;
   }
 
-  .router-outlet {
+  .rigth {
     height: 100vh;
     max-height: calc(100vh - 2rem);
     flex: 1;
@@ -23,5 +23,16 @@
     gap: 0.5rem;
     border-radius: v.$border-radius;
     overflow: auto;
+
+    .content {
+      width: 100%;
+      height: 100vh;
+      max-height: calc(100vh - 5.75rem);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: v.$border-radius;
+      background-color: v.$background-opacity-2;
+    }
   }
 }

@@ -2,10 +2,10 @@
   <app-sidebar
     [isHiddenHeader]="true"
     [headerTitle]="'Nombre de la Organizadora'"
-    [headerIcon]="''"
+    [headerIcon]="'./../../../assets/icons/arrow-left.svg'"
     [headerRoute]="['/dashboard']"
     [isHiddenSubHeader]="true"
-    [subHeaderIcon]="''"
+    [subHeaderIcon]="'./../../../assets/icons/arrow-left.svg'"
     [subHeaderRoute]="['/o', '2', 'create-event']"
     [subHeaderTitle]="'Create Event'"
     [isHiddenItems]="true"
@@ -13,9 +13,11 @@
   >
   </app-sidebar>
 
-  <div class="router-outlet">
+  <div class="rigth">
     <app-header></app-header>
 
-    <router-outlet></router-outlet>
+    <div class="content">
+      <router-outlet></router-outlet>
+    </div>
   </div>
 </div>

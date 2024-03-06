@@ -60,7 +60,13 @@ export const routes: Routes = [
         title: 'Admin - Dashboard',
       },
       {
-        path: 'ordes',
+        path: 'dashboard',
+        loadComponent: () =>
+          import('./@admin/pages/dashboard/dashboard.component'),
+        title: 'Admin - Dashboard',
+      },
+      {
+        path: 'orders',
         loadComponent: () => import('./@admin/pages/ordes/ordes.component'),
         title: 'Admin - Ordes',
       },

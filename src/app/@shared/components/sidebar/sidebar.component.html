@@ -3,78 +3,9 @@
   <aside class="nav-header" [ngClass]="!collapsed ? 'sidenav-collapsed' : ''">
     <div class="logo">
       <p>LOGO</p>
-      <!-- <div
-          class="btn-custom"
-          matRipple
-          [ngClass]="!collapsed ? 'full-width' : ''"
-        >
-          <a
-            [routerLink]="headerRoute"
-            class="event-arrow"
-            (click)="closeSidebarMobile()"
-          >
-            <img [src]="headerIcon" class="event-arrow-icon" />
-          </a>
-        </div>
-
-        <div *ngIf="collapsed" class="vertical-line"></div>
-
-        <div class="event-name-right" *ngIf="collapsed" [@fadeInLeft]>
-          <span>{{ headerTitle }}</span>
-        </div> -->
     </div>
   </aside>
-  <!-- <ng-container *ngIf="isHiddenHeader">
-    <aside class="nav-header" [ngClass]="!collapsed ? 'sidenav-collapsed' : ''">
-      <div class="event-name">
-        <div
-          class="btn-custom"
-          matRipple
-          [ngClass]="!collapsed ? 'full-width' : ''"
-        >
-          <a
-            [routerLink]="headerRoute"
-            class="event-arrow"
-            (click)="closeSidebarMobile()"
-          >
-            <img [src]="headerIcon" class="event-arrow-icon" />
-          </a>
-        </div>
 
-        <div *ngIf="collapsed" class="vertical-line"></div>
-
-        <div class="event-name-right" *ngIf="collapsed" [@fadeInLeft]>
-          <span>{{ headerTitle }}</span>
-        </div>
-      </div>
-    </aside>
-  </ng-container> -->
-  <!-- 
-  <ng-container *ngIf="isHiddenSubHeader">
-    <aside class="nav-items" [ngClass]="!collapsed ? 'sidenav-collapsed' : ''">
-      <ul class="sidenav-nav">
-        <li class="sidenav-nav-item" matRipple>
-          <a
-            class="sidenav-nav-link"
-            [routerLink]="subHeaderRoute"
-            routerLinkActive="active"
-            (click)="closeSidebarMobile()"
-          >
-            <img [src]="subHeaderIcon" class="sidenav-link-icon" />
-            <span
-              class="sidenav-link-text"
-              [@fadeInOutInsideCollapsed]="collapsed ? 'true' : 'false'"
-            >
-              {{ subHeaderTitle }}
-            </span>
-          </a>
-        </li>
-      </ul>
-    </aside>
-  </ng-container> -->
-
-  <!-- Content -->
-  <!-- <ng-container *ngIf="isHiddenItems"> -->
   <aside class="nav-items" [ngClass]="!collapsed ? 'sidenav-collapsed' : ''">
     <ul class="sidenav-nav">
       <li class="sidenav-nav-item" matRipple *ngFor="let data of navData">
@@ -86,7 +17,7 @@
           routerLinkActive="active"
           [routerLinkActiveOptions]="{ exact: true }"
         >
-          <img [src]="[data.icon]" class="sidenav-link-icon" />
+          <mat-icon class="sidenav-link-icon">{{ data.icon }}</mat-icon>
           <span
             class="sidenav-link-text"
             [@fadeInOutInsideCollapsed]="collapsed ? 'true' : 'false'"
@@ -97,30 +28,17 @@
       </li>
     </ul>
   </aside>
-  <!-- </ng-container> -->
 
   <aside>
-    <div class="logo">
-      <p>CONFIG</p>
-      <!-- <div
-          class="btn-custom"
-          matRipple
-          [ngClass]="!collapsed ? 'full-width' : ''"
-        >
-          <a
-            [routerLink]="headerRoute"
-            class="event-arrow"
-            (click)="closeSidebarMobile()"
-          >
-            <img [src]="headerIcon" class="event-arrow-icon" />
-          </a>
-        </div>
-
-        <div *ngIf="collapsed" class="vertical-line"></div>
-
-        <div class="event-name-right" *ngIf="collapsed" [@fadeInLeft]>
-          <span>{{ headerTitle }}</span>
-        </div> -->
+    <div class="config">
+      <button
+        mat-icon-button
+        color="primary"
+        [routerLink]="['/']"
+        routerLinkActive="router-link-active"
+      >
+        <mat-icon class="settings-icon">settings</mat-icon>
+      </button>
     </div>
   </aside>
 </div>
