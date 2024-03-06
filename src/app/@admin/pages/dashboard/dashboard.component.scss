@@ -1,0 +1,9 @@
+@use "./../../../@shared/scss/variables.scss" as v;
+@use "./../../../@shared/scss/mixins.scss" as mixins;
+
+.container-dashborad {
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 101, 189, 0.686);
+  border-radius: v.$border-radius;
+}

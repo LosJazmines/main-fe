@@ -10,16 +10,20 @@ import { Subscription } from 'rxjs';
 
 import { Animations } from '../../animations';
 
-import { IVerticalNavState } from './store/reducers/vertical-nav.reducer';
-import { toggleVerticalNav } from './store/actions/vertical-nav.actions';
+// import { IVerticalNavState } from './store/reducers/vertical-nav.reducer';
+// import { toggleVerticalNav } from './store/actions/vertical-nav.actions';
 // import { getActiveEvent } from '../../store/reducers/user.reducer';
 // import { Event } from '../../interfaces/event.interface';
 // import { EventService } from '../../services/event.service';
 // import { Producer } from '../../interfaces/producer.interface';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
+import { MaterialModule } from '../../material/material.module';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-sidebar',
+  standalone: true,
+  imports: [CommonModule, RouterModule, MaterialModule],
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.scss'],
   animations: [Animations],
@@ -27,51 +31,35 @@ import { Router } from '@angular/router';
 export class SidebarComponent implements OnInit, OnDestroy {
   // Header
   @Input() isHiddenHeader!: boolean;
-  @Input() headerIcon?: string;
-  @Input() headerTitle?: string;
-  @Input() headerRoute?: any;
+  @Input() headerIcon!: string;
+  @Input() headerTitle!: string;
+  @Input() headerRoute!: string[];
 
   // Sub Header
   @Input() isHiddenSubHeader!: boolean;
-  @Input() subHeaderIcon?: string;
-  @Input() subHeaderRoute?: string[];
-  @Input() subHeaderTitle?: string;
+  @Input() subHeaderIcon!: string;
+  @Input() subHeaderRoute!: string[];
+  @Input() subHeaderTitle!: string;
 
   @Input() isHiddenItems!: boolean;
   @Input() navData!: any[];
 
-  @Input() page!: string;
-  @Input() activeProducer!: any;
-
-  producers!: any[];
   myBoolean!: boolean;
   collapsed: boolean = true;
   openOrClose: boolean = false;
-  showDropdown!: boolean;
+
   screenWidth: number = 0;
 
-  isSelectProducer!: boolean;
-
   unsuscribeAll!: Subscription;
-  eventSubcribe!: Subscription;
 
-  event!: Event;
-
-  constructor(
-    // private store: Store<{ verticalNav: IVerticalNavState }>,
-    // private _eventService: EventService,
-    private router: Router
-  ) {}
+  // constructor(private store: Store<{ verticalNav: IVerticalNavState }>) {}
 
   ngOnInit() {
     this.subVerticalNav();
-    // this.getActiveEvent();
-    console.log(this.activeProducer);
   }
 
   ngOnDestroy(): void {
-    this.unsuscribeAll?.unsubscribe();
-    this.eventSubcribe?.unsubscribe();
+    // this.unsuscribeAll.unsubscribe();
   }
 
   subVerticalNav() {
@@ -115,36 +103,6 @@ export class SidebarComponent implements OnInit, OnDestroy {
 
   closeSidebarMobile() {
     // if (this.screenWidth < 1024)
-    //   return this.store.dispatch(toggleVerticalNav({ isOpen: false }));
+    // return this.store.dispatch(toggleVerticalNav({ isOpen: false }));
   }
-
-  // getActiveEvent() {
-  //   this.eventSubcribe = this.store
-  //     .select(getActiveEvent)
-  //     .subscribe((event: any) => {
-  //       if (event) {
-  //         this.event = event;
-  //       }
-  //     });
 }
-
-// publish() {
-//   this._eventService.publish(this.event.id).subscribe((response) => {
-//     console.log(response);
-//   });
-// }
-
-// switchDropdown() {
-//   this.showDropdown = !this.showDropdown;
-// }
-
-// // goToProducer(producer: Producer) {
-// //   this.router.navigate(['/o', producer.producer.id, 'dashboard']);
-// //   this.showDropdown = false;
-// //   this.activeProducer = producer;
-// // }
-
-// switchSelectProducer() {
-//   this.isSelectProducer = !this.isSelectProducer;
-// }
-//}

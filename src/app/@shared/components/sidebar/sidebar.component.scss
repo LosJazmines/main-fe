@@ -1,43 +1,45 @@
 @use "./../../scss/variables.scss" as v;
 @use "./../../scss/mixins.scss" as mixins;
 
-.mode-over {
-  background: v.$background-sidebar;
-  width: 100%;
+// .mode-over {
+//   background: v.$background-sidebar;
+//   width: 100%;
+//   height: 100vh;
+//   position: absolute;
+//   top: 0;
+//   left: 0;
+//   right: 0;
+//   bottom: 0;
+//   z-index: 98;
+//   overflow: hidden;
 
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 98;
-  overflow: hidden;
-
-  @include mixins.laptop {
-    display: none;
-    position: static;
-  }
-}
+//   @include mixins.laptop {
+//     display: none;
+//     position: static;
+//   }
+// }
 
 .container-sidebar {
   width: 290px;
-  height: calc(100vh - 66px);
-  max-height: calc(100vh - 50px);
+  height: 100vh;
+  max-height: calc(100vh - 2rem);
   background: v.$background;
   position: absolute;
-  top: 50px;
+  top: 0;
   left: 0;
   z-index: 99;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   align-items: center;
   padding: 1.5rem 1rem;
   overflow-y: hidden;
+  border-radius: v.$border-radius;
+  // margin: 1rem;
 
   @include mixins.laptop {
-    padding: 0;
-    margin-right: 1rem;
-    width: auto;
+    // padding: 0;
+    // width: auto;
     position: static;
   }
 }
@@ -50,11 +52,10 @@
   height: 50px;
   display: flex;
   align-items: center;
-  margin-bottom: 1rem;
 
   .event-name {
     display: flex;
-
+    justify-content: center;
     align-items: center;
     color: v.$font-principal;
     width: 100%;
@@ -84,12 +85,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-
-      font-weight: bold;
-      padding-right: 1rem;
-      span {
-        font-size: 1rem;
-      }
+      width: 75%;
     }
 
     .vertical-line {
@@ -107,7 +103,7 @@
 
 .nav-items {
   width: 250px;
-  margin-bottom: 1rem;
+  // margin-top: 15px;
 
   .sidenav-nav {
     list-style: none;
@@ -146,6 +142,10 @@
           width: 1.5rem;
           margin: 1rem;
         }
+
+        .sidenav-link-text {
+          margin-left: 1.5rem;
+        }
       }
     }
 
@@ -175,37 +175,4 @@
 
 .active {
   background-color: v.$hover;
-}
-
-.header-title-name {
-  text-transform: capitalize;
-}
-
-.red {
-  color: red;
-}
-.green {
-  color: green;
-}
-
-.dot-active {
-  height: 8px;
-  width: 8px;
-  background-color: green;
-  border-radius: 50%;
-}
-
-.dot-inactive {
-  height: 8px;
-  width: 8px;
-  background-color: red;
-  border-radius: 50%;
-}
-
-.disable-selection {
-  -moz-user-select: none; /* Firefox */
-  -ms-user-select: none; /* Internet Explorer */
-  -khtml-user-select: none; /* KHTML browsers (e.g. Konqueror) */
-  -webkit-user-select: none; /* Chrome, Safari, and Opera */
-  -webkit-touch-callout: none; /* Disable Android and iOS callouts*/
 }

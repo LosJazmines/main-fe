@@ -1,1 +1,21 @@
-<p>admin works!</p>
+<div class="container">
+  <app-sidebar
+    [isHiddenHeader]="true"
+    [headerTitle]="'Nombre de la Organizadora'"
+    [headerIcon]="''"
+    [headerRoute]="['/dashboard']"
+    [isHiddenSubHeader]="true"
+    [subHeaderIcon]="''"
+    [subHeaderRoute]="['/o', '2', 'create-event']"
+    [subHeaderTitle]="'Create Event'"
+    [isHiddenItems]="true"
+    [navData]="navbarData"
+  >
+  </app-sidebar>
+
+  <div class="router-outlet">
+    <app-header></app-header>
+
+    <router-outlet></router-outlet>
+  </div>
+</div>

@@ -15,16 +15,19 @@ export const routes: Routes = [
         path: 'register',
         loadComponent: () =>
           import('./@public/pages/forms/register/register.component'),
+        title: 'Register',
       },
       {
         path: 'login',
         loadComponent: () =>
           import('./@public/pages/forms/login/login.component'),
+        title: 'Login',
       },
       {
         path: 'checkout',
         loadComponent: () =>
           import('./@public/pages/forms/checkout/checkout.component'),
+        title: 'Checkout',
       },
       {
         path: 'change-password',
@@ -32,11 +35,13 @@ export const routes: Routes = [
           import(
             './@public/pages/forms/change-password/change-password.component'
           ),
+        title: 'Change Password',
       },
       {
         path: 'contact',
         loadComponent: () =>
           import('./@public/pages/contact/contact.component'),
+        title: 'Contact',
       },
     ],
   },
@@ -46,23 +51,24 @@ export const routes: Routes = [
   {
     path: 'admin',
     loadComponent: () => import('./@admin/pages/admin.component'),
+    title: 'Admin',
     children: [
       {
         path: '',
         loadComponent: () =>
           import('./@admin/pages/dashboard/dashboard.component'),
-        title: 'Dashboard',
+        title: 'Admin - Dashboard',
       },
       {
         path: 'ordes',
         loadComponent: () => import('./@admin/pages/ordes/ordes.component'),
-        title: 'Ordes',
+        title: 'Admin - Ordes',
       },
       {
         path: 'products',
         loadComponent: () =>
           import('./@admin/pages/products/products.component'),
-        title: 'Products',
+        title: 'Admin - Products',
       },
       {
         path: 'users',
