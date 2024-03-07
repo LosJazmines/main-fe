@@ -1,0 +1,23 @@
+<div class="search-container">
+  <div class="search">
+    <input
+      class="search-input"
+      placeholder="Buscar"
+      [formControl]="search"
+      #searchInput
+    />
+
+    @if (search.value !== '') {
+    <button
+      matRipple
+      class="btn-clear_search"
+      type="button"
+      (click)="onClearSearch()"
+    >
+      <mat-icon class="input-icon input-icon__clear">clear</mat-icon>
+    </button>
+    } @else if (search.value === '') {
+    <mat-icon class="search-icon">search</mat-icon>
+    }
+  </div>
+</div>
