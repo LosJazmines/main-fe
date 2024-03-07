@@ -3,32 +3,54 @@
 
 .toolbar {
   width: 100%;
-  height: 60px;
-  background: v.$background-primary;
-  box-shadow: v.$secondary-box-shadow;
+  height: 50px;
+  background: transparent;
+
   overflow: hidden;
   display: flex;
   justify-content: space-between;
-  gap: 1rem;
+  gap: 0.5rem;
   align-items: center;
   border-radius: v.$border-radius;
 
   .left {
+    width: 50px;
+    height: 50px;
+    background: v.$background-secondary;
+    border-radius: v.$border-radius;
+    box-shadow: v.$secondary-box-shadow;
     mat-icon {
       color: v.$font-principal;
     }
   }
 
   .center {
+    width: 100%;
+    height: 100%;
+    border-radius: v.$border-radius;
+    background: v.$background-opacity-2;
+    box-shadow: v.$secondary-box-shadow;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    display: flex;
+
     h1 {
       margin: 0;
-      color: v.$font-principal;
+      color: v.$font-secondary;
+      font-weight: 600;
+      letter-spacing: 2px;
     }
   }
 
   .right {
+    width: 60%;
+    height: 100%;
+    background: v.$background-primary;
+    border-radius: v.$border-radius;
+    padding: 0.5rem;
     display: flex;
-    justify-content: center;
+    justify-content: flex-end;
     gap: 1rem;
     align-items: center;
     mat-icon {
@@ -41,7 +63,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-right: 1rem;
+  padding: 1rem;
 
   .avatar {
     width: 40px;

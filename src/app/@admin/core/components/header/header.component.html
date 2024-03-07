@@ -12,50 +12,12 @@
     <h1>TITLE</h1>
   </div>
 
-  <!-- <span class="material-symbols-outlined"> left_panel_close </span>
-
-  <span class="material-symbols-outlined"> left_panel_open </span> -->
-
   <div class="right">
     <div class="search-container">
       <app-search-moderno-reactive
         [inputPlaceholder]="'Buscar cliente'"
         (search)="handleSearch($event)"
       ></app-search-moderno-reactive>
-
-      <!-- <form
-        [formGroup]="searchForm"
-        (ngSubmit)="onSubmit()"
-        class="searchForm-container"
-      >
-        <mat-form-field appearance="outline" class="input-container">
-          <mat-label class="input-label"> {{ inputLabel }} </mat-label>
-          <div class="input-wrapper">
-            <input
-              class="input-input"
-              matInput
-              formControlName="search"
-              placeholder="inputPlaceholder"
-            />
-
-            <ng-container *ngIf="!showResetButton">
-              <mat-icon matSuffix class="btn input-icon">search</mat-icon>
-            </ng-container>
-
-            <ng-container *ngIf="showResetButton">
-              <button
-                mat-icon-button
-                color="primary"
-                class="btn"
-                type="button"
-                (click)="onClearSearch()"
-              >
-                <mat-icon class="input-icon input-icon__clear">clear</mat-icon>
-              </button>
-            </ng-container>
-          </div>
-        </mat-form-field>
-      </form> -->
     </div>
 
     <button mat-icon-button color="primary" (click)="search()">
