@@ -1,10 +1,65 @@
 <header class="toolbar">
-  <button
-    mat-icon-button
-    color="primary"
-    [routerLink]="['/admin']"
-    routerLinkActive="router-link-active"
-  >
-    <mat-icon> admin_panel_settings </mat-icon>
-  </button>
+  <div class="content">
+    <div class="logo-container">
+      <p>LOGO</p>
+    </div>
+
+    <div class="center-container">
+      <div class="">
+        <button
+          [routerLink]="['/']"
+          routerLinkActive="router-link-active"
+          class="btn-header"
+          mat-flat-button
+        >
+          Home
+        </button>
+      </div>
+      <div class="">
+        <button
+          [routerLink]="['/online-store']"
+          routerLinkActive="router-link-active"
+          class="btn-header"
+          mat-flat-button
+        >
+          Store
+        </button>
+      </div>
+      <div class="">
+        <button class="btn-header" mat-flat-button>About</button>
+      </div>
+      <div class="">
+        <button class="btn-header" mat-flat-button>Blog</button>
+      </div>
+    </div>
+
+    <div class="right-container">
+      <button
+        mat-icon-button
+        color="primary"
+        [routerLink]="['/admin']"
+        routerLinkActive="router-link-active"
+      >
+        <mat-icon class="mat-icon">shopping_bag</mat-icon>
+      </button>
+
+      <button
+        mat-icon-button
+        color="primary"
+        [routerLink]="['/admin']"
+        routerLinkActive="router-link-active"
+      >
+        <mat-icon class="mat-icon">search</mat-icon>
+      </button>
+
+      <button
+        mat-icon-button
+        color="primary"
+        [routerLink]="['/admin']"
+        routerLinkActive="router-link-active"
+      >
+        <mat-icon class="mat-icon"> admin_panel_settings </mat-icon>
+      </button>
+    </div>
+  </div>
 </header>
