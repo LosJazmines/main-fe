@@ -42,6 +42,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 // Cdk
 import { CdkTableModule } from '@angular/cdk/table';
 import { CdkAccordionModule } from '@angular/cdk/accordion';
+import { DialogModule } from '@angular/cdk/dialog';
 
 export const MATERIAL_MODULES = [
   MatStepperModule,
@@ -77,6 +78,7 @@ export const MATERIAL_MODULES = [
   // CDK
   CdkStepperModule,
   CdkTableModule,
+  DialogModule,
   CdkAccordionModule,
 ];
 

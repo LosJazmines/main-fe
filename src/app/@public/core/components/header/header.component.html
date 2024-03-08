@@ -4,36 +4,43 @@
       <p>LOGO</p>
     </div>
 
-    <div class="center-container">
-      <div class="">
-        <button
-          [routerLink]="['/']"
-          routerLinkActive="router-link-active"
-          class="btn-header"
-          mat-flat-button
-        >
-          Home
-        </button>
-      </div>
-      <div class="">
-        <button
-          [routerLink]="['/online-store']"
-          routerLinkActive="router-link-active"
-          class="btn-header"
-          mat-flat-button
-        >
-          Store
-        </button>
-      </div>
-      <div class="">
-        <button class="btn-header" mat-flat-button>About</button>
-      </div>
-      <div class="">
-        <button class="btn-header" mat-flat-button>Blog</button>
-      </div>
-    </div>
-
     <div class="right-container">
+      <div class="link-container">
+        <div class="">
+          <button
+            [routerLink]="['/']"
+            routerLinkActive="router-link-active"
+            class="btn-header"
+            mat-flat-button
+          >
+            Home
+          </button>
+        </div>
+        <div class="">
+          <button
+            [routerLink]="['/online-store']"
+            routerLinkActive="router-link-active"
+            class="btn-header"
+            mat-flat-button
+          >
+            Store
+          </button>
+        </div>
+        <div class="">
+          <button class="btn-header" mat-flat-button>About</button>
+        </div>
+        <div class="">
+          <button
+            [routerLink]="['/contact']"
+            routerLinkActive="router-link-active"
+            class="btn-header"
+            mat-flat-button
+          >
+            contact
+          </button>
+        </div>
+      </div>
+
       <button
         mat-icon-button
         color="primary"
@@ -60,6 +67,17 @@
       >
         <mat-icon class="mat-icon"> admin_panel_settings </mat-icon>
       </button>
+
+      <div class="">
+        <button
+          [routerLink]="['/login']"
+          routerLinkActive="router-link-active"
+          class="btn-login"
+          mat-flat-button
+        >
+          Login
+        </button>
+      </div>
     </div>
   </div>
 </header>
