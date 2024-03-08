@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
+import { AdminHeaderStore } from '../../../@core/store/admin-header.store';
 
 @Component({
   selector: 'app-users',
@@ -7,4 +8,11 @@ import { Component } from '@angular/core';
   templateUrl: './users.component.html',
   styleUrl: './users.component.scss',
 })
-export default class UsersComponent {}
+export default class UsersComponent implements OnInit {
+  private _adminHeaderStore = inject(AdminHeaderStore);
+  public readonly adminHeaderStore$ = this._adminHeaderStore.getHeaderTitle();
+
+  ngOnInit(): void {
+    this._adminHeaderStore.updateHeaderTitle('Users');
+  }
+}

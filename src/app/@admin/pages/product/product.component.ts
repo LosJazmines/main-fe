@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
+import { AdminHeaderStore } from '../../../@core/store/admin-header.store';
 
 @Component({
   selector: 'app-product',
@@ -7,4 +8,11 @@ import { Component } from '@angular/core';
   templateUrl: './product.component.html',
   styleUrl: './product.component.scss',
 })
-export default class ProductComponent {}
+export default class ProductComponent implements OnInit {
+  private _adminHeaderStore = inject(AdminHeaderStore);
+  public readonly adminHeaderStore$ = this._adminHeaderStore.getHeaderTitle();
+
+  ngOnInit(): void {
+    this._adminHeaderStore.updateHeaderTitle('Products - Product');
+  }
+}

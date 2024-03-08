@@ -1,23 +1,23 @@
 @use "./../../scss/variables.scss" as v;
 @use "./../../scss/mixins.scss" as mixins;
 
-// .mode-over {
-//   background: v.$background-sidebar;
-//   width: 100%;
-//   height: 100vh;
-//   position: absolute;
-//   top: 0;
-//   left: 0;
-//   right: 0;
-//   bottom: 0;
-//   z-index: 98;
-//   overflow: hidden;
+.mode-over {
+  background: v.$background-secondary;
+  width: 100%;
+  height: 100vh;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 98;
+  // overflow: hidden;
 
-//   @include mixins.laptop {
-//     display: none;
-//     position: static;
-//   }
-// }
+  @include mixins.laptop {
+    display: none;
+    position: static;
+  }
+}
 
 .container-sidebar {
   width: 290px;
@@ -40,9 +40,15 @@
 
   @include mixins.laptop {
     // padding: 0;
-    // width: auto;
+    width: auto;
     position: static;
   }
+}
+
+.display {
+  display: none;
+  // transition: width 0.5s ease;
+  // transition: width 0.5s ease, transform 0.5s ease;
 }
 
 .nav-header {
@@ -53,6 +59,7 @@
   height: 50px;
   display: flex;
   align-items: center;
+  transition: all 0.5s ease;
 
   .logo {
     display: flex;
@@ -115,7 +122,10 @@
 
 .nav-items {
   width: 250px;
+  transition: all 0.5s ease;
+
   // margin-top: 15px;
+  // transition: width 0.5s ease, transform 0.5s ease;
 
   .sidenav-nav {
     list-style: none;
@@ -148,7 +158,7 @@
         margin-bottom: 3px;
         color: v.$font-principal;
         text-decoration: none;
-        transition: all 0.3s ease;
+        // transition: all 0.3s ease;
 
         .sidenav-link-icon {
           width: 1.5rem;
@@ -157,6 +167,8 @@
 
         .sidenav-link-text {
           margin-left: 1.5rem;
+          // transition: width 0.5s ease;
+          // transition: width 0.5s ease, transform 0.5s ease;
         }
       }
     }
@@ -191,6 +203,8 @@
 
 .sidenav-collapsed {
   width: 55px;
+  transition: all 0.5s ease;
+  // transition: width 0.5s ease, transform 0.5s ease;
 }
 .full-width {
   width: 100% !important;
@@ -199,3 +213,7 @@
 .active {
   background-color: v.$hover;
 }
+
+// ::ng-deep .mat-icon {
+//   overflow: auto !important;
+// }

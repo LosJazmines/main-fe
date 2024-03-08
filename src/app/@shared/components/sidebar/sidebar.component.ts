@@ -4,6 +4,7 @@ import {
   Input,
   OnDestroy,
   OnInit,
+  inject,
 } from '@angular/core';
 // import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
@@ -19,6 +20,8 @@ import { Animations } from '../../animations';
 import { Router, RouterModule } from '@angular/router';
 import { MaterialModule } from '../../material/material.module';
 import { CommonModule } from '@angular/common';
+import { SidebarStore } from '../../../@core/store/sidebar.store';
+import { STATE_SIGNAL } from '@ngrx/signals/src/state-signal';
 
 @Component({
   selector: 'app-sidebar',
@@ -29,6 +32,10 @@ import { CommonModule } from '@angular/common';
   animations: [Animations],
 })
 export class SidebarComponent implements OnInit, OnDestroy {
+  private _sidebarStore = inject(SidebarStore);
+
+  public toggleSidebar$ = this._sidebarStore.getToggleSidebar();
+
   // Header
   @Input() isHiddenHeader!: boolean;
   @Input() headerIcon!: string;
@@ -56,6 +63,19 @@ export class SidebarComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.subVerticalNav();
+
+    console.log({
+      toggleSidebar$: this.toggleSidebar$(),
+    });
+
+    // this.toggleSidebar$.subscribe((toggleSidebar: boolean) => {
+    //   console.log({ toggleSidebar });
+    // Realiza las acciones necesarias cuando cambie el estado de la barra lateral
+    // this.myBoolean = toggleSidebar;
+    // this.onResize();
+    // });
+
+    // console.log({ toggleSidebar$: this.toggleSidebar$ });
   }
 
   ngOnDestroy(): void {
@@ -63,6 +83,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
   }
 
   subVerticalNav() {
+    // console.log({ toggleSidebar: this.toggleSidebar });
     // this.unsuscribeAll = this.store
     //   .select((state) => state.verticalNav.isOpen)
     //   .subscribe((isOpen) => {
@@ -78,22 +99,22 @@ export class SidebarComponent implements OnInit, OnDestroy {
     switch (true) {
       case this.screenWidth <= 768:
         this.collapsed = true;
-        this.openOrClose = this.myBoolean;
+        this.openOrClose = this.toggleSidebar$();
         break;
 
       case this.screenWidth < 1024:
-        this.openOrClose = this.myBoolean;
+        this.openOrClose = this.toggleSidebar$();
         this.collapsed = true;
         break;
 
       case this.screenWidth < 1440:
         this.openOrClose = false;
-        this.collapsed = this.myBoolean;
+        this.collapsed = this.toggleSidebar$();
         break;
 
       case this.screenWidth >= 1440:
         this.openOrClose = false;
-        this.collapsed = true;
+        this.collapsed = this.toggleSidebar$();
         break;
 
       default:

@@ -1,15 +1,15 @@
 <header class="toolbar">
   <div class="left">
     <button mat-icon-button color="primary" (click)="panelToggle()">
-      @if(isPanelToggle){
+      @if(toggleSidebar$()){
       <mat-icon>chevron_left</mat-icon>
 
-      } @else if (!isPanelToggle) {<mat-icon>chevron_right</mat-icon>}
+      } @else if (!toggleSidebar$()) {<mat-icon>chevron_right</mat-icon>}
     </button>
   </div>
 
   <div class="center">
-    <h1>TITLE</h1>
+    <h1>{{ adminHeaderStore$() }}</h1>
   </div>
 
   <div class="right">
@@ -21,7 +21,7 @@
     </div>
 
     <button mat-icon-button color="primary" (click)="search()">
-      <mat-icon>search</mat-icon>
+      <mat-icon>home</mat-icon>
     </button>
     <button
       mat-icon-button
