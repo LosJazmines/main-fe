@@ -12,6 +12,11 @@ export const routes: Routes = [
         title: 'Home',
       },
       {
+        path: 'home',
+        loadComponent: () => import('./@public/pages/home/home.component'),
+        title: 'Home',
+      },
+      {
         path: 'online-store',
         loadComponent: () =>
           import('./@public/pages/online-store/online-store.component'),
