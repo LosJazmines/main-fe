@@ -63,4 +63,6 @@ export class HeaderComponent implements OnInit {
   onClearSearch() {}
 
   handleSearch(event: any) {}
+
+  openNoti() {}
 }

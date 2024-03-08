@@ -20,24 +20,24 @@
       ></app-search-moderno-reactive>
     </div>
 
-    <button mat-icon-button color="primary" (click)="search()">
+    <button
+      [routerLink]="['/']"
+      routerLinkActive="router-link-active"
+      mat-icon-button
+      color="primary"
+    >
       <mat-icon>home</mat-icon>
     </button>
     <button
       mat-icon-button
       color="primary"
-      [routerLink]="['/']"
+      [routerLink]="['/online-store']"
       routerLinkActive="router-link-active"
     >
       <mat-icon>store</mat-icon>
     </button>
 
-    <button
-      mat-icon-button
-      color="primary"
-      [routerLink]="['/']"
-      routerLinkActive="router-link-active"
-    >
+    <button mat-icon-button color="primary" (click)="openNoti()">
       <mat-icon>notifications</mat-icon>
     </button>
 

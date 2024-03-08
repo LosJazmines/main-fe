@@ -12,6 +12,12 @@ export const routes: Routes = [
         title: 'Home',
       },
       {
+        path: 'online-store',
+        loadComponent: () =>
+          import('./@public/pages/online-store/online-store.component'),
+        title: 'Online Store',
+      },
+      {
         path: 'register',
         loadComponent: () =>
           import('./@public/pages/forms/register/register.component'),
