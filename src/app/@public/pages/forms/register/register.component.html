@@ -16,7 +16,7 @@
   <div class="register">
     <div class="left">INFO</div>
 
-    <div [@slideInRight] class="right">
+    <div [@slideInRight] [@slideOutRight] class="right">
       <h1 class="title">Register</h1>
 
       <form
@@ -69,7 +69,6 @@
 
           <button
             class="login-button login-button--submit"
-            (click)="submitEvent()"
             type="submit"
             mat-flat-button
           >
