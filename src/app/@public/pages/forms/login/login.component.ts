@@ -12,6 +12,7 @@ import { CommonModule } from '@angular/common';
 import RegisterComponent from '../register/register.component';
 import { MatDialog } from '@angular/material/dialog';
 import { RouterModule } from '@angular/router';
+import { Animations } from '../../../../@shared/animations';
 
 @Component({
   selector: 'app-login',
@@ -19,6 +20,7 @@ import { RouterModule } from '@angular/router';
   imports: [CommonModule, RouterModule, MaterialModule, ReactiveFormsModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
+  animations: [Animations],
 })
 export default class LoginComponent implements OnInit {
   loginGroup!: FormGroup;

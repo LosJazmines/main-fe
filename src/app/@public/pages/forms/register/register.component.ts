@@ -11,6 +11,7 @@ import {
 } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import CheckoutComponent from '../checkout/checkout.component';
+import { Animations } from '../../../../@shared/animations';
 
 @Component({
   selector: 'app-register',
@@ -18,6 +19,7 @@ import CheckoutComponent from '../checkout/checkout.component';
   imports: [CommonModule, RouterModule, MaterialModule, ReactiveFormsModule],
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss',
+  animations: [Animations],
 })
 export default class RegisterComponent implements OnInit {
   registerGroup!: FormGroup;
