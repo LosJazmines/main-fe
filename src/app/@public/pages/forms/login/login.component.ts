@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MaterialModule } from '../../../../@shared/material/material.module';
-import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
+import { DIALOG_DATA, Dialog, DialogRef } from '@angular/cdk/dialog';
 import {
   FormBuilder,
   ReactiveFormsModule,
@@ -28,7 +28,7 @@ export default class LoginComponent implements OnInit {
   constructor(
     private _fb: FormBuilder,
     public dialogRef: DialogRef<string>,
-    private _dialog: MatDialog,
+    private _dialog: Dialog,
     @Inject(DIALOG_DATA) public data: any
   ) {}
 
@@ -43,9 +43,21 @@ export default class LoginComponent implements OnInit {
     });
   }
 
-  register() {
+  // register() {
+  //   this.dialogRef.close();
+  //   this._dialog.open(RegisterComponent, { disableClose: true });
+  // }
+
+  openDialogRegister(): void {
     this.dialogRef.close();
-    this._dialog.open(RegisterComponent, { disableClose: true });
+    const dialogRef = this._dialog.open<string>(RegisterComponent, {
+      width: '250px',
+      data: { name: 'hola', animal: 'hola' },
+    });
+
+    dialogRef.closed.subscribe((result) => {
+      console.log('The dialog was closed');
+    });
   }
 
   submitEvent() {
