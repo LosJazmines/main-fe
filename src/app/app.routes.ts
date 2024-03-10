@@ -54,6 +54,12 @@ export const routes: Routes = [
           import('./@public/pages/contact/contact.component'),
         title: 'Contact',
       },
+
+      {
+        path: 'about',
+        loadComponent: () => import('./@public/pages/about/about.component'),
+        title: 'About',
+      },
     ],
   },
 
