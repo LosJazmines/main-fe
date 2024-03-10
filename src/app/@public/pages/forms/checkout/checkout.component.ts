@@ -10,6 +10,7 @@ import { MaterialModule } from '../../../../@shared/material/material.module';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Animations } from '../../../../@shared/animations';
+import LoginComponent from '../login/login.component';
 
 @Component({
   selector: 'app-checkout',
@@ -20,7 +21,7 @@ import { Animations } from '../../../../@shared/animations';
   animations: [Animations],
 })
 export default class CheckoutComponent implements OnInit {
-  registerGroup!: FormGroup;
+  checkouGroup!: FormGroup;
   hide = true;
   formTouched = false;
 
@@ -32,11 +33,11 @@ export default class CheckoutComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.initGroupRegister();
+    this.initGroupCheckou();
   }
 
-  private initGroupRegister() {
-    this.registerGroup = this._fb.group({
+  private initGroupCheckou() {
+    this.checkouGroup = this._fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required]],
     });
@@ -50,15 +51,15 @@ export default class CheckoutComponent implements OnInit {
   }
 
   submitEvent() {
-    const formData = this.registerGroup.value;
+    const formData = this.checkouGroup.value;
     console.log('Valor de todos los campos del evento:');
     console.log({ formData });
-    this.openDialogCheckout();
+    this.openDialogLogin();
   }
 
-  openDialogCheckout(): void {
+  openDialogLogin(): void {
     this.dialogRef.close();
-    const dialogRef = this._dialog.open<string>(CheckoutComponent, {
+    const dialogRef = this._dialog.open<string>(LoginComponent, {
       width: '250px',
       data: { name: 'hola', animal: 'hola' },
     });

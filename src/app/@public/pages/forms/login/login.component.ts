@@ -13,6 +13,7 @@ import RegisterComponent from '../register/register.component';
 import { MatDialog } from '@angular/material/dialog';
 import { RouterModule } from '@angular/router';
 import { Animations } from '../../../../@shared/animations';
+import ChangePasswordComponent from '../change-password/change-password.component';
 
 @Component({
   selector: 'app-login',
@@ -53,6 +54,18 @@ export default class LoginComponent implements OnInit {
   openDialogRegister(): void {
     this.dialogRef.close();
     const dialogRef = this._dialog.open<string>(RegisterComponent, {
+      width: '250px',
+      data: { name: 'hola', animal: 'hola' },
+    });
+
+    dialogRef.closed.subscribe((result) => {
+      console.log('The dialog was closed');
+    });
+  }
+
+  openDialogChangePasswor(): void {
+    this.dialogRef.close();
+    const dialogRef = this._dialog.open<string>(ChangePasswordComponent, {
       width: '250px',
       data: { name: 'hola', animal: 'hola' },
     });
