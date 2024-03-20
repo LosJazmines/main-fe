@@ -4,8 +4,9 @@ import { provideRouter } from '@angular/router';
 import { routes } from './app.routes';
 import { provideClientHydration } from '@angular/platform-browser';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
-import { provideStore } from '@ngrx/store';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
+import { provideHttpClient } from '@angular/common/http';
+import { graphqlProvider } from './graphql.provider';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -22,6 +23,8 @@ export const appConfig: ApplicationConfig = {
       traceLimit: 75, // maximum stack trace frames to be stored (in case trace option was provided as true)
       connectInZone: true, // If set to true, the connection is established within the Angular zone
     }),
+    provideHttpClient(),
+    graphqlProvider
     // provideStore(),
   ],
 };
