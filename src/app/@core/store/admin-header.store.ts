@@ -18,11 +18,7 @@ export const AdminHeaderStore = signalStore(
 
     updateHeaderTitle(toggleSidebarTerm: string) {
       const updateToggleSidebar = toggleSidebarTerm;
-      console.log({ updateToggleSidebar });
-
       patchState(store, { headerTitle: updateToggleSidebar });
-
-      console.log({ headerTitle: headerTitle() });
     },
   }))
 );

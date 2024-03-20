@@ -1,9 +1,9 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { AdminHeaderStore } from '../../../@core/store/admin-header.store';
 import { Apollo } from 'apollo-angular';
-import { GET_ORDERS } from '../../../graphql.operations';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { GET_ORDERS } from '../../../@graphql/operations/query/orders';
 
 @Component({
   selector: 'app-ordes',

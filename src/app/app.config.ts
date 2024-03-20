@@ -6,7 +6,7 @@ import { provideClientHydration } from '@angular/platform-browser';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
 import { provideHttpClient } from '@angular/common/http';
-import { graphqlProvider } from './graphql.provider';
+import { graphqlProvider } from './@graphql/config/graphql.provider';
 
 export const appConfig: ApplicationConfig = {
   providers: [

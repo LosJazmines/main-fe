@@ -13,6 +13,9 @@ const GET_ORDERS = gql`
       deliveryDate
       deliveryTime
       description
+      user {
+        fullName
+      }
     }
   }
 `;

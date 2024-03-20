@@ -19,11 +19,7 @@ export const SidebarStore = signalStore(
 
     updateToggleSidebar(toggleSidebarTerm: boolean) {
       const updateToggleSidebar = toggleSidebarTerm;
-      console.log({ updateToggleSidebar });
-
       patchState(store, { toggleSidebar: updateToggleSidebar });
-
-      console.log({ toggleSidebar: toggleSidebar() });
     },
   }))
 );
