@@ -11,9 +11,11 @@ import {
 import { CommonModule } from '@angular/common';
 import RegisterComponent from '../register/register.component';
 import { MatDialog } from '@angular/material/dialog';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 import { Animations } from '../../../../@shared/animations';
 import ChangePasswordComponent from '../change-password/change-password.component';
+import { Apollo } from 'apollo-angular';
+import { LOGIN_MUTATE } from '../../../../@graphql/operations/mutation/user';
 
 @Component({
   selector: 'app-login',
@@ -29,9 +31,11 @@ export default class LoginComponent implements OnInit {
   formTouched = false;
 
   constructor(
+    private _apollo: Apollo,
     private _fb: FormBuilder,
     public dialogRef: DialogRef<string>,
     private _dialog: Dialog,
+    private _router: Router,
     @Inject(DIALOG_DATA) public data: any
   ) {}
 
@@ -45,6 +49,55 @@ export default class LoginComponent implements OnInit {
       password: ['', [Validators.required]],
     });
   }
+
+  private login(email: string, password: string) {
+    this._apollo
+      .mutate({
+        mutation: LOGIN_MUTATE,
+        variables: {
+          loginInput: {
+            email,
+            password,
+          },
+        },
+      })
+      .subscribe({
+        next: ({ data }) => {
+          const resultLogin: any = data;
+
+          const { token, ...user } = resultLogin.login;
+          localStorage.setItem('session', `Bearer ${token}`);
+
+          console.log('Login successful!');
+        },
+        error: (error) => {
+          console.error('Login failed!', error);
+        },
+      });
+  }
+  // init() {
+  //   this.auth
+  //     .login(this.login.email, this.login.password)
+  //     .subscribe((result: IResultLogin) => {
+  //       if (result.status) {
+  //         if (result.token !== null) {
+  //           // Guardamos la sesión
+  //           this.auth.setSession(result.token);
+  //           this.auth.updateSession(result);
+  //           if (localStorage.getItem('route_after_login')) {
+  //             this.router.navigate([localStorage.getItem('route_after_login')]);
+  //             localStorage.removeItem('route_after_login');
+  //             return;
+  //           }
+  //           this.router.navigate(['/home']);
+  //           return;
+  //         }
+  //         basicAlert(TYPE_ALERT.WARNING, result.message);
+  //         return;
+  //       }
+  //       basicAlert(TYPE_ALERT.INFO, result.message);
+  //     });
+  // }
 
   // register() {
   //   this.dialogRef.close();
@@ -76,9 +129,11 @@ export default class LoginComponent implements OnInit {
   }
 
   submitEvent() {
-    const formData = this.loginGroup.value;
+    const { email, password } = this.loginGroup.value;
     console.log('Valor de todos los campos del evento:');
-    console.log({ formData });
+    console.log({ email, password });
+
+    this.login(email, password);
     this.dialogRef.close();
   }
 }
