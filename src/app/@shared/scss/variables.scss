@@ -1,0 +1,48 @@
+// Media Queries
+$phone: 480px;
+$tablets: 768px;
+$laptop: 1024px;
+$desktop: 1440px;
+
+// Border PX
+$border-radius: 12px;
+$border-radius-search: 28px;
+
+// Colors
+$primary: #33691e;
+$secondary: #33691e;
+$tertiary: #689f38;
+$quaternary: #8bc34a;
+
+$senary: #cccccc;
+$septenary: #f3f3f3;
+
+$white: #ffffff;
+$black: #000000;
+$gray: #666666;
+
+$warning: #b95700;
+$error: #f44336;
+
+$font-principal: $white;
+$font-secondary: $black;
+
+// EFFECT HOVER
+$hover: rgba(0, 0, 0, 0.3);
+
+// BACKGROUND
+$background-primary: #33691e;
+$background-secondary: #8bc34a;
+$background-opacity-1: rgba(51, 105, 30, 0.5);
+$background-opacity-2: rgba(139, 195, 74, 0.5);
+
+// BOX SHADOW
+$primary-box-shadow: 6px 6px 30px 0px rgba(0, 0, 0, 0.25);
+
+$text-box-shadow: 2px 2px 4px rgba(255, 255, 255, 0.3);
+
+$primary-box-shadow-50: 6px 6px 30px 0px rgba(0, 0, 0, 0.5);
+
+$primary-box-shadow-80: 6px 6px 30px 0px rgba(0, 0, 0, 0.8);
+
+$secondary-box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.25);

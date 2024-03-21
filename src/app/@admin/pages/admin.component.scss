@@ -1,0 +1,38 @@
+@use "./../../@shared/scss/variables.scss" as v;
+@use "./../../@shared/scss/mixins.scss" as mixins;
+.container {
+  height: 100vh;
+  max-height: calc(100vh - 2rem);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 1rem;
+  gap: 1rem;
+
+  .sidebar {
+    width: 20%;
+    height: 100%;
+  }
+
+  .rigth {
+    height: 100vh;
+    max-height: calc(100vh - 2rem);
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    border-radius: v.$border-radius;
+    overflow: auto;
+
+    .content {
+      width: 100%;
+      height: 100vh;
+      max-height: calc(100vh - 5.75rem);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: v.$border-radius;
+      background-color: v.$background-opacity-2;
+    }
+  }
+}

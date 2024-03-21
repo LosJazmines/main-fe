@@ -1,0 +1,117 @@
+@use "./../../../../@shared/scss/variables.scss" as v;
+@use "./../../../../@shared/scss/mixins.scss" as mixins;
+
+.login-container {
+  //   width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  .login {
+    min-width: 744px;
+    height: 500px;
+    border-radius: 8px;
+    padding: 8px 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    border-radius: v.$border-radius;
+
+    .left {
+      width: 60%;
+      height: 85%;
+      flex: 1;
+      display: flex;
+      border-radius: v.$border-radius;
+      background-color: v.$quaternary;
+      justify-content: center;
+      align-items: center;
+      transform: translateX(25px);
+      z-index: 1;
+    }
+
+    .right {
+      z-index: 2;
+      width: 60%;
+      height: 100%;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      border-radius: v.$border-radius;
+      background-color: v.$primary;
+      justify-content: center;
+      align-items: center;
+      box-shadow: v.$primary-box-shadow;
+
+      .title {
+        font-size: 2rem;
+        color: v.$font-principal;
+        margin-bottom: 2rem;
+      }
+
+      .login-form {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 0.5rem;
+
+        .form-field {
+          width: 80%;
+          color: v.$font-principal;
+          margin: 0;
+          .form-label {
+            color: v.$font-principal;
+          }
+
+          .form-input {
+            color: v.$font-principal;
+          }
+
+          .form-error {
+          }
+        }
+      }
+
+      .items {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .login-buttons {
+        width: 70%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 1.5rem;
+
+        .login-button {
+          border-radius: v.$border-radius;
+        }
+
+        .login-button--register {
+          background-color: transparent;
+          color: v.$font-principal;
+        }
+      }
+    }
+  }
+}
+
+.login-button--change-password {
+  color: v.$font-principal;
+  font-size: 0.8rem;
+  padding: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+::ng-deep .mat-mdc-form-field-subscript-wrapper,
+.mat-mdc-form-field-bottom-align::before {
+  display: none !important;
+}

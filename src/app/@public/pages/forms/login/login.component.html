@@ -1,0 +1,95 @@
+<div [@slideInLeft] class="login-container">
+  <div class="login">
+    <div class="left">INFO</div>
+
+    <div [@slideOutLeft] class="right">
+      <h1 class="title">Login</h1>
+
+      <form
+        class="login-form"
+        [formGroup]="loginGroup"
+        (submit)="submitEvent()"
+      >
+        <mat-form-field class="form-field" appearance="outline">
+          <mat-label class="form-label">Email</mat-label>
+          <input
+            class="form-input"
+            matInput
+            formControlName="email"
+            placeholder="Email"
+            required
+          />
+          <mat-error
+            class="form-error"
+            *ngIf="loginGroup.get('email')?.hasError('email')"
+            >Formato invalido.</mat-error
+          >
+        </mat-form-field>
+
+        <mat-form-field class="form-field" appearance="outline">
+          <mat-label class="form-label">Password</mat-label>
+          <input
+            class="form-input"
+            matInput
+            placeholder="Password"
+            [type]="hide ? 'password' : 'text'"
+            formControlName="password"
+            required
+            onkeydown="enterSubmit($event)"
+          />
+          <mat-icon matSuffix (click)="hide = !hide">{{
+            hide ? "visibility_off" : "visibility"
+          }}</mat-icon>
+        </mat-form-field>
+
+        <div class="change-password">
+          <button
+            class="login-button login-button--change-password"
+            type="button"
+            mat-button
+            (click)="openDialogChangePasswor()"
+            mat-button
+          >
+            ¿Has olvidado tu correo electrónico?
+          </button>
+        </div>
+
+        <div class="login-buttons">
+          <button
+            class="login-button login-button--register"
+            (click)="openDialogRegister()"
+            type="button"
+            mat-button
+          >
+            <span>Crear cuenta</span>
+            <!-- <div  *ngIf="(_loandingService._loading$ | async)" class="loading"></div> -->
+          </button>
+
+          <button
+            class="login-button login-button--submit"
+            (click)="submitEvent()"
+            type="submit"
+            mat-flat-button
+          >
+            <span>Ingresar</span>
+            <!-- <div  *ngIf="(_loandingService._loading$ | async)" class="loading"></div> -->
+          </button>
+        </div>
+      </form>
+
+      <!-- <button
+            (click)="submitEvent()"
+            class="w-100"
+            mat-raised-button
+            color="primary"
+            [disabled]="_loandingService._loading$ | async"
+          >
+            <span *ngIf="!(_loandingService._loading$ | async)">Ingresar</span>
+            <div
+              *ngIf="_loandingService._loading$ | async"
+              class="loading"
+            ></div>
+          </button> -->
+    </div>
+  </div>
+</div>

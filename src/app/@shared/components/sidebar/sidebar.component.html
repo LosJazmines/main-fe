@@ -1,0 +1,52 @@
+<!-- <div class="mode-over" [@fadeInLeft] [@fadeOutLeft] *ngIf="!openOrClose"></div> -->
+<div class="container-sidebar">
+  <aside
+    class="nav-header"
+    [ngClass]="!this.toggleSidebar$() ? 'sidenav-collapsed' : ''"
+  >
+    <div class="logo">
+      <p>LOGO</p>
+    </div>
+  </aside>
+
+  <aside
+    class="nav-items"
+    [ngClass]="!this.toggleSidebar$() ? 'sidenav-collapsed' : ''"
+  >
+    <ul class="sidenav-nav">
+      <li class="sidenav-nav-item" matRipple *ngFor="let data of navData">
+        <a
+          class="sidenav-nav-link"
+          [routerLink]="[data.routeLink]"
+          (click)="closeSidebarMobile()"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }"
+        >
+          <mat-icon class="sidenav-link-icon">{{ data.icon }}</mat-icon>
+          <span
+            [ngClass]="!this.toggleSidebar$() ? 'display' : ''"
+            class="sidenav-link-text"
+            [@fadeInOutInsideCollapsed]="
+              this.toggleSidebar$() ? 'true' : 'false'
+            "
+          >
+            {{ data.label }}
+          </span>
+        </a>
+      </li>
+    </ul>
+  </aside>
+
+  <aside>
+    <div class="config">
+      <button
+        mat-icon-button
+        color="primary"
+        [routerLink]="['/']"
+        routerLinkActive="router-link-active"
+      >
+        <mat-icon class="settings-icon">settings</mat-icon>
+      </button>
+    </div>
+  </aside>
+</div>

@@ -1,0 +1,53 @@
+<header class="toolbar">
+  <div class="left">
+    <button mat-icon-button color="primary" (click)="panelToggle()">
+      @if(toggleSidebar$()){
+      <mat-icon>chevron_left</mat-icon>
+
+      } @else if (!toggleSidebar$()) {<mat-icon>chevron_right</mat-icon>}
+    </button>
+  </div>
+
+  <div class="center">
+    <h1>{{ adminHeaderStore$() }}</h1>
+  </div>
+
+  <div class="right">
+    <div class="search-container">
+      <app-search-moderno-reactive
+        [inputPlaceholder]="'Buscar cliente'"
+        (search)="handleSearch($event)"
+      ></app-search-moderno-reactive>
+    </div>
+
+    <button
+      [routerLink]="['/']"
+      routerLinkActive="router-link-active"
+      mat-icon-button
+      color="primary"
+    >
+      <mat-icon>home</mat-icon>
+    </button>
+    <button
+      mat-icon-button
+      color="primary"
+      [routerLink]="['/online-store']"
+      routerLinkActive="router-link-active"
+    >
+      <mat-icon>store</mat-icon>
+    </button>
+
+    <button mat-icon-button color="primary" (click)="openNoti()">
+      <mat-icon>notifications</mat-icon>
+    </button>
+
+    <div class="avatar-container">
+      <div class="avatar">
+        <img
+          class="avatar-img"
+          src="./../../../../../assets/avatars/brian-hughes.jpg"
+        />
+      </div>
+    </div>
+  </div>
+</header>
