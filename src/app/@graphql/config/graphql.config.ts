@@ -1,1 +1,0 @@
-export const myUrlLocalhost = 'http://localhost:3000/graphql';

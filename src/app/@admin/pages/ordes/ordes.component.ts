@@ -3,7 +3,6 @@ import { AdminHeaderStore } from '../../../@core/store/admin-header.store';
 import { Apollo } from 'apollo-angular';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { GET_ORDERS } from '../../../@graphql/operations/query/orders';
 
 @Component({
   selector: 'app-ordes',
@@ -26,13 +25,5 @@ export default class OrdesComponent implements OnInit {
 
   getOrdes() {
     console.log('hola');
-    
-    this.apollo
-      .watchQuery({
-        query: GET_ORDERS,
-      })
-      .valueChanges.subscribe(({ data, error }: any) => {
-        console.log({ data });
-      });
   }
 }
