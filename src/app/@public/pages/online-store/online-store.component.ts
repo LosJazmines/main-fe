@@ -2,13 +2,14 @@ import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 // import function to register Swiper custom elements
 import { register } from 'swiper/element/bundle';
+import { CardItemComponent } from '../../../@shared/components/card-item/card-item.component';
 // register Swiper custom elements
 register();
 
 @Component({
   selector: 'app-online-store',
   standalone: true,
-  imports: [],
+  imports: [CardItemComponent],
   templateUrl: './online-store.component.html',
   styleUrl: './online-store.component.scss',
   schemas: [CUSTOM_ELEMENTS_SCHEMA],

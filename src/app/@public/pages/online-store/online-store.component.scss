@@ -58,9 +58,20 @@
         align-items: center;
         width: 100%;
         height: 80%;
+        padding: 1rem;
         border-radius: v.$border-radius;
-
         background-color: v.$background-opacity-2;
+        overflow: hidden;
+
+        .container__items {
+          width: 100%;
+          height: 100%;
+          display: flex;
+          justify-content: center;
+          gap: 1rem;
+          flex-wrap: wrap;
+          overflow-y: auto;
+        }
       }
     }
   }
