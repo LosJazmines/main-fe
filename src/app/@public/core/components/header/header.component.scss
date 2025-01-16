@@ -23,9 +23,11 @@
 .logo-container {
   width: 20%;
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   text-align: center;
+  font-size: 1.2rem;
+  font-weight: bold;
   p {
     margin: 0;
   }

@@ -27,6 +27,7 @@ import { MatInputModule } from '@angular/material/input';
 // import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatMenuModule } from '@angular/material/menu';
+import {MatBadgeModule} from '@angular/material/badge';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatStepperModule } from '@angular/material/stepper';
 import { CdkStepperModule } from '@angular/cdk/stepper';
@@ -80,6 +81,7 @@ export const MATERIAL_MODULES = [
   CdkTableModule,
   DialogModule,
   CdkAccordionModule,
+  MatBadgeModule,
 ];
 
 @NgModule({

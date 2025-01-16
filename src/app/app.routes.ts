@@ -5,40 +5,41 @@ export const routes: Routes = [
   {
     path: '',
     loadComponent: () => import('./@public/pages/public.component'),
+    title: 'LosJazmines',
     children: [
       {
         path: '',
         loadComponent: () => import('./@public/pages/home/home.component'),
-        title: 'Home',
+        title: 'Los Jazmines - Home',
       },
       {
         path: 'home',
         loadComponent: () => import('./@public/pages/home/home.component'),
-        title: 'Home',
+        title: 'Los Jazmines - Home',
       },
       {
         path: 'online-store',
         loadComponent: () =>
           import('./@public/pages/online-store/online-store.component'),
-        title: 'Online Store',
+        title: 'Los Jazmines - Online Store',
       },
       {
         path: 'register',
         loadComponent: () =>
           import('./@public/pages/forms/register/register.component'),
-        title: 'Register',
+        title: 'Los Jazmines - Register',
       },
       {
         path: 'login',
         loadComponent: () =>
           import('./@public/pages/forms/login/login.component'),
-        title: 'Login',
+        title: 'Los Jazmines - Login',
       },
       {
         path: 'checkout',
         loadComponent: () =>
           import('./@public/pages/forms/checkout/checkout.component'),
-        title: 'Checkout',
+        title: 'Los Jazmines - Checkout',
       },
       {
         path: 'change-password',
@@ -46,19 +47,19 @@ export const routes: Routes = [
           import(
             './@public/pages/forms/change-password/change-password.component'
           ),
-        title: 'Change Password',
+        title: 'Los Jazmines - Change Password',
       },
       {
         path: 'contact',
         loadComponent: () =>
           import('./@public/pages/contact/contact.component'),
-        title: 'Contact',
+        title: 'Los Jazmines - Contact',
       },
 
       {
         path: 'about',
         loadComponent: () => import('./@public/pages/about/about.component'),
-        title: 'About',
+        title: 'Los Jazmines - About',
       },
     ],
   },
