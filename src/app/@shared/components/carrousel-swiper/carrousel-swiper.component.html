@@ -1,0 +1,7 @@
+<swiper-container style="--swiper-navigation-color: #fff; --swiper-pagination-color: #fff;" navigation="true"
+    pagination="true" [pagination]="{ dynamicBullets: true }" centered-slides="true" slides-per-view="auto"
+    [autoplay-delay]="5000" [autoplay-disable-on-interaction]="false" [space-between]="10" loop="true">
+    <swiper-slide *ngFor="let img of imgHeader">
+        <img class="swiper-slide__img" [src]="img.img_url" alt="Imagen del carrusel" />
+    </swiper-slide>
+</swiper-container>

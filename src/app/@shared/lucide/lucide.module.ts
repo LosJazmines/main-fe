@@ -88,6 +88,7 @@ import {
   Minus,
   Equal,
   X,
+  Heart,
 } from 'lucide-angular';
 
 export const LUCIDE_MODULES = [
@@ -179,6 +180,7 @@ export const LUCIDE_MODULES = [
     Minus,
     Equal,
     X,
+    Heart 
   }),
 ];
 

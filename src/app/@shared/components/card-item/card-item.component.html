@@ -1,1 +1,48 @@
-<div class="item"></div>
+<div class="w-[288px] h-full group relative overflow-hidden rounded-lg border shadow-sm transition-shadow hover:shadow-md">
+  <!-- Badges y Botones -->
+  <div class="absolute right-2 top-2 z-10 flex gap-2">
+    <ng-container *ngIf="isNew">
+      <span class="rounded-md bg-background/80 px-2 py-1 text-xs font-medium text-black backdrop-blur-sm">New</span>
+    </ng-container>
+    <button class="h-8 w-8 rounded-full bg-background/80 text-black backdrop-blur-sm flex items-center justify-center">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-black" viewBox="0 0 24 24" fill="none"
+        stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M3 3h2l.4 2M7 13h10l3.6-7H5.4M7 13L5.4 5M7 13l2 9m5-9l-2 9m5-9h2M10 21h4"></path>
+      </svg>
+    </button>
+  </div>
+
+  <!-- Imagen del producto -->
+  <a href="/" class="w-full h-[379px] relative aspect-square overflow-hidden cursor-pointer">
+    <img [src]="image" [alt]="name"
+      class="w-full object-fill transition-opacity duration-500 ease-in-out group-hover:opacity-80" />
+  </a>
+
+  <!-- Contenido del producto -->
+  <div class="p-4 flex flex-col justify-between">
+    <!-- Título y precio -->
+    <div>
+      <div class="flex items-center justify-between">
+        <h3 class="line-clamp-1 text-lg font-medium">{{ name }}</h3>
+        <span class="font-semibold text-lg">${{ price.toFixed(2) }}</span>
+      </div>
+      <p class="text-xs uppercase text-muted-foreground">{{ category }}</p>
+    </div>
+
+    <!-- Descripción -->
+    <div class="mt-2">
+      <p class="line-clamp-2 text-sm text-gray-600">{{ description }}</p>
+    </div>
+
+    <!-- Botón 'Add to Cart' -->
+    <button class="w-full bg-black text-white py-2 rounded-lg hover:bg-black/50 flex items-center justify-center mt-4">
+      <svg xmlns="http://www.w3.org/2000/svg" class="mr-2 h-4 w-4" fill="none" viewBox="0 0 24 24"
+        stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M3 3h2l.4 2M7 13h10l3.6-7H5.4M7 13L5.4 5M7 13l2 9m5-9l-2 9m5-9h2M10 21h4"></path>
+      </svg>
+      Add to Cart
+    </button>
+  </div>
+</div>
