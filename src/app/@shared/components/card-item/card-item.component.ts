@@ -17,7 +17,5 @@ export class CardItemComponent {
   @Input() category!: string;
   @Input() isNew: boolean = false;
 
-  constructor() {
-    console.log('CardItemComponent created');
-  }
+  constructor() {}
 }

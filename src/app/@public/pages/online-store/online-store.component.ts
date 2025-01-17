@@ -10,6 +10,7 @@ import {
 import { register } from 'swiper/element/bundle';
 import { CardItemComponent } from '../../../@shared/components/card-item/card-item.component';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { Animations } from '../../../@shared/animations';
 // register Swiper custom elements
 register();
 
@@ -20,6 +21,7 @@ register();
   templateUrl: './online-store.component.html',
   styleUrl: './online-store.component.scss',
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  animations: [Animations],
 })
 export default class OnlineStoreComponent implements OnInit {
   // Lista de posibles colecciones

@@ -1,15 +1,165 @@
-<div class="home-container">
-  <div class="home">
-    <div class="courrusel">
-      <!-- <div class=" text-card-foreground p-4 rounded">
-        Este es un ejemplo con los colores personalizados.
+<div class="online-store-container">
+  <div class="online-store">
+
+    <div class="right">
+      <div class="header">
+        <div [@zoomIn] [@zoomOut] class="carrousel">
+          <swiper-container *ngIf="isBrowser" style="
+              --swiper-navigation-color: #fff;
+              --swiper-pagination-color: #fff;
+            " navigation="true" pagination="true" pagination-clickable="true" effect="coverflow" grab-cursor="true"
+            centered-slides="true" slides-per-view="auto" coverflow-effect-rotate="10" coverflow-effect-stretch="0"
+            coverflow-effect-depth="200" coverflow-effect-modifier="3" coverflow-effect-slide-shadows="true"
+            autoplay-delay="5000" autoplay-disable-on-interaction="false" space-between="10" loop="true">
+            @for (img of imgHeader; track $index) {
+            <swiper-slide>
+              <img class="swiper-slide__img" [src]="img.img_url" alt="" srcset="" />
+            </swiper-slide>
+            }
+          </swiper-container>
+        </div>
       </div>
+      <div class="body">
+        <div class="left">
+          <div class="filters flex justify-center items-center gap-6">
+            <div (click)="selectCategory('muebles')"
+              class="flex flex-col items-center transition-all duration-300 cursor-pointer group">
+              <!-- Círculo con la imagen -->
+              <div
+                class="w-[120px] h-[120px] bg-black/20 rounded-full flex items-center justify-center transition-all duration-300 group-hover:shadow-xl">
+                <img src="ruta-del-icono/playa.png" alt="Playa y Pileta"
+                  class="w-10 h-10 transition-all duration-300" />
+              </div>
+              <!-- Texto debajo del círculo -->
+              <span
+                class="mt-[0.5rem] text-center text-sm text-black transition-all duration-300 group-hover:text-gray-700">
+                Playa y Pileta
+              </span>
+            </div>
+
+            <div (click)="selectCategory('heladeras')"
+              class="flex flex-col items-center transition-all duration-300 cursor-pointer group">
+              <!-- Círculo con la imagen -->
+              <div
+                class="w-[120px] h-[120px] bg-black/20 rounded-full flex items-center justify-center transition-all duration-300 group-hover:shadow-xl">
+                <img src="ruta-del-icono/playa.png" alt="Playa y Pileta"
+                  class="w-10 h-10 transition-all duration-300" />
+              </div>
+              <!-- Texto debajo del círculo -->
+              <span
+                class="mt-[0.5rem] text-center text-sm text-black transition-all duration-300 group-hover:text-gray-700">
+                Playa y Pileta
+              </span>
+            </div>
+            <div (click)="selectCategory('celulares')"
+              class="flex flex-col items-center transition-all duration-300 cursor-pointer group">
+              <!-- Círculo con la imagen -->
+              <div
+                class="w-[120px] h-[120px] bg-black/20 rounded-full flex items-center justify-center transition-all duration-300 group-hover:shadow-xl">
+                <img src="ruta-del-icono/playa.png" alt="Playa y Pileta"
+                  class="w-10 h-10 transition-all duration-300" />
+              </div>
+              <!-- Texto debajo del círculo -->
+              <span
+                class="mt-[0.5rem] text-center text-sm text-black transition-all duration-300 group-hover:text-gray-700">
+                Playa y Pileta
+              </span>
+            </div>
+            <div (click)="selectCategory('playa-pileta')"
+              class="flex flex-col items-center transition-all duration-300 cursor-pointer group">
+              <!-- Círculo con la imagen -->
+              <div
+                class="w-[120px] h-[120px] bg-black/20 rounded-full flex items-center justify-center transition-all duration-300 group-hover:shadow-xl">
+                <img src="ruta-del-icono/playa.png" alt="Playa y Pileta"
+                  class="w-10 h-10 transition-all duration-300" />
+              </div>
+              <!-- Texto debajo del círculo -->
+              <span
+                class="mt-[0.5rem] text-center text-sm text-black transition-all duration-300 group-hover:text-gray-700">
+                Playa y Pileta
+              </span>
+            </div>
+            <div (click)="selectCategory('playa-pileta')"
+              class="flex flex-col items-center transition-all duration-300 cursor-pointer group">
+              <!-- Círculo con la imagen -->
+              <div
+                class="w-[120px] h-[120px] bg-black/20 rounded-full flex items-center justify-center transition-all duration-300 group-hover:shadow-xl">
+                <img src="ruta-del-icono/playa.png" alt="Playa y Pileta"
+                  class="w-10 h-10 transition-all duration-300" />
+              </div>
+              <!-- Texto debajo del círculo -->
+              <span
+                class="mt-[0.5rem] text-center text-sm text-black transition-all duration-300 group-hover:text-gray-700">
+                Playa y Pileta
+              </span>
+            </div>
+            <div (click)="selectCategory('playa-pileta')"
+              class="flex flex-col items-center transition-all duration-300 cursor-pointer group">
+              <!-- Círculo con la imagen -->
+              <div
+                class="w-[120px] h-[120px] bg-black/20 rounded-full flex items-center justify-center transition-all duration-300 group-hover:shadow-xl">
+                <img src="ruta-del-icono/playa.png" alt="Playa y Pileta"
+                  class="w-10 h-10 transition-all duration-300" />
+              </div>
+              <!-- Texto debajo del círculo -->
+              <span
+                class="mt-[0.5rem] text-center text-sm text-black transition-all duration-300 group-hover:text-gray-700">
+                Playa y Pileta
+              </span>
+            </div>
+            <div (click)="selectCategory('playa-pileta')"
+              class="flex flex-col items-center transition-all duration-300 cursor-pointer group">
+              <!-- Círculo con la imagen -->
+              <div
+                class="w-[120px] h-[120px] bg-black/20 rounded-full flex items-center justify-center transition-all duration-300 group-hover:shadow-xl">
+                <img src="ruta-del-icono/playa.png" alt="Playa y Pileta"
+                  class="w-10 h-10 transition-all duration-300" />
+              </div>
+              <!-- Texto debajo del círculo -->
+              <span
+                class="mt-[0.5rem] text-center text-sm text-black transition-all duration-300 group-hover:text-gray-700">
+                Playa y Pileta
+              </span>
+            </div>
+          </div>
+        </div>
+
+
+
+      </div>
+      <div class="w-full">
+        <h2 class="text-4xl uppercase font-bold text-gray-800">
+          Colecciones de {{ temporada }}
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 h-full">
+          <app-card-item *ngFor="let product of filteredProducts" [name]="product.name"
+            [description]="product.description" [price]="product.price" [image]="product.image"
+            [category]="product.category" [isNew]="product.isNew"></app-card-item>
+        </div>
+      </div>
+
+      <div class="w-full">
+        <h2 class="text-4xl uppercase font-bold text-gray-800">
+          Colecciones de {{ temporada }}
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 h-full">
+          <app-card-item *ngFor="let product of filteredProducts" [name]="product.name"
+            [description]="product.description" [price]="product.price" [image]="product.image"
+            [category]="product.category" [isNew]="product.isNew"></app-card-item>
+        </div>
+      </div>
+
+      <div class="w-full">
+        <h2 class="text-4xl uppercase font-bold text-gray-800">
+          Colecciones de {{ temporada }}
+        </h2>
+        <div class="grid items-center justify-center grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <app-card-item *ngFor="let product of products" [name]="product.name" [description]="product.description"
+            [price]="product.price" [image]="product.image" [category]="product.category"
+            [isNew]="product.isNew"></app-card-item>
+        </div>
+      </div>
+
     </div>
-    <div class="items-offer">items-offer</div>
-    <div class="items-teddies">items-teddies</div>
-    <div class="items-relations">items-relations</div>
-    <div class="services-01">services-01</div>
-    <div class="services-02">services-02</div>
-    <div class="services-03">services-03</div> -->
   </div>
 </div>
