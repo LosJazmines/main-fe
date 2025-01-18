@@ -1,1 +1,100 @@
-<p>about works!</p>
+<div class="min-h-screen bg-gray-50">
+    <!-- Hero Section -->
+    <section class="text-center mb-12">
+        <h2 class="text-4xl font-bold tracking-tight mb-4">Los Jazmines</h2>
+        <p class="text-xl text-muted-foreground">
+            Famosa florería en Tandil, con miles de reseñas positivas.
+        </p>
+    </section>
+
+    <!-- Info Cards -->
+    <section class="space-y-4 mb-12">
+        <div class="card">
+            <div class="flex items-center space-x-4 p-6">
+                <i class="h-6 w-6 text-primary shrink-0 fas fa-map-pin"></i>
+                <div>
+                    <h3 class="font-semibold">Dirección</h3>
+                    <p class="text-sm text-muted-foreground">Av. España 995, Tandil, Provincia de Buenos Aires</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="flex items-center space-x-4 p-6">
+                <i class="h-6 w-6 text-primary shrink-0 fas fa-phone"></i>
+                <div>
+                    <h3 class="font-semibold">Teléfono</h3>
+                    <p class="text-sm text-muted-foreground">0249 422-0341</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="flex items-center space-x-4 p-6">
+                <i class="h-6 w-6 text-primary shrink-0 fas fa-clock"></i>
+                <div>
+                    <h3 class="font-semibold">Horario</h3>
+                    <p class="text-sm text-muted-foreground">Abierto · Cierra a las 8:30 p.m.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Map Section -->
+    <section class="w-full mb-12">
+        <div class="w-full ">
+            <div class="w-full  p-0">
+                <iframe class="w-full " src="https://www.google.com/maps/embed?pb=...">
+                </iframe>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section class="mb-12">
+        <div class="card group relative overflow-hidden">
+            <div class="p-0">
+                <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-6W8Hq0rcKxxY0fW20w40100Wh2BJ73.png"
+                    alt="Galería de fotos"
+                    class="aspect-video w-full object-cover transition-transform group-hover:scale-105" />
+                <div class="absolute inset-0 bg-black/60 flex items-center justify-center">
+                    <button class="bg-secondary text-white px-4 py-2 rounded-lg">
+                        <i class="mr-2 h-5 w-5 fas fa-camera"></i>
+                        Ver Galería de Fotos
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="mb-12">
+        <h2 class="text-2xl font-bold tracking-tight mb-6">Preguntas Frecuentes</h2>
+        <div class="accordion">
+            <div class="accordion-item">
+                <div class="accordion-trigger">¿Qué servicios ofrecen?</div>
+                <div class="accordion-content">
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                </div>
+            </div>
+            <div class="accordion-item">
+                <div class="accordion-trigger">¿Hacen entregas el mismo día?</div>
+                <div class="accordion-content">
+                    Sí, ofrecemos entrega rápida para la mayoría de pedidos.
+                </div>
+            </div>
+            <div class="accordion-item">
+                <div class="accordion-trigger">¿Cuál es el horario de mayor concurrencia?</div>
+                <div class="accordion-content">
+                    Generalmente en las tardes entre las 4 y 6 p.m.
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+<div class="accordion-item" (click)="toggleAccordion('item-1')">
+    <div class="accordion-trigger">¿Qué servicios ofrecen?</div>
+    <div class="accordion-content" [ngClass]="{'hidden': activeItem !== 'item-1'}">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+    </div>
+</div>

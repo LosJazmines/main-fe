@@ -11,13 +11,22 @@ import { register } from 'swiper/element/bundle';
 import { CardItemComponent } from '../../../@shared/components/card-item/card-item.component';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { Animations } from '../../../@shared/animations';
+import { ShopFiltersComponent } from '../../../@shared/components/shop-filters/shop-filters.component';
+import { BreadcrumbComponent } from '../../../@shared/components/breadcrumb/breadcrumb.component';
+import { FormsModule } from '@angular/forms';
 // register Swiper custom elements
 register();
 
 @Component({
   selector: 'app-online-store',
   standalone: true,
-  imports: [CommonModule, CardItemComponent],
+  imports: [
+    CommonModule,
+    CardItemComponent,
+    ShopFiltersComponent,
+    BreadcrumbComponent,
+    FormsModule,
+  ],
   templateUrl: './online-store.component.html',
   styleUrl: './online-store.component.scss',
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
@@ -41,6 +50,46 @@ export default class OnlineStoreComponent implements OnInit {
   constructor(@Inject(PLATFORM_ID) private platformId: Object) {
     this.isBrowser = isPlatformBrowser(this.platformId);
     this.temporada = this.obtenerTemporada();
+  }
+
+  // Datos de ejemplo
+  items = [
+    {
+      name: 'Ramo de rosas',
+      description: 'Hermoso ramo de rosas rojas',
+      price: 300,
+    },
+    {
+      name: 'Flor de lis',
+      description: 'Ramo de flores frescas de lis',
+      price: 150,
+    },
+    {
+      name: 'Ramo de girasoles',
+      description: 'Ramo de girasoles de campo',
+      price: 200,
+    },
+    {
+      name: 'Tulipanes',
+      description: 'Ramo de tulipanes coloridos',
+      price: 250,
+    },
+  ];
+
+  selectedOrder: string = 'ascendente'; // Valor por defecto
+  filteredItems = [...this.items]; // Items filtrados según el orden seleccionado
+
+  // Método para aplicar el filtro de orden
+  applyFilter() {
+    if (this.selectedOrder === 'ascendente') {
+      this.filteredItems = [...this.items].sort((a, b) => a.price - b.price);
+    } else if (this.selectedOrder === 'descendente') {
+      this.filteredItems = [...this.items].sort((a, b) => b.price - a.price);
+    } else if (this.selectedOrder === 'mayorValor') {
+      this.filteredItems = [...this.items].sort((a, b) => b.price - a.price);
+    } else if (this.selectedOrder === 'menorValor') {
+      this.filteredItems = [...this.items].sort((a, b) => a.price - b.price);
+    }
   }
 
   ngOnInit(): void {
@@ -82,6 +131,94 @@ export default class OnlineStoreComponent implements OnInit {
       price: 69.99,
       image: './../../../../assets/img/casamientos/ramos-de-novias/01.jpg',
       category: 'osos',
+      isNew: true,
+    },
+    {
+      name: 'Oso de Peluche',
+      description: 'Suave y adorable oso de peluche.',
+      price: 29.99,
+      image: './../../../../assets/img/casamientos/ramos-principales/02.jpg',
+      category: 'osos',
+      isNew: false,
+    },
+    {
+      name: 'Arreglo de Tulipanes',
+      description: 'Hermoso arreglo de tulipanes frescos.',
+      price: 45.99,
+      image: './../../../../assets/img/casamientos/Boutonniere/01.jpg',
+      category: 'flores',
+      isNew: false,
+    },
+    {
+      name: 'Bouquet de Novia',
+      description: 'Bouquet especial para bodas.',
+      price: 89.99,
+      image: './../../../../assets/img/casamientos/centros-mesa-novia/01.jpg',
+      category: 'novia',
+      isNew: true,
+    },
+    {
+      name: 'Osito con Rosas',
+      description: 'Un oso decorado con rosas artificiales.',
+      price: 69.99,
+      image: './../../../../assets/img/casamientos/ramos-de-novias/01.jpg',
+      category: 'osos',
+      isNew: true,
+    },
+    {
+      name: 'Oso de Peluche',
+      description: 'Suave y adorable oso de peluche.',
+      price: 29.99,
+      image: './../../../../assets/img/casamientos/ramos-principales/02.jpg',
+      category: 'osos',
+      isNew: false,
+    },
+    {
+      name: 'Arreglo de Tulipanes',
+      description: 'Hermoso arreglo de tulipanes frescos.',
+      price: 45.99,
+      image: './../../../../assets/img/casamientos/Boutonniere/01.jpg',
+      category: 'flores',
+      isNew: false,
+    },
+    {
+      name: 'Bouquet de Novia',
+      description: 'Bouquet especial para bodas.',
+      price: 89.99,
+      image: './../../../../assets/img/casamientos/centros-mesa-novia/01.jpg',
+      category: 'novia',
+      isNew: true,
+    },
+    {
+      name: 'Osito con Rosas',
+      description: 'Un oso decorado con rosas artificiales.',
+      price: 69.99,
+      image: './../../../../assets/img/casamientos/ramos-de-novias/01.jpg',
+      category: 'osos',
+      isNew: true,
+    },
+    {
+      name: 'Oso de Peluche',
+      description: 'Suave y adorable oso de peluche.',
+      price: 29.99,
+      image: './../../../../assets/img/casamientos/ramos-principales/02.jpg',
+      category: 'osos',
+      isNew: false,
+    },
+    {
+      name: 'Arreglo de Tulipanes',
+      description: 'Hermoso arreglo de tulipanes frescos.',
+      price: 45.99,
+      image: './../../../../assets/img/casamientos/Boutonniere/01.jpg',
+      category: 'flores',
+      isNew: false,
+    },
+    {
+      name: 'Bouquet de Novia',
+      description: 'Bouquet especial para bodas.',
+      price: 89.99,
+      image: './../../../../assets/img/casamientos/centros-mesa-novia/01.jpg',
+      category: 'novia',
       isNew: true,
     },
     // Más productos
