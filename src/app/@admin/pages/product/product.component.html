@@ -1,1 +1,101 @@
-<p>product works!</p>
+<div class="p-6 bg-gray-100 min-h-screen">
+  <h1 class="text-2xl font-semibold text-gray-700 mb-6">Agregar Producto</h1>
+  <form
+    [formGroup]="productForm"
+    (ngSubmit)="onSubmit()"
+    class="bg-white shadow rounded-lg p-6"
+  >
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <!-- Nombre del producto -->
+      <mat-form-field class="w-full">
+        <mat-label>Nombre del Producto</mat-label>
+        <input matInput formControlName="name" placeholder="Ej: Rosa Roja" />
+        <mat-error *ngIf="productForm.get('name')?.invalid"
+          >Este campo es obligatorio</mat-error
+        >
+      </mat-form-field>
+
+      <!-- Categoría -->
+      <mat-form-field class="w-full">
+        <mat-label>Categoría</mat-label>
+        <mat-select formControlName="category">
+          <mat-option *ngFor="let category of categories" [value]="category">{{
+            category
+          }}</mat-option>
+        </mat-select>
+        <mat-error *ngIf="productForm.get('category')?.invalid"
+          >Selecciona una categoría</mat-error
+        >
+      </mat-form-field>
+
+      <!-- Precio -->
+      <mat-form-field class="w-full">
+        <mat-label>Precio</mat-label>
+        <input
+          matInput
+          type="number"
+          formControlName="price"
+          placeholder="Ej: 25.00"
+        />
+        <mat-error *ngIf="productForm.get('price')?.invalid"
+          >Introduce un precio válido</mat-error
+        >
+      </mat-form-field>
+
+      <!-- Cantidad en stock -->
+      <mat-form-field class="w-full">
+        <mat-label>Cantidad en Stock</mat-label>
+        <input
+          matInput
+          type="number"
+          formControlName="stock"
+          placeholder="Ej: 10"
+        />
+        <mat-error *ngIf="productForm.get('stock')?.invalid"
+          >Este campo es obligatorio</mat-error
+        >
+      </mat-form-field>
+
+      <!-- Descripción -->
+      <mat-form-field class="w-full md:col-span-2">
+        <mat-label>Descripción</mat-label>
+        <textarea
+          matInput
+          formControlName="description"
+          placeholder="Descripción del producto"
+        ></textarea>
+        <mat-error *ngIf="productForm.get('description')?.invalid"
+          >Este campo es obligatorio</mat-error
+        >
+      </mat-form-field>
+
+      <!-- Imagen -->
+      <mat-form-field class="w-full md:col-span-2">
+        <mat-label>URL de la Imagen</mat-label>
+        <input
+          matInput
+          formControlName="image"
+          placeholder="https://example.com/imagen.jpg"
+        />
+        <mat-error *ngIf="productForm.get('image')?.invalid"
+          >Introduce una URL válida</mat-error
+        >
+      </mat-form-field>
+    </div>
+
+    <!-- Botones -->
+    <div class="mt-6 flex justify-end gap-4">
+      <button mat-button color="warn" type="button" (click)="onCancel()">
+        Cancelar
+      </button>
+      <button
+        mat-raised-button
+        color="primary"
+        type="submit"
+        [disabled]="productForm.invalid"
+      >
+        Guardar Producto
+      </button>
+    </div>
+  </form>
+</div>

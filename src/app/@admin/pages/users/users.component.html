@@ -1,1 +1,121 @@
-<p>users works!</p>
+<div class="p-6 bg-gray-100 min-h-screen">
+  <!-- Título -->
+  <h1 class="text-2xl font-semibold text-gray-700 mb-6">Gestión de Usuarios</h1>
+
+  <!-- Estadísticas -->
+  <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+    <div class="bg-white p-4 rounded-lg shadow flex items-center gap-4">
+      <div class="text-blue-500">
+        <mat-icon class="text-4xl">person</mat-icon>
+      </div>
+      <div>
+        <p class="text-lg font-semibold">Usuarios Activos</p>
+        <p class="text-gray-500">{{ activeUsers }}</p>
+      </div>
+    </div>
+
+    <div class="bg-white p-4 rounded-lg shadow flex items-center gap-4">
+      <div class="text-green-500">
+        <mat-icon class="text-4xl">person_add</mat-icon>
+      </div>
+      <div>
+        <p class="text-lg font-semibold">Nuevos Usuarios</p>
+        <p class="text-gray-500">{{ newUsers }}</p>
+      </div>
+    </div>
+
+    <div class="bg-white p-4 rounded-lg shadow flex items-center gap-4">
+      <div class="text-red-500">
+        <mat-icon class="text-4xl">person_off</mat-icon>
+      </div>
+      <div>
+        <p class="text-lg font-semibold">Usuarios Inactivos</p>
+        <p class="text-gray-500">{{ inactiveUsers }}</p>
+      </div>
+    </div>
+
+    <div class="bg-white p-4 rounded-lg shadow flex items-center gap-4">
+      <div class="text-purple-500">
+        <mat-icon class="text-4xl">groups</mat-icon>
+      </div>
+      <div>
+        <p class="text-lg font-semibold">Total Usuarios</p>
+        <p class="text-gray-500">{{ totalUsers }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filtros y Lista -->
+  <div class="bg-white p-6 rounded-lg shadow">
+    <!-- Filtros -->
+    <div class="flex justify-between items-center mb-4">
+      <div class="flex gap-4">
+        <!-- Filtro por estado -->
+        <mat-form-field>
+          <mat-label>Estado</mat-label>
+          <mat-select
+            [(value)]="selectedStatus"
+            (selectionChange)="applyFilters()"
+          >
+            <mat-option *ngFor="let status of statuses" [value]="status">{{
+              status
+            }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <!-- Filtro por búsqueda -->
+        <mat-form-field class="w-64">
+          <mat-label>Buscar Usuario</mat-label>
+          <input
+            matInput
+            placeholder="Nombre, correo..."
+            [(ngModel)]="searchQuery"
+            (input)="applyFilters()"
+          />
+        </mat-form-field>
+      </div>
+
+      <!-- Botón Agregar Usuario -->
+      <button mat-raised-button color="primary" (click)="addUser()">
+        <mat-icon>person_add</mat-icon>
+        Agregar Usuario
+      </button>
+    </div>
+
+    <!-- Lista de Usuarios -->
+    <table class="min-w-full text-left">
+      <thead>
+        <tr class="border-b bg-gray-50">
+          <th class="px-4 py-2">Nombre</th>
+          <th class="px-4 py-2">Correo</th>
+          <th class="px-4 py-2">Estado</th>
+          <th class="px-4 py-2">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          *ngFor="let user of filteredUsers"
+          class="border-b hover:bg-gray-50"
+        >
+          <td class="px-4 py-2">{{ user.name }}</td>
+          <td class="px-4 py-2">{{ user.email }}</td>
+          <td class="px-4 py-2">
+            <span
+              [ngClass]="{
+                'text-green-500': user.status === 'Activo',
+                'text-red-500': user.status === 'Inactivo'
+              }"
+            >
+              {{ user.status }}
+            </span>
+          </td>
+          <td class="px-4 py-2">
+            <button mat-button color="warn" (click)="removeUser(user)">
+              Eliminar
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

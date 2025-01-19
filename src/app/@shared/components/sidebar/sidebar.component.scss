@@ -23,7 +23,7 @@
   width: 290px;
   height: 100vh;
   max-height: calc(100vh - 2rem);
-  background: v.$background-secondary;
+  background: rgba(0, 0, 0, 0.2);
   box-shadow: v.$primary-box-shadow;
   position: absolute;
   top: 0;
@@ -52,7 +52,7 @@
 }
 
 .nav-header {
-  background: v.$background-secondary;
+  background: rgba(0, 0, 0, 0.4);
   color: v.$font-principal;
   border-radius: v.$border-radius;
   width: 250px;
@@ -139,7 +139,7 @@
       width: 100%;
       height: 50px;
       margin-bottom: 2px;
-      background: v.$background-opacity-1;
+      background: rgba(0, 0, 0, 0.4);
 
       &:first-child {
         border-top-left-radius: v.$border-radius;

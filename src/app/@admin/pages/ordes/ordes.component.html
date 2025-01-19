@@ -1,1 +1,151 @@
-<p>ordes works!</p>
+<div class="p-6 bg-gray-100 min-h-screen">
+  <!-- Cards de Estadísticas -->
+  <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+    <div class="bg-white shadow rounded-lg p-6 text-center">
+      <div class="text-gray-500 flex justify-center items-center gap-2 mb-2">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="w-6 h-6"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M3 10h11M9 21V3M9 3l3 3M9 3l-3 3"
+          />
+        </svg>
+        Ventas Totales
+      </div>
+      <p class="text-2xl font-semibold">45,000</p>
+    </div>
+    <div class="bg-white shadow rounded-lg p-6 text-center">
+      <div class="text-gray-500 flex justify-center items-center gap-2 mb-2">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="w-6 h-6"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M5 13l4 4L19 7"
+          />
+        </svg>
+        Órdenes Completadas
+      </div>
+      <p class="text-2xl font-semibold">120</p>
+    </div>
+    <div class="bg-white shadow rounded-lg p-6 text-center">
+      <div class="text-gray-500 flex justify-center items-center gap-2 mb-2">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="w-6 h-6"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M9 17v5m0-5a3 3 0 01-3-3v-2a3 3 0 013-3h6a3 3 0 013 3v2a3 3 0 01-3 3m-3 5v-5"
+          />
+        </svg>
+        Clientes Nuevos
+      </div>
+      <p class="text-2xl font-semibold">34</p>
+    </div>
+    <div class="bg-white shadow rounded-lg p-6 text-center">
+      <div class="text-gray-500 flex justify-center items-center gap-2 mb-2">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="w-6 h-6"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M13 10V3L4 14h7v7l9-11h-7z"
+          />
+        </svg>
+        Pendientes
+      </div>
+      <p class="text-2xl font-semibold">15</p>
+    </div>
+  </div>
+
+  <!-- Filtros -->
+  <div class="bg-white shadow rounded-lg p-6 mb-6">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div>
+        <label class="text-gray-500 block mb-1">Desde</label>
+        <input type="date" class="w-full p-2 border rounded-lg" />
+      </div>
+      <div>
+        <label class="text-gray-500 block mb-1">Hasta</label>
+        <input type="date" class="w-full p-2 border rounded-lg" />
+      </div>
+      <div>
+        <label class="text-gray-500 block mb-1">Estado</label>
+        <select class="w-full p-2 border rounded-lg">
+          <option value="pendiente">Pendiente</option>
+          <option value="entregada">Entregada</option>
+          <option value="rechazada">Rechazada</option>
+          <option value="enviada">Enviada</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tabla de Órdenes -->
+  <div class="bg-white shadow rounded-lg p-6">
+    <table class="table-auto w-full border-collapse">
+      <thead>
+        <tr class="bg-gray-200 text-gray-600 text-sm uppercase text-left">
+          <th class="p-3">ID</th>
+          <th class="p-3">Cliente</th>
+          <th class="p-3">Fecha</th>
+          <th class="p-3">Estado</th>
+          <th class="p-3">Total</th>
+          <th class="p-3">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="border-t">
+          <td class="p-3">#1001</td>
+          <td class="p-3">Juan Pérez</td>
+          <td class="p-3">2025-01-15</td>
+          <td class="p-3 text-yellow-500">Pendiente</td>
+          <td class="p-3">$200</td>
+          <td class="p-3">
+            <button class="bg-blue-500 text-white px-3 py-1 rounded text-sm">
+              Ver Detalle
+            </button>
+          </td>
+        </tr>
+        <tr class="border-t">
+          <td class="p-3">#1002</td>
+          <td class="p-3">María López</td>
+          <td class="p-3">2025-01-16</td>
+          <td class="p-3 text-green-500">Entregada</td>
+          <td class="p-3">$350</td>
+          <td class="p-3">
+            <button class="bg-blue-500 text-white px-3 py-1 rounded text-sm">
+              Ver Detalle
+            </button>
+          </td>
+        </tr>
+        <!-- Más filas -->
+      </tbody>
+    </table>
+  </div>
+</div>

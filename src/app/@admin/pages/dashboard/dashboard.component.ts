@@ -4,11 +4,18 @@ import { DrawerComponent } from '../../../@shared/components/drawer/drawer.compo
 import { drawerMode } from '../../../@shared/components/drawer/drawer.types';
 import { CommonModule } from '@angular/common';
 import { Animations } from '../../../@shared/animations';
+import { AvailabilityCalendarComponent } from '../../../@public/core/components/availability-calendar/availability-calendar.component';
+import { AssignedProjectsComponent } from '../../../@public/core/components/assigned-projects/assigned-projects.component';
+import { PendingRequestsIndicatorComponent } from '../../../@public/core/components/pending-requests-indicator/pending-requests-indicator.component';
+import { NewsAnnouncementsComponent } from '../../../@public/core/components/news-announcements/news-announcements.component';
+import { MaterialModule } from '../../../@shared/material/material.module';
+import { LucideModule } from '../../../@shared/lucide/lucide.module';
+import { Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, DrawerComponent],
+  imports: [CommonModule, MaterialModule, LucideModule, RouterModule],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
   animations: [Animations],
@@ -16,6 +23,28 @@ import { Animations } from '../../../@shared/animations';
 export default class DashboardComponent implements OnInit {
   private _adminHeaderStore = inject(AdminHeaderStore);
   public readonly adminHeaderStore$ = this._adminHeaderStore.getHeaderTitle();
+
+  pedidos = [
+    {
+      id: 101,
+      cliente: 'Juan Pérez',
+      total: 45.0,
+      fechaInicio: '2025-01-16',
+      fechaEntrega: '2025-01-18',
+      estado: 'Pendiente',
+      imagen: 'https://via.placeholder.com/50',
+    },
+    {
+      id: 102,
+      cliente: 'María García',
+      total: 60.0,
+      fechaInicio: '2025-01-17',
+      fechaEntrega: '2025-01-20',
+      estado: 'Pendiente',
+      imagen: 'https://via.placeholder.com/50',
+    },
+    // Más pedidos...
+  ];
 
   drawerMode: drawerMode = 'over';
   drawerOpened: boolean = false;
@@ -47,5 +76,16 @@ export default class DashboardComponent implements OnInit {
    */
   drawerOpenedChanged(opened: boolean): void {
     this.drawerOpened = opened;
+  }
+
+  actualizarEstado(id: number, estado: string): void {
+    // Actualiza el estado del pedido en la lista
+    const pedido = this.pedidos.find((p) => p.id === id);
+    if (pedido) {
+      pedido.estado = estado;
+    }
+
+    // Aquí podrías integrar una llamada a un servicio que actualice la base de datos.
+    console.log(`Pedido ${id} actualizado a: ${estado}`);
   }
 }

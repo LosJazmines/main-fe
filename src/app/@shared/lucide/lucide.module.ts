@@ -89,6 +89,11 @@ import {
   Equal,
   X,
   Heart,
+  FolderKanban,
+  TreePalm,
+  ChartNoAxesColumnIncreasing,
+  Newspaper,
+  Megaphone,
 } from 'lucide-angular';
 
 export const LUCIDE_MODULES = [
@@ -180,7 +185,12 @@ export const LUCIDE_MODULES = [
     Minus,
     Equal,
     X,
-    Heart 
+    Heart,
+    TreePalm,
+    FolderKanban,
+    ChartNoAxesColumnIncreasing,
+    Newspaper,
+    Megaphone,
   }),
 ];
 

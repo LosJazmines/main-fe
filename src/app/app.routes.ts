@@ -95,6 +95,13 @@ export const routes: Routes = [
           import('./@admin/pages/products/products.component'),
         title: 'Admin - Products',
       },
+
+      {
+        path: 'products/:id',
+        loadComponent: () =>
+          import('./@admin/pages/product/product.component'),
+        title: 'Admin - Product',
+      },
       {
         path: 'users',
         loadComponent: () => import('./@admin/pages/users/users.component'),

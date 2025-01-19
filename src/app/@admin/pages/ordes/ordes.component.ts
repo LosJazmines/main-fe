@@ -1,6 +1,5 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { AdminHeaderStore } from '../../../@core/store/admin-header.store';
-import { Apollo } from 'apollo-angular';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 
@@ -15,7 +14,7 @@ export default class OrdesComponent implements OnInit {
   private _adminHeaderStore = inject(AdminHeaderStore);
   public readonly adminHeaderStore$ = this._adminHeaderStore.getHeaderTitle();
 
-  constructor(private apollo: Apollo) {}
+  constructor() {}
 
   ngOnInit(): void {
     this._adminHeaderStore.updateHeaderTitle('Orders');

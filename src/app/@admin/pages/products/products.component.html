@@ -1,1 +1,150 @@
-<p>products works!</p>
+<div class="p-6 bg-gray-100 min-h-screen">
+  <!-- Header -->
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-2xl font-semibold text-gray-700">Productos</h1>
+    <button
+      class="bg-green-500 text-white px-4 py-2 rounded-lg flex items-center gap-2"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="w-5 h-5"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M12 4v16m8-8H4"
+        />
+      </svg>
+      Agregar Producto
+    </button>
+  </div>
+
+  <!-- Estadísticas -->
+  <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+    <div class="bg-white p-4 rounded-lg shadow flex items-center gap-4">
+      <div class="text-green-500">
+        <mat-icon class="text-4xl">inventory</mat-icon>
+      </div>
+      <div>
+        <p class="text-lg font-semibold">Total Productos</p>
+        <p class="text-gray-500">{{ totalProducts }}</p>
+      </div>
+    </div>
+
+    <div class="bg-white p-4 rounded-lg shadow flex items-center gap-4">
+      <div class="text-blue-500">
+        <mat-icon class="text-4xl">sell</mat-icon>
+      </div>
+      <div>
+        <p class="text-lg font-semibold">Productos Vendidos</p>
+        <p class="text-gray-500">{{ totalSold }}</p>
+      </div>
+    </div>
+
+    <div class="bg-white p-4 rounded-lg shadow flex items-center gap-4">
+      <div class="text-red-500">
+        <mat-icon class="text-4xl">warning</mat-icon>
+      </div>
+      <div>
+        <p class="text-lg font-semibold">Sin Stock</p>
+        <p class="text-gray-500">{{ outOfStock }}</p>
+      </div>
+    </div>
+
+    <div class="bg-white p-4 rounded-lg shadow flex items-center gap-4">
+      <div class="text-orange-500">
+        <mat-icon class="text-4xl">error_outline</mat-icon>
+      </div>
+      <div>
+        <p class="text-lg font-semibold">Stock < 5</p>
+        <p class="text-gray-500">{{ lowStock }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filtros -->
+  <div class="bg-white shadow rounded-lg p-6 mb-6">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div>
+        <label class="text-gray-500 block mb-1">Categoría</label>
+        <select
+          class="w-full p-2 border rounded-lg"
+          [(ngModel)]="selectedCategory"
+          (change)="applyFilters()"
+        >
+          <option value="">Todas</option>
+          <option value="flores">Flores</option>
+          <option value="plantas">Plantas</option>
+          <option value="macetas">Macetas</option>
+          <option value="fertilizantes">Fertilizantes</option>
+        </select>
+      </div>
+      <div>
+        <label class="text-gray-500 block mb-1">Precio Mínimo</label>
+        <input
+          type="number"
+          class="w-full p-2 border rounded-lg"
+          placeholder="0"
+          [(ngModel)]="minPrice"
+          (input)="applyFilters()"
+        />
+      </div>
+      <div>
+        <label class="text-gray-500 block mb-1">Precio Máximo</label>
+        <input
+          type="number"
+          class="w-full p-2 border rounded-lg"
+          placeholder="0"
+          [(ngModel)]="maxPrice"
+          (input)="applyFilters()"
+        />
+      </div>
+    </div>
+  </div>
+
+  <!-- Tabla de Productos -->
+  <div class="bg-white shadow rounded-lg p-6">
+    <table class="table-auto w-full border-collapse">
+      <thead>
+        <tr class="bg-gray-200 text-gray-600 text-sm uppercase text-left">
+          <th class="p-3">ID</th>
+          <th class="p-3">Nombre</th>
+          <th class="p-3">Categoría</th>
+          <th class="p-3">Precio</th>
+          <th class="p-3">Stock</th>
+          <th class="p-3">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          *ngFor="let product of filteredProducts"
+          class="border-t hover:bg-gray-50"
+        >
+          <td class="p-3">{{ product.id }}</td>
+          <td class="p-3">{{ product.name }}</td>
+          <td class="p-3">{{ product.category }}</td>
+          <td class="p-3">{{ product.price | currency }}</td>
+          <td class="p-3">{{ product.stock }}</td>
+          <td class="p-3">
+            <button
+              class="bg-blue-500 text-white px-3 py-1 rounded text-sm"
+              (click)="editProduct(product)"
+            >
+              Editar
+            </button>
+            <button
+              class="bg-red-500 text-white px-3 py-1 rounded text-sm"
+              (click)="deleteProduct(product)"
+            >
+              Eliminar
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
