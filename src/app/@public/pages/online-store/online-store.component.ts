@@ -14,6 +14,7 @@ import { Animations } from '../../../@shared/animations';
 import { ShopFiltersComponent } from '../../../@shared/components/shop-filters/shop-filters.component';
 import { BreadcrumbComponent } from '../../../@shared/components/breadcrumb/breadcrumb.component';
 import { FormsModule } from '@angular/forms';
+import { CarrouselSwiperComponent } from '../../../@shared/components/carrousel-swiper/carrousel-swiper.component';
 // register Swiper custom elements
 register();
 
@@ -25,6 +26,7 @@ register();
     CardItemComponent,
     ShopFiltersComponent,
     BreadcrumbComponent,
+    CarrouselSwiperComponent,
     FormsModule,
   ],
   templateUrl: './online-store.component.html',

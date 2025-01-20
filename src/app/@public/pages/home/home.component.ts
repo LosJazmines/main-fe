@@ -11,12 +11,13 @@ import { CardItemComponent } from '../../../@shared/components/card-item/card-it
 // import function to register Swiper custom elements
 import { register } from 'swiper/element/bundle';
 import { Animations } from '../../../@shared/animations';
+import { CarrouselSwiperComponent } from '../../../@shared/components/carrousel-swiper/carrousel-swiper.component';
 // register Swiper custom elements
 register();
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, CardItemComponent],
+  imports: [CommonModule, CardItemComponent, CarrouselSwiperComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
