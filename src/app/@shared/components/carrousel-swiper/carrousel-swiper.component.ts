@@ -49,7 +49,5 @@ export class CarrouselSwiperComponent implements OnInit {
   constructor(@Inject(PLATFORM_ID) private platformId: Object) {
     this.isBrowser = isPlatformBrowser(this.platformId);
   }
-  ngOnInit(): void {
-    console.log({ images: this.images, imgHeader: this.imgHeader });
-  }
+  ngOnInit(): void {}
 }
