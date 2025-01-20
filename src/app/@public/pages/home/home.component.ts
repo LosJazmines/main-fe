@@ -12,12 +12,18 @@ import { CardItemComponent } from '../../../@shared/components/card-item/card-it
 import { register } from 'swiper/element/bundle';
 import { Animations } from '../../../@shared/animations';
 import { CarrouselSwiperComponent } from '../../../@shared/components/carrousel-swiper/carrousel-swiper.component';
+import { CircleFilterComponent } from '../../../@shared/components/circle-filter/circle-filter.component';
 // register Swiper custom elements
 register();
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, CardItemComponent, CarrouselSwiperComponent],
+  imports: [
+    CommonModule,
+    CardItemComponent,
+    CarrouselSwiperComponent,
+    CircleFilterComponent,
+  ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
@@ -32,6 +38,18 @@ export default class HomeComponent implements OnInit {
     'Invierno',
     'Colección Especial',
     'Novedades',
+  ];
+
+  filters = [
+    { categoryName: 'Ramos', iconPath: 'ruta-del-icono/flores.png' },
+    { categoryName: 'Novia', iconPath: 'ruta-del-icono/ramos.png' },
+    { categoryName: 'Oso de Peluche', iconPath: 'ruta-del-icono/oso.png' },
+    { categoryName: 'Combos', iconPath: 'ruta-del-icono/combos.png' },
+    { categoryName: 'Cactus', iconPath: 'ruta-del-icono/cactus.png' },
+    {
+      categoryName: 'Regalos Especiales',
+      iconPath: 'ruta-del-icono/regalos-especiales.png',
+    },
   ];
   // Variable para almacenar la temporada actual
   temporada: string;
@@ -124,6 +142,10 @@ export default class HomeComponent implements OnInit {
   // Método para seleccionar una categoría
   selectCategory(category: string) {
     this.selectedCategory = category;
+  }
+
+  onCategorySelected(selectedCategory: any): void {
+    console.log('Categoría seleccionada:', selectedCategory);
   }
   obtenerTemporada(): string {
     const mes = new Date().getMonth(); // Obtiene el mes actual (0-11)
