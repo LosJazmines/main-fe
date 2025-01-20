@@ -1,1 +1,87 @@
-<p>contact works!</p>
+<section class="bg-gray-50 py-12 px-6">
+    <!-- Título -->
+    <div class="text-center mb-12">
+        <h2 class="text-4xl font-bold text-gray-800">Contact Works!</h2>
+        <p class="text-lg text-gray-600 mt-4">¿Tienes alguna pregunta? ¡Estamos aquí para ayudarte!</p>
+    </div>
+
+    <!-- Bloques de Información de Contacto -->
+    <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+        <!-- Dirección -->
+        <div class="flex items-center bg-white shadow rounded-lg p-6">
+            <div class="flex-shrink-0 bg-blue-100 text-blue-600 rounded-full p-4">
+                <svg class="h-6 w-6" fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M16.88 3.549a9.49 9.49 0 011.591 1.586m-2.813-.586a9.49 9.49 0 00-2.678-.837c-4.955-.888-8.926 3.083-8.038 8.038a9.49 9.49 0 00.837 2.678m2.312-2.312a9.49 9.49 0 01.837 2.678m4.81-2.72l3.586 3.586m-1.492-6.09a2.12 2.12 0 112.997 2.998m-6.09-1.492L4.68 4.68" />
+                </svg>
+            </div>
+            <div class="ml-4">
+                <h3 class="text-lg font-semibold text-gray-800">Dirección</h3>
+                <p class="text-gray-600">Av. España 995, Tandil</p>
+            </div>
+        </div>
+        <!-- Teléfono -->
+        <div class="flex items-center bg-white shadow rounded-lg p-6">
+            <div class="flex-shrink-0 bg-green-100 text-green-600 rounded-full p-4">
+                <svg class="h-6 w-6" fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M3 10a4 4 0 014-4h10a4 4 0 014 4v6a4 4 0 01-4 4H7a4 4 0 01-4-4v-6z" />
+                </svg>
+            </div>
+            <div class="ml-4">
+                <h3 class="text-lg font-semibold text-gray-800">Teléfono</h3>
+                <p class="text-gray-600">0249 422-0341</p>
+            </div>
+        </div>
+        <!-- Email -->
+        <div class="flex items-center bg-white shadow rounded-lg p-6">
+            <div class="flex-shrink-0 bg-yellow-100 text-yellow-600 rounded-full p-4">
+                <svg class="h-6 w-6" fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M16 12H3m1-4l8-8 8 8m-9 4v6m0 6h4" />
+                </svg>
+            </div>
+            <div class="ml-4">
+                <h3 class="text-lg font-semibold text-gray-800">Correo Electrónico</h3>
+                <p>Correo Electrónico: contact&#64;losjazmines.com</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Formulario de Contacto -->
+    <div class="max-w-4xl mx-auto bg-white shadow rounded-lg p-6">
+        <h3 class="text-2xl font-semibold text-gray-800 mb-6">Envíanos un Mensaje</h3>
+        <form>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Nombre -->
+                <div>
+                    <label for="name" class="block text-sm font-medium text-gray-700">Nombre</label>
+                    <input type="text" id="name" placeholder="Tu nombre"
+                        class="w-full mt-2 p-3 border border-gray-300 rounded-lg focus:ring focus:ring-blue-200 focus:outline-none" />
+                </div>
+                <!-- Email -->
+                <div>
+                    <label for="email" class="block text-sm font-medium text-gray-700">Correo Electrónico</label>
+                    <input type="email" id="email" placeholder="tuemail@ejemplo.com"
+                        class="w-full mt-2 p-3 border border-gray-300 rounded-lg focus:ring focus:ring-blue-200 focus:outline-none" />
+                </div>
+            </div>
+            <!-- Mensaje -->
+            <div class="mt-6">
+                <label for="message" class="block text-sm font-medium text-gray-700">Mensaje</label>
+                <textarea id="message" rows="4" placeholder="Escribe tu mensaje aquí..."
+                    class="w-full mt-2 p-3 border border-gray-300 rounded-lg focus:ring focus:ring-blue-200 focus:outline-none"></textarea>
+            </div>
+            <!-- Botón -->
+            <div class="mt-6 text-center">
+                <button type="submit"
+                    class="px-6 py-3 bg-blue-600 text-white font-medium rounded-lg shadow hover:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300">
+                    Enviar
+                </button>
+            </div>
+        </form>
+    </div>
+</section>

@@ -22,6 +22,7 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./@public/pages/online-store/online-store.component'),
         title: 'Los Jazmines - Online Store',
+        data: { breadcrumb: 'Online Store' },
       },
       {
         path: 'register',
@@ -93,6 +94,13 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./@admin/pages/products/products.component'),
         title: 'Admin - Products',
+      },
+
+      {
+        path: 'products/:id',
+        loadComponent: () =>
+          import('./@admin/pages/product/product.component'),
+        title: 'Admin - Product',
       },
       {
         path: 'users',

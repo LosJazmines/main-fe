@@ -1,11 +1,64 @@
 <div class="online-store-container">
   <div class="online-store">
     <div class="left">
-      <div class="filters">filter</div>
+      <app-shop-filters></app-shop-filters>
     </div>
+
     <div class="right">
-      <div class="header">header</div>
-      <div class="body">body</div>
+      <div class="h-10 w-full"> <app-breadcrumb></app-breadcrumb>
+
+      </div>
+
+      <div class="header">
+        <div [@zoomIn] [@zoomOut] class="carrousel">
+          <swiper-container *ngIf="isBrowser" style="
+              --swiper-navigation-color: #fff;
+              --swiper-pagination-color: #fff;
+            " navigation="true" pagination="true" pagination-clickable="true" effect="coverflow" grab-cursor="true"
+            centered-slides="true" slides-per-view="auto" coverflow-effect-rotate="10" coverflow-effect-stretch="0"
+            coverflow-effect-depth="200" coverflow-effect-modifier="3" coverflow-effect-slide-shadows="true"
+            autoplay-delay="5000" autoplay-disable-on-interaction="false" space-between="10" loop="true">
+            @for (img of imgHeader; track $index) {
+            <swiper-slide>
+              <img class="swiper-slide__img" [src]="img.img_url" alt="" srcset="" />
+            </swiper-slide>
+            }
+          </swiper-container>
+        </div>
+      </div>
+
+      <div class="w-full">
+
+        <div class="flex justify-between items-center mb-6">
+          <!-- Filtro de Ordenación -->
+          <div class="flex items-center space-x-4">
+            <label for="orderBy" class="text-sm font-medium">Ordenar por:</label>
+            <select id="orderBy" [(ngModel)]="selectedOrder" (change)="applyFilter()"
+              class="border p-2 rounded-md text-sm">
+              <option value="ascendente">Ascendente</option>
+              <option value="descendente">Descendente</option>
+              <option value="mayorValor">Mayor Valor</option>
+              <option value="menorValor">Menor Valor</option>
+            </select>
+          </div>
+
+          <!-- Contador de Items -->
+          <div class="text-sm font-medium">
+            <span>{{ filteredItems.length }} Items disponibles</span>
+          </div>
+        </div>
+        <!-- <h2 class="text-4xl uppercase font-bold text-gray-800">
+          Colecciones de {{ temporada }}
+        </h2> -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 h-full">
+          <app-card-item *ngFor="let product of filteredProducts" [name]="product.name"
+            [description]="product.description" [price]="product.price" [image]="product.image"
+            [category]="product.category" [isNew]="product.isNew"></app-card-item>
+        </div>
+      </div>
+
+
+
     </div>
   </div>
 </div>

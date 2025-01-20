@@ -9,6 +9,7 @@ export const PUBLIC_ROUTES: Routes = [
         path: '',
         loadComponent: () => import('./home/home.component'),
         title: 'Home',
+        data: { breadcrumb: 'Home' }
       },
       {
         path: 'register',

@@ -5,13 +5,11 @@ import { routes } from './app.routes';
 import { provideClientHydration } from '@angular/platform-browser';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
-import {  provideHttpClient, withInterceptors } from '@angular/common/http';
-import { graphqlProvider } from './@graphql/config/graphql.provider';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { authInterceptor } from './@core/interceptors/auth-interceptor.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    
     //withPreloading(PreloadAllModules)
     // Preloading improves UX by loading parts of your application in the background. You can preload modules, standalone components or component data.
     provideRouter(routes),
@@ -25,10 +23,7 @@ export const appConfig: ApplicationConfig = {
       traceLimit: 75, // maximum stack trace frames to be stored (in case trace option was provided as true)
       connectInZone: true, // If set to true, the connection is established within the Angular zone
     }),
-    provideHttpClient(withInterceptors([
-      authInterceptor
-    ])),
-    graphqlProvider,
+    provideHttpClient(withInterceptors([authInterceptor])),
 
     // provideStore(),
   ],

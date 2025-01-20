@@ -65,3 +65,33 @@ body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  padding: 0;
+  margin: 0;
+}
+
+/* Estilo genérico para los scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: auto;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #4b4c4e;
+  border-radius: 6px;
+
+  &:hover {
+    background: #454545;
+  }
+}

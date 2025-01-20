@@ -1,0 +1,26 @@
+/* Estilos adicionales si los necesitas */
+.card {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
+  .accordion-item {
+    padding: 10px;
+    border-bottom: 1px solid #eaeaea;
+  }
+  .accordion-trigger {
+    font-weight: bold;
+    cursor: pointer;
+  }
+  .accordion-content {
+    padding-left: 20px;
+    padding-top: 5px;
+    color: #6b7280;
+  }
+  .accordion-content:not(:first-child) {
+    display: none;
+  }
+  .accordion-item.active .accordion-content {
+    display: block;
+  }
+  
