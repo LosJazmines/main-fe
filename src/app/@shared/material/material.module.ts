@@ -27,10 +27,11 @@ import { MatInputModule } from '@angular/material/input';
 // import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatMenuModule } from '@angular/material/menu';
-import {MatBadgeModule} from '@angular/material/badge';
+import { MatBadgeModule } from '@angular/material/badge';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatStepperModule } from '@angular/material/stepper';
 import { CdkStepperModule } from '@angular/cdk/stepper';
+import { MatSidenavModule } from '@angular/material/sidenav';
 
 // import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
@@ -82,6 +83,7 @@ export const MATERIAL_MODULES = [
   DialogModule,
   CdkAccordionModule,
   MatBadgeModule,
+  MatSidenavModule,
 ];
 
 @NgModule({

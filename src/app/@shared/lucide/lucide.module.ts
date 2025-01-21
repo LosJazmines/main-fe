@@ -94,6 +94,7 @@ import {
   ChartNoAxesColumnIncreasing,
   Newspaper,
   Megaphone,
+  Home,
 } from 'lucide-angular';
 
 export const LUCIDE_MODULES = [
@@ -191,6 +192,7 @@ export const LUCIDE_MODULES = [
     ChartNoAxesColumnIncreasing,
     Newspaper,
     Megaphone,
+    Home,
   }),
 ];
 

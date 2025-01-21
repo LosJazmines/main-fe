@@ -1,1 +1,32 @@
-<router-outlet></router-outlet>
+<!-- <app-splash-screen></app-splash-screen> -->
+
+<mat-drawer-container class="h-full" [hasBackdrop]="true">
+  <!-- <mat-drawer
+    mode="over"
+    [opened]="isLeftAdminSidebarOpen$ | async"
+    (closedStart)="closeLeftDrawerAdmin()"
+  >
+    <app-left-sidebar-admin></app-left-sidebar-admin>
+  </mat-drawer> -->
+
+  <mat-drawer
+    mode="over"
+    [opened]="isLeftSidebarOpen$ | async"
+    (closedStart)="closeLeftDrawer()"
+  >
+    <app-left-sidebar></app-left-sidebar>
+  </mat-drawer>
+
+  <mat-drawer
+    mode="over"
+    position="end"
+    [opened]="isRightSidebarOpen$ | async"
+    (closedStart)="closeRightDrawer()"
+  >
+    <app-right-sidebar></app-right-sidebar>
+  </mat-drawer>
+
+  <mat-drawer-content>
+    <router-outlet></router-outlet>
+  </mat-drawer-content>
+</mat-drawer-container>
