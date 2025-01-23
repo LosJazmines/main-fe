@@ -4,13 +4,13 @@ import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'app-left-sidebar-admin',
+  selector: 'app-left-sidebar-filters',
   standalone: true,
   imports: [CommonModule, RouterModule, MaterialModule],
-  templateUrl: './left-sidebar-admin.component.html',
-  styleUrls: ['./left-sidebar-admin.component.scss'],
+  templateUrl: './left-sidebar-filters.component.html',
+  styleUrls: ['./left-sidebar-filters.component.scss'],
 })
-export class LeftSidebarAdminComponent implements OnInit, OnDestroy {
+export class LeftSidebarFiltersComponent implements OnInit, OnDestroy {
   constructor() {}
 
   ngOnInit() {}

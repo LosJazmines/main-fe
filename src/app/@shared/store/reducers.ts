@@ -10,7 +10,7 @@ import {
 import {
   leftSidebarAdminReducer,
   LeftSidebarAdminState,
-} from '../components/sidebars/left-sidebar-admin/store/reducers/left-sidebar-admin.reducer';
+} from '../components/sidebars/left-sidebar-filters/store/reducers/left-sidebar-admin.reducer';
 
 export interface AppState {
   leftSidebarAdmin: LeftSidebarAdminState;

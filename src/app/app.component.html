@@ -1,21 +1,25 @@
 <!-- <app-splash-screen></app-splash-screen> -->
 
 <mat-drawer-container class="h-full" [hasBackdrop]="true">
-  <!-- <mat-drawer
+  @if (isLeftAdminSidebarOpen$ | async) {
+  <mat-drawer
     mode="over"
+    position="start"
     [opened]="isLeftAdminSidebarOpen$ | async"
     (closedStart)="closeLeftDrawerAdmin()"
   >
-    <app-left-sidebar-admin></app-left-sidebar-admin>
-  </mat-drawer> -->
-
+    <app-left-sidebar-filters></app-left-sidebar-filters>
+  </mat-drawer>
+  } @if (isLeftSidebarOpen$ | async) {
   <mat-drawer
     mode="over"
+    position="start"
     [opened]="isLeftSidebarOpen$ | async"
     (closedStart)="closeLeftDrawer()"
   >
     <app-left-sidebar></app-left-sidebar>
   </mat-drawer>
+  }
 
   <mat-drawer
     mode="over"

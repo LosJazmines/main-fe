@@ -4,15 +4,16 @@ import { RouterOutlet } from '@angular/router';
 import { MaterialModule } from './@shared/material/material.module';
 import { RightSidebarComponent } from './@shared/components/sidebars/right-sidebar/right-sidebar.component';
 import { LeftSidebarComponent } from './@shared/components/sidebars/left-sidebar/left-sidebar.component';
-import { LeftSidebarAdminComponent } from './@shared/components/sidebars/left-sidebar-admin/left-sidebar-admin.component';
 import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { selectIsRightSidebarOpen } from './@shared/components/sidebars/right-sidebar/store/selectors/right-sidebar.selectors';
 import { selectIsLeftSidebarOpen } from './@shared/components/sidebars/left-sidebar/store/selectors/left-sidebar.selectors';
-import { selectIsLeftSidebarAdminOpen } from './@shared/components/sidebars/left-sidebar-admin/store/selectors/left-sidebar-admin.selectors';
 import { toggleLeftSidebar } from './@shared/components/sidebars/left-sidebar/store/actions/left-sidebar.actions';
-import { toggleLeftSidebarAdmin } from './@shared/components/sidebars/left-sidebar-admin/store/actions/left-sidebar-admin.actions';
+
 import { toggleRightSidebar } from './@shared/components/sidebars/right-sidebar/store/actions/right-sidebar.actions';
+import { LeftSidebarFiltersComponent } from './@shared/components/sidebars/left-sidebar-filters/left-sidebar-filters.component';
+import { selectIsLeftSidebarAdminOpen } from './@shared/components/sidebars/left-sidebar-filters/store/selectors/left-sidebar-admin.selectors';
+import { toggleLeftSidebarAdmin } from './@shared/components/sidebars/left-sidebar-filters/store/actions/left-sidebar-admin.actions';
 
 @Component({
   selector: 'app-root',
@@ -23,7 +24,7 @@ import { toggleRightSidebar } from './@shared/components/sidebars/right-sidebar/
     MaterialModule,
     RightSidebarComponent,
     LeftSidebarComponent,
-    LeftSidebarAdminComponent,
+    LeftSidebarFiltersComponent,
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
