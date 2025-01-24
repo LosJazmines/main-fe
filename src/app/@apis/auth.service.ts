@@ -38,6 +38,17 @@ export class AuthService {
     });
   }
 
+  validateToken(token: string) {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+    });
+    const ruta = `${this.urlUsers}/validate-token`;
+    const body = { token: token };
+    return this._http.post(ruta, body, {
+      headers: headers,
+    });
+  }
+
   // refreshMpToken(payload: any): Observable<any> {
   //   const ruta = `https://api.mercadopago.com/oauth/token`;
   //   const body = payload;

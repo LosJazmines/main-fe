@@ -79,7 +79,7 @@
       >
         <lucide-icon [size]="24" name="search"></lucide-icon>
       </button> -->
-<!-- 
+      <!-- 
       <button
         mat-icon-button
         class="text-black"
@@ -88,15 +88,39 @@
       >
         <lucide-icon [size]="24" name="shield"></lucide-icon>
       </button> -->
-
-      <div class="">
+      @if( isAdmin$ | async ){
+      <button
+        mat-icon-button
+        class="text-black"
+        [routerLink]="['/admin']"
+        routerLinkActive="router-link-active"
+      >
+        <lucide-icon [size]="24" name="shield"></lucide-icon>
+      </button>
+      } @if(!this.currentUser()?.username){
+      <div>
         <button
           (click)="openDialogLogin()"
           class="px-4 py-2 bg-black text-white rounded-md shadow hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition"
         >
-          Login
+          Ingresar
         </button>
       </div>
+      } @if(this.currentUser()?.username){
+      <div>
+        <!-- Avatar y nombre de usuario -->
+        <div class="flex items-center gap-2">
+          <span class="text-lg font-medium">{{ currentUser()?.username }}</span>
+          <div
+            class="w-10 h-10 bg-black bg-opacity-80 rounded-full flex items-center justify-center text-white font-bold"
+          >
+            <!-- Avatar (sin foto, solo un fondo gris con las iniciales) -->
+            <span>{{ currentUser()?.username | slice : 0 : 1 }}</span>
+            <!-- Ejemplo de iniciales -->
+          </div>
+        </div>
+      </div>
+      }
     </div>
   </div>
 </header>

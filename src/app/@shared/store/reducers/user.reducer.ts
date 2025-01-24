@@ -7,7 +7,7 @@ export interface UserState {
 }
 
 const initialState: UserState = {
-  currentUser: '',
+  currentUser: null,
   shoppingCart: [],
 };
 

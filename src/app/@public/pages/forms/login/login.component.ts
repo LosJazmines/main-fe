@@ -16,9 +16,9 @@ import { Animations } from '../../../../@shared/animations';
 import ChangePasswordComponent from '../change-password/change-password.component';
 import { AuthService } from '../../../../@apis/auth.service';
 import { Store } from '@ngrx/store';
-import * as userActions from '../../../../@shared/store/actions/user.actions';
 import { TokenService } from '../../../../@core/services/token.service';
-import { setCurrentUser } from '../../../../@shared/store/actions/user.actions';
+import * as userActions from '../../../../@shared/store/actions/user.actions';
+import { MessageService } from '../../../../@core/services/snackbar.service';
 
 @Component({
   selector: 'app-login',
@@ -40,7 +40,8 @@ export default class LoginComponent implements OnInit {
     @Inject(DIALOG_DATA) public data: any,
     private _authService: AuthService,
     private store: Store,
-    private _tokenService: TokenService
+    private _tokenService: TokenService,
+    private _messageService: MessageService
   ) {}
 
   ngOnInit(): void {
@@ -90,9 +91,6 @@ export default class LoginComponent implements OnInit {
   private loginUser() {
     if (this.loginGroup.valid) {
       const formData = this.loginGroup.value;
-
-      console.log('Valor de todos los campos del evento:', formData);
-
       // Llamada al servicio de autenticación para registrar al usuario
       this._authService.login(formData).subscribe({
         next: (response: any) => {
@@ -102,7 +100,14 @@ export default class LoginComponent implements OnInit {
           this._tokenService.setToken(response.token);
 
           // Establecer el usuario actual en el estado
-          this.store.dispatch(setCurrentUser({ currentUser: res }));
+          this.store.dispatch(userActions.setCurrentUser({ currentUser: res }));
+
+          // this._messageService.showError(
+          //   'Correo o contraseña incorrectos. Por favor, intenta de nuevo.',
+          //   'top right',
+          //   5000,
+          //   'Aceptar'
+          // );
           this.dialogRef.close();
 
           // Puedes agregar un mensaje de éxito o redirigir al usuario a otra página

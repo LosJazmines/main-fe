@@ -35,13 +35,5 @@ export const appConfig: ApplicationConfig = {
     }),
     provideHttpClient(withFetch(), withInterceptors([authInterceptor])),
     provideStore(reducers), // Provide the store globally
-    provideStoreDevtools({
-      maxAge: 25,
-      logOnly: !isDevMode(),
-      autoPause: true,
-      trace: false,
-      traceLimit: 75,
-      connectInZone: true,
-    }),
   ],
 };

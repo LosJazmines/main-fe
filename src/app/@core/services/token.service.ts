@@ -10,12 +10,15 @@ export class TokenService {
 
   // Guarda el token en el almacenamiento local
   setToken(token: string): void {
-    localStorage.setItem(this.TOKEN_KEY, token);
+    localStorage.setItem('user', token);
   }
 
   // Obtiene el token del almacenamiento local
   getToken(): string | null {
-    return localStorage.getItem(this.TOKEN_KEY);
+    if (typeof window !== 'undefined' && window.localStorage) {
+      return localStorage.getItem('user');
+    }
+    return null; // o cualquier otro valor por defecto
   }
 
   // Elimina el token del almacenamiento local
