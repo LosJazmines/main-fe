@@ -62,7 +62,7 @@ export default class RegisterComponent implements OnInit {
     this.registerUser()
   }
 
-  registerUser() {
+ private registerUser() {
     if (this.registerGroup.valid) {
       const formData = this.registerGroup.value;
 

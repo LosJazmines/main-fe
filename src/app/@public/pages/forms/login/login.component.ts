@@ -14,6 +14,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { RouterModule } from '@angular/router';
 import { Animations } from '../../../../@shared/animations';
 import ChangePasswordComponent from '../change-password/change-password.component';
+import { AuthService } from '../../../../@apis/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -32,7 +33,8 @@ export default class LoginComponent implements OnInit {
     private _fb: FormBuilder,
     public dialogRef: DialogRef<string>,
     private _dialog: Dialog,
-    @Inject(DIALOG_DATA) public data: any
+    @Inject(DIALOG_DATA) public data: any,
+    private _authService: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -79,6 +81,32 @@ export default class LoginComponent implements OnInit {
     const formData = this.loginGroup.value;
     console.log('Valor de todos los campos del evento:');
     console.log({ formData });
-    this.dialogRef.close();
+    this.loginUser();
+  }
+
+  private loginUser() {
+    if (this.loginGroup.valid) {
+      const formData = this.loginGroup.value;
+
+      console.log('Valor de todos los campos del evento:', formData);
+
+      // Llamada al servicio de autenticación para registrar al usuario
+      this._authService.login(formData).subscribe({
+        next: (response) => {
+          // En caso de éxito, se puede agregar más lógica aquí si es necesario
+          console.log('Usuario Ingreso con éxito:', response);
+          this.dialogRef.close();
+
+          // Puedes agregar un mensaje de éxito o redirigir al usuario a otra página
+        },
+        error: (error) => {
+          // En caso de error, se maneja aquí
+          console.error('Error al Ingresar usuario:', error);
+          // Puedes mostrar un mensaje de error si es necesario
+        },
+      });
+    } else {
+      console.log('Formulario no válido');
+    }
   }
 }

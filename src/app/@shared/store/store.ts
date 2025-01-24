@@ -18,7 +18,6 @@ export interface AppState {
   leftSidebar: LeftSidebarState;
   rightSidebar: RightSidebarState;
   currentUser: UserState;
-
 }
 
 export const reducers: ActionReducerMap<AppState> = {
@@ -26,5 +25,4 @@ export const reducers: ActionReducerMap<AppState> = {
   leftSidebar: leftSidebarReducer,
   rightSidebar: rightSidebarReducer,
   currentUser: userReducer,
-
 };
