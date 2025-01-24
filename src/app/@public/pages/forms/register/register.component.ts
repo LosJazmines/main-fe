@@ -12,6 +12,7 @@ import {
 import { MatDialog } from '@angular/material/dialog';
 import CheckoutComponent from '../checkout/checkout.component';
 import { Animations } from '../../../../@shared/animations';
+import { AuthService } from '../../../../@apis/auth.service';
 
 @Component({
   selector: 'app-register',
@@ -30,7 +31,8 @@ export default class RegisterComponent implements OnInit {
     private _fb: FormBuilder,
     public dialogRef: DialogRef<string>,
     private _dialog: Dialog,
-    @Inject(DIALOG_DATA) public data: any
+    @Inject(DIALOG_DATA) public data: any,
+    private _authService: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -39,6 +41,7 @@ export default class RegisterComponent implements OnInit {
 
   private initGroupRegister() {
     this.registerGroup = this._fb.group({
+      username: ['', [Validators.required, Validators.minLength(4)]],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required]],
     });
@@ -55,9 +58,33 @@ export default class RegisterComponent implements OnInit {
     const formData = this.registerGroup.value;
     console.log('Valor de todos los campos del evento:');
     console.log({ formData });
-    this.openDialogCheckout();
+    // this.openDialogCheckout();
+    this.registerUser()
   }
 
+  registerUser() {
+    if (this.registerGroup.valid) {
+      const formData = this.registerGroup.value;
+
+      console.log('Valor de todos los campos del evento:', formData);
+
+      // Llamada al servicio de autenticación para registrar al usuario
+      this._authService.register(formData).subscribe({
+        next: (response) => {
+          // En caso de éxito, se puede agregar más lógica aquí si es necesario
+          console.log('Usuario registrado con éxito:', response);
+          // Puedes agregar un mensaje de éxito o redirigir al usuario a otra página
+        },
+        error: (error) => {
+          // En caso de error, se maneja aquí
+          console.error('Error al registrar usuario:', error);
+          // Puedes mostrar un mensaje de error si es necesario
+        },
+      });
+    } else {
+      console.log('Formulario no válido');
+    }
+  }
   openDialogCheckout(): void {
     this.dialogRef.close();
     const dialogRef = this._dialog.open<string>(CheckoutComponent, {
