@@ -15,6 +15,10 @@ import { RouterModule } from '@angular/router';
 import { Animations } from '../../../../@shared/animations';
 import ChangePasswordComponent from '../change-password/change-password.component';
 import { AuthService } from '../../../../@apis/auth.service';
+import { Store } from '@ngrx/store';
+import * as userActions from '../../../../@shared/store/actions/user.actions';
+import { TokenService } from '../../../../@core/services/token.service';
+import { setCurrentUser } from '../../../../@shared/store/actions/user.actions';
 
 @Component({
   selector: 'app-login',
@@ -34,7 +38,9 @@ export default class LoginComponent implements OnInit {
     public dialogRef: DialogRef<string>,
     private _dialog: Dialog,
     @Inject(DIALOG_DATA) public data: any,
-    private _authService: AuthService
+    private _authService: AuthService,
+    private store: Store,
+    private _tokenService: TokenService
   ) {}
 
   ngOnInit(): void {
@@ -78,9 +84,6 @@ export default class LoginComponent implements OnInit {
   }
 
   submitEvent() {
-    const formData = this.loginGroup.value;
-    console.log('Valor de todos los campos del evento:');
-    console.log({ formData });
     this.loginUser();
   }
 
@@ -92,9 +95,14 @@ export default class LoginComponent implements OnInit {
 
       // Llamada al servicio de autenticación para registrar al usuario
       this._authService.login(formData).subscribe({
-        next: (response) => {
-          // En caso de éxito, se puede agregar más lógica aquí si es necesario
-          console.log('Usuario Ingreso con éxito:', response);
+        next: (response: any) => {
+          const { token, ...res } = response;
+
+          // Almacenar el token
+          this._tokenService.setToken(response.token);
+
+          // Establecer el usuario actual en el estado
+          this.store.dispatch(setCurrentUser({ currentUser: res }));
           this.dialogRef.close();
 
           // Puedes agregar un mensaje de éxito o redirigir al usuario a otra página

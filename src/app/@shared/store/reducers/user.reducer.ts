@@ -22,6 +22,11 @@ export const userReducer = createReducer(
     };
   }),
 
+  on(userActions.clearCurrentUser, (state) => ({
+    ...state,
+    currentUser: null,
+  })),
+
   /* Set Active Products*/
   on(userActions.shoppingCart, (state, action): any => {
     let shoppingCart = [...action.products];

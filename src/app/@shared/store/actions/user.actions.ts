@@ -5,6 +5,8 @@ export const setCurrentUser = createAction(
   props<{ currentUser: any }>()
 );
 
+export const clearCurrentUser = createAction('[Auth] Clear Current User');
+
 export const shoppingCart = createAction(
   '[User] Set Shopping Cart',
   props<{ products: any[] }>()
