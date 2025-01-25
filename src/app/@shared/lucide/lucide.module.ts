@@ -95,6 +95,7 @@ import {
   Newspaper,
   Megaphone,
   Home,
+  Logs,
 } from 'lucide-angular';
 
 export const LUCIDE_MODULES = [
@@ -193,6 +194,7 @@ export const LUCIDE_MODULES = [
     Newspaper,
     Megaphone,
     Home,
+    Logs,
   }),
 ];
 

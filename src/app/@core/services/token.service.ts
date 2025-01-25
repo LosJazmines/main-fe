@@ -23,7 +23,7 @@ export class TokenService {
 
   // Elimina el token del almacenamiento local
   removeToken(): void {
-    localStorage.removeItem(this.TOKEN_KEY);
+    localStorage.removeItem('user');
   }
 
   // Verifica si el token existe

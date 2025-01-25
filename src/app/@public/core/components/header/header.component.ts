@@ -17,6 +17,7 @@ import {
   selectIsAdmin,
   selectUserRoles,
 } from '../../../../@shared/store/selectors/user.selector';
+import { toggleRightSidebar } from '../../../../@shared/components/sidebars/right-sidebar/store/actions/right-sidebar.actions';
 
 @Component({
   selector: 'app-header',
@@ -59,6 +60,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   openLeftDrawer() {
     this.store.dispatch(toggleLeftSidebar({ isOpen: true }));
+  }
+
+  openRightDrawer() {
+    this.store.dispatch(toggleRightSidebar({ isOpen: true }));
   }
 
   openDialogLogin(): void {

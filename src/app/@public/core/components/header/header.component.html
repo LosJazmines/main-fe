@@ -88,7 +88,7 @@
       >
         <lucide-icon [size]="24" name="shield"></lucide-icon>
       </button> -->
-      @if( isAdmin$ | async ){
+      <!-- @if( isAdmin$ | async ){
       <button
         mat-icon-button
         class="text-black"
@@ -97,7 +97,8 @@
       >
         <lucide-icon [size]="24" name="shield"></lucide-icon>
       </button>
-      } @if(!this.currentUser()?.username){
+      } -->
+       @if(!this.currentUser()?.username){
       <div>
         <button
           (click)="openDialogLogin()"
@@ -107,16 +108,19 @@
         </button>
       </div>
       } @if(this.currentUser()?.username){
-      <div>
+      <div class="cursor-pointer group" (click)="openRightDrawer()">
         <!-- Avatar y nombre de usuario -->
-        <div class="flex items-center gap-2">
-          <span class="text-lg font-medium">{{ currentUser()?.username }}</span>
+        <div
+          class="flex items-center gap-2 p-2 rounded-lg transition-all duration-300"
+        >
+          <span class="text-lg font-medium group-hover:shadow-text">{{
+            currentUser()?.username
+          }}</span>
           <div
-            class="w-10 h-10 bg-black bg-opacity-80 rounded-full flex items-center justify-center text-white font-bold"
+            class="w-10 h-10 bg-black bg-opacity-80 rounded-full flex items-center justify-center text-white font-bold group-hover:shadow-lg hover:bg-opacity-100"
           >
             <!-- Avatar (sin foto, solo un fondo gris con las iniciales) -->
             <span>{{ currentUser()?.username | slice : 0 : 1 }}</span>
-            <!-- Ejemplo de iniciales -->
           </div>
         </div>
       </div>

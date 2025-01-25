@@ -4,7 +4,7 @@ import { RouterOutlet } from '@angular/router';
 import { MaterialModule } from './@shared/material/material.module';
 import { RightSidebarComponent } from './@shared/components/sidebars/right-sidebar/right-sidebar.component';
 import { LeftSidebarComponent } from './@shared/components/sidebars/left-sidebar/left-sidebar.component';
-import { Observable } from 'rxjs';
+import { Observable, pipe, retry } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { selectIsRightSidebarOpen } from './@shared/components/sidebars/right-sidebar/store/selectors/right-sidebar.selectors';
 import { selectIsLeftSidebarOpen } from './@shared/components/sidebars/left-sidebar/store/selectors/left-sidebar.selectors';
@@ -66,28 +66,35 @@ export class AppComponent implements OnInit {
     console.log(token);
 
     if (token) {
-      this._authService.validateToken(token).subscribe({
-        next: (response: any) => {
-          const { token, ...res } = response;
+      this._authService
+        .validateToken(token)
+        .pipe(retry(2))
+        .subscribe({
+          next: (response: any) => {
+            const { token, ...res } = response;
 
-          // Almacenar el token
-          this._tokenService.setToken(response.token);
+            // Almacenar el token
+            this._tokenService.setToken(response.token);
 
-          // Establecer el usuario actual en el estado
-          this.store.dispatch(userActions.setCurrentUser({ currentUser: res }));
+            // Establecer el usuario actual en el estado
+            this.store.dispatch(
+              userActions.setCurrentUser({ currentUser: res })
+            );
 
-          // this._messageService.showError(
-          //   'Correo o contraseña incorrectos. Por favor, intenta de nuevo.',
-          //   'top right',
-          //   5000,
-          //   'Aceptar'
-          // );
-        },
-        error: (err) => {
-          // El token es inválido o ha expirado
-          console.error('Token inválido o expirado');
-        },
-      });
+            // this._messageService.showError(
+            //   'Correo o contraseña incorrectos. Por favor, intenta de nuevo.',
+            //   'top right',
+            //   5000,
+            //   'Aceptar'
+            // );
+          },
+          error: (err: any) => {
+            // El token es inválido o ha expirado
+            this._tokenService.removeToken();
+
+            console.error('Token inválido o expirado');
+          },
+        });
     }
   }
 
