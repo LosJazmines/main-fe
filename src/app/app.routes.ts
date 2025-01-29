@@ -25,6 +25,15 @@ export const routes: Routes = [
         data: { breadcrumb: 'Online Store' },
       },
       {
+        path: 'card-order',
+        loadComponent: () =>
+          import('./@public/pages/card-order/card-order.component').then(
+            (m) => m.CardOrderComponent
+          ),
+        title: 'Los Jazmines - Card Order',
+        data: { breadcrumb: 'Card Order' },
+      },
+      {
         path: 'register',
         loadComponent: () =>
           import('./@public/pages/forms/register/register.component'),
@@ -98,8 +107,7 @@ export const routes: Routes = [
 
       {
         path: 'products/:id',
-        loadComponent: () =>
-          import('./@admin/pages/product/product.component'),
+        loadComponent: () => import('./@admin/pages/product/product.component'),
         title: 'Admin - Product',
       },
       {

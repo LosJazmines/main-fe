@@ -1,7 +1,6 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment.dev';
-import { httpOptionsService } from './httpOptions.service';
 
 @Injectable({
   providedIn: 'root',
@@ -11,25 +10,30 @@ export class ProductsService {
 
   constructor(
     private _http: HttpClient,
-    private _httpOptions: httpOptionsService
   ) {}
   // Método para obtener todos los productos
   getAllProducts() {
-    let httpOptions = this._httpOptions.getHttpOptions();
-
-    return this._http.get(`${this.urlProducts}`, httpOptions);
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+    });
+    return this._http.get(`${this.urlProducts}`, {
+      headers: headers,
+    });
   }
 
   // Método para obtener un producto por su ID
   getProductById(productId: string) {
-    let httpOptions = this._httpOptions.getHttpOptions();
-
-    return this._http.get(`${this.urlProducts}/${productId}`, httpOptions);
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+    });
+    return this._http.get(`${this.urlProducts}/${productId}`, {
+      headers: headers,
+    });
   }
 
   // Método para crear un nuevo producto  // Método para crear un nuevo producto
   createProduct(productData: {
-    title: string;
+    name: string;
     description: string;
     price: number;
     stock: number;
@@ -42,26 +46,35 @@ export class ProductsService {
     };
     maxPurchasePerUser: number;
   }) {
-    let httpOptions = this._httpOptions.getHttpOptions();
-
-    return this._http.post(`${this.urlProducts}`, productData, httpOptions);
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+    });
+    return this._http.post(`${this.urlProducts}`, productData, {
+      headers: headers,
+    });
   }
 
   // Método para actualizar un producto existente
   updateProduct(productId: string, productData: any) {
-    let httpOptions = this._httpOptions.getHttpOptions();
-
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+    });
     return this._http.put(
       `${this.urlProducts}/${productId}`,
       productData,
-      httpOptions
+      {
+        headers: headers,
+      }
     );
   }
 
   // Método para eliminar un producto por su ID
   deleteProduct(productId: string) {
-    let httpOptions = this._httpOptions.getHttpOptions();
-
-    return this._http.delete(`${this.urlProducts}/${productId}`, httpOptions);
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+    });
+    return this._http.delete(`${this.urlProducts}/${productId}`, {
+      headers: headers,
+    });
   }
 }
