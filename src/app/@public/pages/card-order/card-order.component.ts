@@ -7,7 +7,7 @@ import { CommonModule } from '@angular/common';
 @Component({
   selector: 'app-card-order',
   standalone: true,
-  imports: [RouterModule, MaterialModule, LucideModule, CommonModule],
+  imports: [RouterModule, MaterialModule, LucideModule, CommonModule, RouterModule],
   templateUrl: './card-order.component.html',
   styleUrl: './card-order.component.scss',
 })

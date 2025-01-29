@@ -34,6 +34,25 @@ export const routes: Routes = [
         data: { breadcrumb: 'Card Order' },
       },
       {
+        path: 'card-order-map',
+        loadComponent: () =>
+          import(
+            './@public/pages/card-order-map/card-order-map.component'
+          ).then((m) => m.CardOrderMapComponent),
+        title: 'Los Jazmines - Card Order Map',
+        data: { breadcrumb: 'Card Order Map' },
+      },
+
+      {
+        path: 'card-order-check-payments',
+        loadComponent: () =>
+          import(
+            './@public/pages/card-order-check-payments-mp/card-order-check-payments-mp.component'
+          ).then((m) => m.CardOrderCheckPaymentsMpComponent),
+        title: 'Los Jazmines - Card Order Map',
+        data: { breadcrumb: 'Card Order Map' },
+      },
+      {
         path: 'register',
         loadComponent: () =>
           import('./@public/pages/forms/register/register.component'),

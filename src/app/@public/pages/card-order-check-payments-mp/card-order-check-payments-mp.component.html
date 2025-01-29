@@ -1,0 +1,13 @@
+<div class="max-w-[1200px] mx-auto">
+  <div class="p-8 custom-height flex">
+    <div class="w-full h-full flex-1 flex justify-center items-start gap-4">
+      <div
+        class="min-h-[360px] w-[300px] bg-black/10 flex-1 rounded shadow-lg overflow-hidden"
+      >
+        <google-map width="100%" height="360px" [center]="center" [zoom]="15">
+          <map-marker [position]="center"></map-marker>
+        </google-map>
+      </div>
+    </div>
+  </div>
+</div>

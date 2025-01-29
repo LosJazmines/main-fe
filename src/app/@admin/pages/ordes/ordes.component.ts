@@ -2,7 +2,6 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { AdminHeaderStore } from '../../../@core/store/admin-header.store';
 import { CommonModule } from '@angular/common';
 import { MaterialModule } from '../../../@shared/material/material.module';
-import { RouterLink } from '@angular/router';
 import { LucideModule } from '../../../@shared/lucide/lucide.module';
 import { FormBuilder } from '@angular/forms';
 import { OrdersService } from '../../../@apis/orders.service';
@@ -13,7 +12,7 @@ import { MessageService } from '../../../@core/services/snackbar.service';
 @Component({
   selector: 'app-ordes',
   standalone: true,
-  imports: [CommonModule, RouterLink, MaterialModule, LucideModule],
+  imports: [CommonModule, MaterialModule, LucideModule],
   templateUrl: './ordes.component.html',
   styleUrl: './ordes.component.scss',
 })
