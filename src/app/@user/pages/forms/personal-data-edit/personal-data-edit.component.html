@@ -1,0 +1,48 @@
+<div class="form-container">
+  <form [formGroup]="personalDataForm" (ngSubmit)="onSubmit()">
+    <!-- Nombre -->
+    <mat-form-field appearance="fill">
+      <mat-label>Nombre</mat-label>
+      <input matInput formControlName="nombre" required />
+      <mat-error *ngIf="personalDataForm.get('nombre')?.hasError('required')">
+        El nombre es obligatorio.
+      </mat-error>
+    </mat-form-field>
+
+    <!-- Email -->
+    <mat-form-field appearance="fill">
+      <mat-label>Email</mat-label>
+      <input matInput formControlName="email" type="email" required />
+      <mat-error *ngIf="personalDataForm.get('email')?.hasError('required')">
+        El email es obligatorio.
+      </mat-error>
+      <mat-error *ngIf="personalDataForm.get('email')?.hasError('email')">
+        El email no es válido.
+      </mat-error>
+    </mat-form-field>
+
+    <!-- Teléfono -->
+    <mat-form-field appearance="fill">
+      <mat-label>Teléfono</mat-label>
+      <input matInput formControlName="telefono" required />
+      <mat-error *ngIf="personalDataForm.get('telefono')?.hasError('required')">
+        El teléfono es obligatorio.
+      </mat-error>
+    </mat-form-field>
+
+    <!-- Botón de guardar cambios -->
+    <button
+      mat-raised-button
+      color="primary"
+      type="submit"
+      [disabled]="personalDataForm.invalid"
+    >
+      Guardar Cambios
+    </button>
+
+    <!-- Enlace para cambiar la contraseña -->
+    <div class="change-password-link">
+      <a routerLink="/cambiar-contrasena">¿Quieres cambiar la contraseña?</a>
+    </div>
+  </form>
+</div>

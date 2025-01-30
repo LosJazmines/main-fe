@@ -1,0 +1,30 @@
+.form-container {
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: white;
+  }
+  
+  mat-form-field {
+    width: 100%;
+    margin-bottom: 15px;
+  }
+  
+  button {
+    margin-top: 20px;
+  }
+  
+  .change-password-link {
+    margin-top: 15px;
+    text-align: center;
+  }
+  
+  .change-password-link a {
+    color: #007bff;
+    text-decoration: none;
+  }
+  
+  .change-password-link a:hover {
+    text-decoration: underline;
+  }
+  
