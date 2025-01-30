@@ -93,6 +93,40 @@ export const routes: Routes = [
     ],
   },
 
+  // @Rutas User
+  {
+    path: '',
+    loadComponent: () =>
+      import('./@user/pages/user.component').then((m) => m.UserComponent),
+    title: 'User',
+    children: [
+      {
+        path: '',
+        loadComponent: () =>
+          import('./@user/pages/profile/profile.component').then(
+            (m) => m.ProfileComponent
+          ),
+        title: 'User - Perfil',
+      },
+      {
+        path: 'perfile',
+        loadComponent: () =>
+          import('./@user/pages/profile/profile.component').then(
+            (m) => m.ProfileComponent
+          ),
+        title: 'User - Perfil',
+      },
+      {
+        path: 'order',
+        loadComponent: () =>
+          import('./@user/pages/order/order.component').then(
+            (m) => m.OrderComponent
+          ),
+        title: 'User - Order',
+      },
+    ],
+  },
+
   // @Rutas Admin
 
   {
