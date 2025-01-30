@@ -96,6 +96,11 @@ import {
   Megaphone,
   Home,
   Logs,
+  Receipt,
+  Truck,
+  Layers,
+  Box,
+  Package,
 } from 'lucide-angular';
 
 export const LUCIDE_MODULES = [
@@ -195,6 +200,11 @@ export const LUCIDE_MODULES = [
     Megaphone,
     Home,
     Logs,
+    Receipt,
+    Truck,
+    Layers,
+    Box,
+    Package 
   }),
 ];
 

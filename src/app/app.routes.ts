@@ -117,7 +117,7 @@ export const routes: Routes = [
         title: 'User - Perfil',
       },
       {
-        path: 'order',
+        path: 'order/:idOrder',
         loadComponent: () =>
           import('./@user/pages/order/order.component').then(
             (m) => m.OrderComponent
