@@ -1,13 +1,13 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { HeaderComponent } from '../core/components/header/header.component';
+import { HeaderComponent } from '../../@public/core/components/header/header.component';
 import { FooterComponent } from '../../@shared/components/footer/footer.component';
 
 @Component({
-  selector: 'app-public',
+  selector: 'app-user',
   standalone: true,
   imports: [RouterOutlet, HeaderComponent, FooterComponent],
-  templateUrl: './public.component.html',
-  styleUrl: './public.component.scss',
+  templateUrl: './user.component.html',
+  styleUrl: './user.component.scss',
 })
-export default class PublicComponent {}
+export class UserComponent {}
