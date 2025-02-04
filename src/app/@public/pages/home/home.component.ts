@@ -39,16 +39,36 @@ export default class HomeComponent implements OnInit {
     'Colección Especial',
     'Novedades',
   ];
+  utlImgs = '../../../../assets/img/categorias/';
 
   filters = [
-    { categoryName: 'Ramos', iconPath: 'ruta-del-icono/flores.png' },
-    { categoryName: 'Novia', iconPath: 'ruta-del-icono/ramos.png' },
-    { categoryName: 'Oso de Peluche', iconPath: 'ruta-del-icono/oso.png' },
-    { categoryName: 'Combos', iconPath: 'ruta-del-icono/combos.png' },
-    { categoryName: 'Cactus', iconPath: 'ruta-del-icono/cactus.png' },
+    {
+      categoryName: 'Ramos',
+      iconPath:
+        './../../../../assets/img/categoria/imgc16_Ramo de 50 rosas.webp',
+    },
+    {
+      categoryName: 'Novia',
+      iconPath:
+        './../../../../assets/img/categoria/imgc10_Ramo novia de rosas.webp',
+    },
+    {
+      categoryName: 'Oso de Peluche',
+      iconPath:
+        './../../../../assets/img/categoria/imgp2680_gigante n3 (1).webp',
+    },
+    {
+      categoryName: 'Combos',
+      iconPath:
+        './../../../../assets/img/categoria/imgc13_COMBO VARIADO CON BAILEYS Y ROCHER.webp',
+    },
+    {
+      categoryName: 'Planetas',
+      iconPath: './../../../../assets/img/categoria/imgp2385_cica.webp',
+    },
     {
       categoryName: 'Regalos Especiales',
-      iconPath: 'ruta-del-icono/regalos-especiales.png',
+      iconPath: './../../../../assets/img/categoria/imgc72_Ramo grande.webp',
     },
   ];
   // Variable para almacenar la temporada actual
@@ -71,6 +91,7 @@ export default class HomeComponent implements OnInit {
 
   products = [
     {
+      id: 1,
       name: 'Oso de Peluche',
       description: 'Suave y adorable oso de peluche.',
       price: 29.99,
@@ -79,6 +100,7 @@ export default class HomeComponent implements OnInit {
       isNew: false,
     },
     {
+      id: 2,
       name: 'Arreglo de Tulipanes',
       description: 'Hermoso arreglo de tulipanes frescos.',
       price: 45.99,
@@ -87,6 +109,7 @@ export default class HomeComponent implements OnInit {
       isNew: false,
     },
     {
+      id: 4,
       name: 'Bouquet de Novia',
       description: 'Bouquet especial para bodas.',
       price: 89.99,
@@ -95,6 +118,7 @@ export default class HomeComponent implements OnInit {
       isNew: true,
     },
     {
+      id: 5,
       name: 'Osito con Rosas',
       description: 'Un oso decorado con rosas artificiales.',
       price: 69.99,

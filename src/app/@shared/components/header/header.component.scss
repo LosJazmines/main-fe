@@ -1,5 +1,5 @@
-@use "./../../../../@shared/scss/variables.scss" as v;
-@use "./../../../../@shared/scss/mixins.scss" as mixins;
+@use "../../scss/variables.scss" as v;
+@use "../../scss/mixins.scss" as mixins;
 
 .toolbar {
   width: 100%;
@@ -16,7 +16,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1rem;
+    padding: 1rem 0;
   }
 }
 
@@ -63,3 +63,5 @@
     }
   }
 }
+
+

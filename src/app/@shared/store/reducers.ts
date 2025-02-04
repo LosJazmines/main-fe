@@ -26,5 +26,4 @@ export const reducers: ActionReducerMap<AppState> = {
   leftSidebar: leftSidebarReducer,
   rightSidebar: rightSidebarReducer,
   currentUser: userReducer,
-
 };

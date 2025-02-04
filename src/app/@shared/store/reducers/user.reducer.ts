@@ -28,11 +28,12 @@ export const userReducer = createReducer(
   })),
 
   /* Set Active Products*/
-  on(userActions.shoppingCart, (state, action): any => {
-    let shoppingCart = [...action.products];
+  on(userActions.setShoppingCart, (state, action): any => {
+    console.log({ action , state});
+    
     return {
       ...state,
-      shoppingCart: shoppingCart,
+      shoppingCart: [...state.shoppingCart, ...action.products],
     };
   }),
 

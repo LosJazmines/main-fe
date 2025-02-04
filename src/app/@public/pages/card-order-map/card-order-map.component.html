@@ -1,63 +1,150 @@
-<div class="max-w-[1200px] mx-auto">
-  <div class="p-8 custom-height flex flex-col gap-4">
-    <div class="w-full h-full flex-1 flex justify-center items-start gap-4">
-      <div
-        class="min-h-[360px] w-[300px] bg-black/10 flex-1 rounded shadow-lg overflow-hidden"
-      >
-        <google-map width="100%" height="360px" [center]="center" [zoom]="15">
-          <map-marker [position]="center"></map-marker>
-        </google-map>
-      </div>
+<div class="container max-w-[1200px] mx-auto py-4">
+  <div class="w-full h-full flex-1 flex justify-center items-start gap-4">
+    <div
+      class="w-full bg-white rounded shadow-lg p-4 min-h-[360px] min-w-[300px] bg-black/10 flex-1 overflow-hidden"
+    >
+      <form [formGroup]="destinatarioForm" (ngSubmit)="onSubmit()">
+        <div class="border-b border-black/10 mb-4">
+          <h2 class="text-2xl font-bold text-gray-800">
+            Datos del Destinatario
+          </h2>
+        </div>
 
-      <div class="w-[360px] bg-white rounded shadow-lg">
-        <div class="w-full h-full flex flex-col min-h-[288px] p-4">
-          <div class="w-full h-full">
-            <div class="border-b border-black/10">
-              <h2 class="text-2xl font-bold text-gray-800">
-                Resumen de Compra
-              </h2>
-            </div>
-            <div class="p-2">
-              <div class="flex gap-2 justify-between items-center">
-                <p class="pb-2 text-sm font-semibold text-gray-800">
-                  Productos <span>(2)</span>
-                </p>
-                <p class="pb-2 text-sm font-semibold text-gray-800">$12.490</p>
-              </div>
-              <div class="flex gap-2 justify-between items-center">
-                <p class="pb-2 text-sm font-semibold text-gray-800">Envio</p>
-                <p class="pb-2 text-sm font-semibold text-gray-800">$2.490</p>
-              </div>
-              <div class="flex gap-2 justify-start items-center">
-                <p class="text-sm font-normal text-blue-500 cursor-pointer">
-                  Ingresar codigo de cupo
-                </p>
-              </div>
-              <div class="flex gap-2 justify-between items-center mt-4">
-                <p class="pb-2 text-sm font-semibold text-gray-800">Total :</p>
-                <p class="pb-2 text-sm font-semibold text-gray-800">$23.000</p>
-              </div>
-            </div>
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label class="border-none">Nombre completo del destinatario</mat-label>
+          <input
+            class="w-full"
+            matInput
+            formControlName="nombre"
+            placeholder="Nombre completo"
+          />
+        </mat-form-field>
+        <div class="w-full flex gap-4 items-center">
+          <mat-form-field appearance="outline" class="w-full">
+            <mat-label>Teléfono del destinatario</mat-label>
+            <input
+              matInput
+              formControlName="telefono"
+              placeholder="+549 11 12345678"
+            />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="w-full">
+            <mat-label>Teléfono móvil del destinatario</mat-label>
+            <input
+              matInput
+              formControlName="telefonoMovil"
+              placeholder="+549 11 12345678"
+            />
+          </mat-form-field>
+        </div>
+
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>Dirección completa de entrega</mat-label>
+          <input
+            matInput
+            formControlName="direccion"
+            placeholder="Dirección"
+            #direccionInput
+            (onAddressChange)="handleAddressChange($event)"
+          />
+        </mat-form-field>
+
+        <div class="w-full flex gap-4 items-center">
+          <mat-form-field appearance="outline" class="w-full">
+            <mat-label>País de entrega</mat-label>
+            <input matInput formControlName="pais" placeholder="Argentina" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="w-full">
+            <mat-label>Estado / Provincia</mat-label>
+            <input
+              matInput
+              formControlName="estado"
+              placeholder="Buenos Aires"
+            />
+          </mat-form-field>
+        </div>
+
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>Ciudad / Barrio / Localidad</mat-label>
+          <input matInput formControlName="ciudad" placeholder="Ciudad" />
+        </mat-form-field>
+
+        <div
+          class="w-full h-64 lg:h-auto rounded shadow-lg overflow-hidden mb-4"
+        >
+          <google-map
+            [center]="center"
+            [zoom]="zoom"
+            width="100%"
+            height="220px"
+          >
+            <map-marker [position]="center"></map-marker>
+          </google-map>
+        </div>
+
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label
+            >Comentarios / Observaciones sobre el domicilio de
+            entrega</mat-label
+          >
+          <textarea
+            matInput
+            formControlName="comentarios"
+            placeholder="Por ejemplo 'No funciona bien el timbre'"
+          ></textarea>
+        </mat-form-field>
+
+        <div class="flex justify-end">
+          <button
+            type="submit"
+            class="bg-black text-white py-2 px-4 rounded-md hover:bg-gray-800 transition duration-300"
+          >
+            Continuar compra
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <div class="w-[360px] bg-white rounded shadow-lg">
+      <div class="w-full h-full flex flex-col min-h-[288px] p-4">
+        <div class="w-full h-full">
+          <div class="border-b border-black/10">
+            <h2 class="text-2xl font-bold text-gray-800">Resumen de Compra</h2>
           </div>
-
-          <div class="w-full h-full flex-1 flex justify-between items-end">
-            <button
-              routerLink="/card-order-check-payments"
-              class="w-full bg-black h-[40px] text-white py-2 px-4 rounded-md hover:bg-gray-800 transition duration-300"
-            >
-              Continuar compra
-            </button>
+          <div class="p-2">
+            <div class="flex gap-2 justify-between items-center">
+              <p class="pb-2 text-sm font-semibold text-gray-800">
+                Productos <span>(2)</span>
+              </p>
+              <p class="pb-2 text-sm font-semibold text-gray-800">$12.490</p>
+            </div>
+            <div class="flex gap-2 justify-between items-center">
+              <p class="pb-2 text-sm font-semibold text-gray-800">Envio</p>
+              <p class="pb-2 text-sm font-semibold text-gray-800">$2.490</p>
+            </div>
+            <div class="flex gap-2 justify-start items-center">
+              <p class="text-sm font-normal text-blue-500 cursor-pointer">
+                Ingresar codigo de cupo
+              </p>
+            </div>
+            <div class="flex gap-2 justify-between items-center mt-4">
+              <p class="pb-2 text-sm font-semibold text-gray-800">Total :</p>
+              <p class="pb-2 text-sm font-semibold text-gray-800">$23.000</p>
+            </div>
           </div>
         </div>
+
+        <!-- <div class="w-full h-full flex-1 flex justify-between items-end">
+          <button
+            routerLink="/card-order-map"
+            class="w-full bg-black h-[40px] text-white py-2 px-4 rounded-md hover:bg-gray-800 transition duration-300"
+          >
+            Continuar compra
+          </button>
+        </div> -->
       </div>
     </div>
-    <!-- <div class="w-full h-full flex-1 flex justify-end items-center">
-      <button
-        routerLink="/card-order-check-payments"
-        class="w-[200px] bg-black h-[40px] text-white py-2 px-4 rounded-md hover:bg-gray-800 transition duration-300"
-      >
-        Continuar compra
-      </button>
-    </div>
-  </div> -->
+  </div>
 </div>

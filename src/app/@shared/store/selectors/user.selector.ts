@@ -7,6 +7,10 @@ export const selectCurrentUser = createSelector(getUserFeatureState, (state) =>
   state.currentUser ? state.currentUser : null
 );
 
+export const selectShoppingCart = createSelector(getUserFeatureState, (state) =>
+  state.shoppingCart ? state.shoppingCart : null
+);
+
 export const getUserState = createSelector(
   getUserFeatureState,
   (state) => state

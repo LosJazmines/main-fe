@@ -1,23 +1,24 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit, signal } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { MaterialModule } from '../../../../@shared/material/material.module';
+import { MaterialModule } from '../../material/material.module';
 import { Dialog } from '@angular/cdk/dialog';
-import LoginComponent from '../../../pages/forms/login/login.component';
-import { LucideModule } from '../../../../@shared/lucide/lucide.module';
+import LoginComponent from '../../../@public/pages/forms/login/login.component';
+import { LucideModule } from '../../lucide/lucide.module';
 import { Store } from '@ngrx/store';
-import { AppState } from '../../../../@shared/store/reducers';
-import { toggleLeftSidebar } from '../../../../@shared/components/sidebars/left-sidebar/store/actions/left-sidebar.actions';
-import { TokenService } from '../../../../@core/services/token.service';
-import { MessageService } from '../../../../@core/services/snackbar.service';
+import { AppState } from '../../store/reducers';
+import { toggleLeftSidebar } from '../sidebars/left-sidebar/store/actions/left-sidebar.actions';
+import { TokenService } from '../../../@core/services/token.service';
+import { MessageService } from '../../../@core/services/snackbar.service';
 import { Observable, Subscription } from 'rxjs';
-import { UserState } from '../../../../@shared/store/reducers/user.reducer';
+import { UserState } from '../../store/reducers/user.reducer';
 import {
   selectCurrentUser,
   selectIsAdmin,
+  selectShoppingCart,
   selectUserRoles,
-} from '../../../../@shared/store/selectors/user.selector';
-import { toggleRightSidebar } from '../../../../@shared/components/sidebars/right-sidebar/store/actions/right-sidebar.actions';
+} from '../../store/selectors/user.selector';
+import { toggleRightSidebar } from '../sidebars/right-sidebar/store/actions/right-sidebar.actions';
 
 @Component({
   selector: 'app-header',
@@ -28,8 +29,11 @@ import { toggleRightSidebar } from '../../../../@shared/components/sidebars/righ
 })
 export class HeaderComponent implements OnInit, OnDestroy {
   currentUser = signal<any>('');
+  shoppingCart = signal<any>(null);
+
   isAdmin$!: Observable<boolean>;
   userRoles$!: Observable<string[]>;
+  shoppingCartLength = signal<number | null>(null);
 
   private _unsuscribeAll!: Subscription;
 
@@ -41,6 +45,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   ) {}
   ngOnInit(): void {
     this.getUser();
+    this.getShoppingCart();
   }
   ngOnDestroy(): void {
     this._unsuscribeAll.unsubscribe();
@@ -52,8 +57,19 @@ export class HeaderComponent implements OnInit, OnDestroy {
       .subscribe((currentUser) => {
         if (currentUser) {
           this.currentUser.set(currentUser);
+          console.log({ currentUser });
 
           this.isAdmin$ = this.store.select(selectIsAdmin);
+        }
+      });
+  }
+
+  getShoppingCart() {
+    this._unsuscribeAll = this.store
+      .select(selectShoppingCart)
+      .subscribe((shoppingCart) => {
+        if (shoppingCart) {
+          this.shoppingCartLength.set(shoppingCart.length);
         }
       });
   }
