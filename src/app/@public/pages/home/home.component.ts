@@ -11,12 +11,19 @@ import { CardItemComponent } from '../../../@shared/components/card-item/card-it
 // import function to register Swiper custom elements
 import { register } from 'swiper/element/bundle';
 import { Animations } from '../../../@shared/animations';
+import { CarrouselSwiperComponent } from '../../../@shared/components/carrousel-swiper/carrousel-swiper.component';
+import { CircleFilterComponent } from '../../../@shared/components/circle-filter/circle-filter.component';
 // register Swiper custom elements
 register();
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, CardItemComponent],
+  imports: [
+    CommonModule,
+    CardItemComponent,
+    CarrouselSwiperComponent,
+    CircleFilterComponent,
+  ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
@@ -31,6 +38,38 @@ export default class HomeComponent implements OnInit {
     'Invierno',
     'Colección Especial',
     'Novedades',
+  ];
+  utlImgs = '../../../../assets/img/categorias/';
+
+  filters = [
+    {
+      categoryName: 'Ramos',
+      iconPath:
+        './../../../../assets/img/categoria/imgc16_Ramo de 50 rosas.webp',
+    },
+    {
+      categoryName: 'Novia',
+      iconPath:
+        './../../../../assets/img/categoria/imgc10_Ramo novia de rosas.webp',
+    },
+    {
+      categoryName: 'Oso de Peluche',
+      iconPath:
+        './../../../../assets/img/categoria/imgp2680_gigante n3 (1).webp',
+    },
+    {
+      categoryName: 'Combos',
+      iconPath:
+        './../../../../assets/img/categoria/imgc13_COMBO VARIADO CON BAILEYS Y ROCHER.webp',
+    },
+    {
+      categoryName: 'Planetas',
+      iconPath: './../../../../assets/img/categoria/imgp2385_cica.webp',
+    },
+    {
+      categoryName: 'Regalos Especiales',
+      iconPath: './../../../../assets/img/categoria/imgc72_Ramo grande.webp',
+    },
   ];
   // Variable para almacenar la temporada actual
   temporada: string;
@@ -52,6 +91,7 @@ export default class HomeComponent implements OnInit {
 
   products = [
     {
+      id: 1,
       name: 'Oso de Peluche',
       description: 'Suave y adorable oso de peluche.',
       price: 29.99,
@@ -60,6 +100,7 @@ export default class HomeComponent implements OnInit {
       isNew: false,
     },
     {
+      id: 2,
       name: 'Arreglo de Tulipanes',
       description: 'Hermoso arreglo de tulipanes frescos.',
       price: 45.99,
@@ -68,6 +109,7 @@ export default class HomeComponent implements OnInit {
       isNew: false,
     },
     {
+      id: 4,
       name: 'Bouquet de Novia',
       description: 'Bouquet especial para bodas.',
       price: 89.99,
@@ -76,6 +118,7 @@ export default class HomeComponent implements OnInit {
       isNew: true,
     },
     {
+      id: 5,
       name: 'Osito con Rosas',
       description: 'Un oso decorado con rosas artificiales.',
       price: 69.99,
@@ -123,6 +166,10 @@ export default class HomeComponent implements OnInit {
   // Método para seleccionar una categoría
   selectCategory(category: string) {
     this.selectedCategory = category;
+  }
+
+  onCategorySelected(selectedCategory: any): void {
+    console.log('Categoría seleccionada:', selectedCategory);
   }
   obtenerTemporada(): string {
     const mes = new Date().getMonth(); // Obtiene el mes actual (0-11)

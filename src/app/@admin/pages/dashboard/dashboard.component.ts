@@ -4,10 +4,6 @@ import { DrawerComponent } from '../../../@shared/components/drawer/drawer.compo
 import { drawerMode } from '../../../@shared/components/drawer/drawer.types';
 import { CommonModule } from '@angular/common';
 import { Animations } from '../../../@shared/animations';
-import { AvailabilityCalendarComponent } from '../../../@public/core/components/availability-calendar/availability-calendar.component';
-import { AssignedProjectsComponent } from '../../../@public/core/components/assigned-projects/assigned-projects.component';
-import { PendingRequestsIndicatorComponent } from '../../../@public/core/components/pending-requests-indicator/pending-requests-indicator.component';
-import { NewsAnnouncementsComponent } from '../../../@public/core/components/news-announcements/news-announcements.component';
 import { MaterialModule } from '../../../@shared/material/material.module';
 import { LucideModule } from '../../../@shared/lucide/lucide.module';
 import { Router, RouterModule } from '@angular/router';

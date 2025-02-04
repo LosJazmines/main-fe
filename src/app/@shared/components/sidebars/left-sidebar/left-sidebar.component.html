@@ -1,0 +1,50 @@
+<div class="disable-selection min-w-[290px]  overflow-hidden">
+  <div class="h-screen w-full bg-black/10 text-black flex flex-col p-4">
+    <div class="mb-2 text-center">
+      <!-- <button mat-icon-button aria-label="menu" (click)="openLeftDrawer()">
+          <mat-icon>menu</mat-icon>
+        </button> -->
+      <h1 class="text-2xl font-bold">Los Jazmines</h1>
+    </div>
+
+    <div class="flex flex-col space-y-2">
+      <button
+        [routerLink]="['/home']"
+        routerLinkActive="bg-black/15"
+        class="flex items-center px-4 py-2 rounded hover:bg-black/15"
+      >
+        <lucide-icon name="home" class="w-5 h-5 mr-3"></lucide-icon>
+        <span>Inicio</span>
+      </button>
+
+      <button
+        [routerLink]="['/online-store']"
+        routerLinkActive="bg-black/15"
+        class="flex items-center px-4 py-2 rounded hover:bg-black/15"
+      >
+        <lucide-icon name="shopping-cart" class="w-5 h-5 mr-3"></lucide-icon>
+        <span>Tienda</span>
+      </button>
+
+      <button
+        [routerLink]="['/about']"
+        routerLinkActive="bg-black/15"
+        class="flex items-center px-4 py-2 rounded hover:bg-black/15"
+      >
+        <lucide-icon name="info" class="w-5 h-5 mr-3"></lucide-icon>
+        <span>Acerca de</span>
+      </button>
+
+      <button
+        [routerLink]="['/contact']"
+        routerLinkActive="bg-black/15"
+        class="flex items-center px-4 py-2 rounded hover:bg-black/15"
+      >
+        <lucide-icon name="mail" class="w-5 h-5 mr-3"></lucide-icon>
+        <span>Contacto</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Import Lucide icons as needed in your component -->
+</div>

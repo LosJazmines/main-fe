@@ -1,0 +1,67 @@
+@use "../../scss/variables.scss" as v;
+@use "../../scss/mixins.scss" as mixins;
+
+.toolbar {
+  width: 100%;
+  height: 60px;
+  background-color: rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .content {
+    width: 100%;
+    max-width: 1200px;
+    height: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 0;
+  }
+}
+
+.logo-container {
+  width: 20%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  text-align: center;
+  font-size: 1.2rem;
+  font-weight: bold;
+  p {
+    margin: 0;
+  }
+}
+
+.link-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+
+  .btn-header {
+    background-color: transparent;
+    border-radius: v.$border-radius;
+  }
+}
+
+.right-container {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 1rem;
+
+  .mat-icon {
+    color: v.$primary;
+  }
+
+  div {
+    .btn-login {
+      color: v.$font-principal;
+      background-color: v.$background-primary;
+      border-radius: v.$border-radius;
+    }
+  }
+}
+
+

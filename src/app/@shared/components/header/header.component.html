@@ -1,0 +1,132 @@
+<header class="toolbar">
+  <div class="content">
+    <div class="logo-container">
+      <div class="flex md:hidden justify-end">
+        <button
+          mat-icon-button
+          aria-label="menu"
+          (click)="openLeftDrawer()"
+          class="text-white"
+        >
+          <mat-icon>menu</mat-icon>
+        </button>
+      </div>
+      <p class="text-start">Los Jazmines</p>
+    </div>
+
+    <div class="hidden md:flex justify-center items-center">
+      <div class="link-container">
+        <div class="">
+          <button
+            [routerLink]="['/home']"
+            routerLinkActive="router-link-active"
+            class="btn-header"
+            mat-flat-button
+          >
+            Inicio
+          </button>
+        </div>
+        <div class="">
+          <button
+            [routerLink]="['/online-store']"
+            routerLinkActive="router-link-active"
+            class="btn-header"
+            mat-flat-button
+          >
+            Tienda
+          </button>
+        </div>
+        <!-- <div class="">
+          <button
+            [routerLink]="['/about']"
+            routerLinkActive="router-link-active"
+            class="btn-header"
+            mat-flat-button
+          >
+            Acerca de
+          </button>
+        </div> -->
+        <div class="">
+          <button
+            [routerLink]="['/contact']"
+            routerLinkActive="router-link-active"
+            class="btn-header"
+            mat-flat-button
+          >
+            Contacto
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="right-container">
+      <button
+        mat-icon-button
+        class="relative text-black custom-badge"
+        [routerLink]="['/card-order']"
+        routerLinkActive="router-link-active"
+      >
+        <span
+          class="absolute -top-[-10px] right-[23px] transform translate-x-1/2 -translate-y-1/2 text-black text-xs font-semibold px-2 py-0.5 rounded-full"
+        >
+          {{ shoppingCartLength() }}
+        </span>
+        <lucide-icon [size]="24" name="shopping-cart"></lucide-icon>
+      </button>
+      <!-- 
+      <button
+        mat-icon-button
+        class="text-black"
+        [routerLink]="['/admin']"
+        routerLinkActive="router-link-active"
+      >
+        <lucide-icon [size]="24" name="search"></lucide-icon>
+      </button> -->
+      <!-- 
+      <button
+        mat-icon-button
+        class="text-black"
+        [routerLink]="['/admin']"
+        routerLinkActive="router-link-active"
+      >
+        <lucide-icon [size]="24" name="shield"></lucide-icon>
+      </button> -->
+      <!-- @if( isAdmin$ | async ){
+      <button
+        mat-icon-button
+        class="text-black"
+        [routerLink]="['/admin']"
+        routerLinkActive="router-link-active"
+      >
+        <lucide-icon [size]="24" name="shield"></lucide-icon>
+      </button>
+      } -->
+      @if(!this.currentUser()?.username){
+      <div>
+        <button
+          (click)="openDialogLogin()"
+          class="px-4 py-2 bg-black/80 text-white rounded shadow hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition"
+        >
+          Ingresar
+        </button>
+      </div>
+      } @if(this.currentUser()?.username){
+      <div class="cursor-pointer group" (click)="openRightDrawer()">
+        <!-- Avatar y nombre de usuario -->
+        <div
+          class="flex items-center gap-2 p-2 rounded-lg transition-all duration-300"
+        >
+          <span class="text-lg font-medium group-hover:shadow-text">{{
+            currentUser()?.username
+          }}</span>
+          <div
+            class="w-10 h-10 bg-black bg-opacity-80 rounded-full flex items-center justify-center text-white font-bold group-hover:shadow-lg hover:bg-opacity-100"
+          >
+            <!-- Avatar (sin foto, solo un fondo gris con las iniciales) -->
+            <span>{{ currentUser()?.username | slice : 0 : 1 }}</span>
+          </div>
+        </div>
+      </div>
+      }
+    </div>
+  </div>
+</header>

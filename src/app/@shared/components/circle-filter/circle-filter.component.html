@@ -1,0 +1,21 @@
+<div
+  (click)="onSelectCategory()"
+  class="flex flex-col items-center transition-all duration-300 cursor-pointer group"
+>
+  <!-- Círculo con la imagen -->
+  <div
+    class="w-[120px] h-[120px] p-4 bg-white overflow-hidden  rounded-full flex items-center justify-center transition-all duration-300 shadow group-hover:shadow-xl"
+  >
+    <img
+      [src]="iconPath"
+      [alt]="categoryName"
+      class="w-full h-full transition-all duration-300"
+    />
+  </div>
+  <!-- Texto debajo del círculo -->
+  <span
+    class="mt-[0.5rem] text-center text-sm text-black transition-all duration-300 group-hover:text-gray-700"
+  >
+    {{ categoryName }}
+  </span>
+</div>

@@ -1,4 +1,4 @@
-<div class="p-6 bg-gray-100 min-h-screen">
+<div class="p-6 bg-gray-100 min-h-full">
   <!-- Cards de Estadísticas -->
   <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
     <div class="bg-white shadow rounded-lg p-6 text-center">
@@ -108,44 +108,62 @@
 
   <!-- Tabla de Órdenes -->
   <div class="bg-white shadow rounded-lg p-6">
-    <table class="table-auto w-full border-collapse">
-      <thead>
-        <tr class="bg-gray-200 text-gray-600 text-sm uppercase text-left">
-          <th class="p-3">ID</th>
-          <th class="p-3">Cliente</th>
-          <th class="p-3">Fecha</th>
-          <th class="p-3">Estado</th>
-          <th class="p-3">Total</th>
-          <th class="p-3">Acciones</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr class="border-t">
-          <td class="p-3">#1001</td>
-          <td class="p-3">Juan Pérez</td>
-          <td class="p-3">2025-01-15</td>
-          <td class="p-3 text-yellow-500">Pendiente</td>
-          <td class="p-3">$200</td>
-          <td class="p-3">
+    <h2 class="text-lg font-semibold mb-4">Lista de Pedidos</h2>
+
+      <div *ngFor="let pedido of pedidos" #panel>
+        <!-- Encabezado de la fila -->
+        <div>
+          <div class="flex justify-between items-center w-full">
+            <span class="font-medium">Pedido #{{ pedido.id }}</span>
+            <span class="text-gray-500">{{ pedido.fecha }}</span>
+            <span
+              [ngClass]="{
+                'text-yellow-500': pedido.estado === 'Pendiente',
+                'text-green-500': pedido.estado === 'Entregada'
+              }"
+            >
+              {{ pedido.estado }}
+            </span>
+            <span class="font-bold">${{ pedido.total }}</span>
+            <div class="flex items-center gap-2">
+              <!-- Botón para controlar la expansión -->
+              <!-- <button
+                class="flex items-center justify-center bg-gray-200 hover:bg-gray-300 rounded-full w-8 h-8"
+                (click)="togglePanel(panel)"
+              >
+                <mat-icon>
+                  {{ panel.expanded ? "expand_less" : "expand_more" }}
+                </mat-icon>
+              </button> -->
+
+              <!-- Otros botones de acción -->
+              <button
+                class="bg-red-500 text-white px-3 py-1 rounded text-sm"
+                (click)="accionEliminar(pedido)"
+              >
+                <mat-icon>delete</mat-icon>
+              </button>
+              <button
+                class="bg-green-500 text-white px-3 py-1 rounded text-sm"
+                (click)="accionAprobar(pedido)"
+              >
+                <mat-icon>check</mat-icon>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Detalle expandido -->
+        <div class="p-4">
+          <p><strong>Cliente:</strong> {{ pedido.cliente }}</p>
+          <p><strong>Detalles:</strong> {{ pedido.detalles }}</p>
+          <div class="mt-3">
             <button class="bg-blue-500 text-white px-3 py-1 rounded text-sm">
-              Ver Detalle
+              Acción
             </button>
-          </td>
-        </tr>
-        <tr class="border-t">
-          <td class="p-3">#1002</td>
-          <td class="p-3">María López</td>
-          <td class="p-3">2025-01-16</td>
-          <td class="p-3 text-green-500">Entregada</td>
-          <td class="p-3">$350</td>
-          <td class="p-3">
-            <button class="bg-blue-500 text-white px-3 py-1 rounded text-sm">
-              Ver Detalle
-            </button>
-          </td>
-        </tr>
-        <!-- Más filas -->
-      </tbody>
-    </table>
+          </div>
+        </div>
+      </div>
+    <!-- </mat-accordion> -->
   </div>
 </div>

@@ -25,6 +25,34 @@ export const routes: Routes = [
         data: { breadcrumb: 'Online Store' },
       },
       {
+        path: 'card-order',
+        loadComponent: () =>
+          import('./@public/pages/card-order/card-order.component').then(
+            (m) => m.CardOrderComponent
+          ),
+        title: 'Los Jazmines - Card Order',
+        data: { breadcrumb: 'Card Order' },
+      },
+      {
+        path: 'card-order-map',
+        loadComponent: () =>
+          import(
+            './@public/pages/card-order-map/card-order-map.component'
+          ).then((m) => m.CardOrderMapComponent),
+        title: 'Los Jazmines - Card Order Map',
+        data: { breadcrumb: 'Card Order Map' },
+      },
+
+      {
+        path: 'card-order-check-payments',
+        loadComponent: () =>
+          import(
+            './@public/pages/card-order-check-payments-mp/card-order-check-payments-mp.component'
+          ).then((m) => m.CardOrderCheckPaymentsMpComponent),
+        title: 'Los Jazmines - Card Order Map',
+        data: { breadcrumb: 'Card Order Map' },
+      },
+      {
         path: 'register',
         loadComponent: () =>
           import('./@public/pages/forms/register/register.component'),
@@ -65,6 +93,40 @@ export const routes: Routes = [
     ],
   },
 
+  // @Rutas User
+  {
+    path: '',
+    loadComponent: () =>
+      import('./@user/pages/user.component').then((m) => m.UserComponent),
+    title: 'User',
+    children: [
+      {
+        path: '',
+        loadComponent: () =>
+          import('./@user/pages/profile/profile.component').then(
+            (m) => m.ProfileComponent
+          ),
+        title: 'User - Perfil',
+      },
+      {
+        path: 'perfile',
+        loadComponent: () =>
+          import('./@user/pages/profile/profile.component').then(
+            (m) => m.ProfileComponent
+          ),
+        title: 'User - Perfil',
+      },
+      {
+        path: 'order/:idOrder',
+        loadComponent: () =>
+          import('./@user/pages/order/order.component').then(
+            (m) => m.OrderComponent
+          ),
+        title: 'User - Order',
+      },
+    ],
+  },
+
   // @Rutas Admin
 
   {
@@ -98,8 +160,7 @@ export const routes: Routes = [
 
       {
         path: 'products/:id',
-        loadComponent: () =>
-          import('./@admin/pages/product/product.component'),
+        loadComponent: () => import('./@admin/pages/product/product.component'),
         title: 'Admin - Product',
       },
       {

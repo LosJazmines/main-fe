@@ -1,0 +1,287 @@
+<div class="max-w-[1200px] mx-auto">
+  <div class="p-8 custom-height flex flex-col gap-4">
+    <div class="w-full h-full flex-1 flex justify-center items-start gap-4">
+      <div
+        class="min-h-[360px] h-full w-[410px] flex-1 rounded overflow-hidden flex flex-col gap-4"
+      >
+        <div class="border-b border-black/10 w-full flex-1">
+          <h2 class="text-2xl font-bold text-gray-800">Datos</h2>
+        </div>
+        <div
+          class="min-h-[143px] w-full bg-white rounded-lg shadow-md flex-1 px-4 py-2"
+        >
+          <div
+            class="border-b border-black/10 w-full flex-1 flex items-center justify-between mb-2"
+          >
+            <h3 class="text-base font-bold text-gray-800">Datos Personales</h3>
+            <button
+              (click)="openDialogPersonalDataEdit()"
+              class="text-gray-500 transition duration-300 hover:text-black"
+            >
+              Editar
+            </button>
+          </div>
+          <div class="text-gray-600 text-sm">
+            <div class="flex items-center gap-2 mb-2">
+              <lucide-icon
+                name="map-pin"
+                class="w-4 h-4 text-gray-600"
+              ></lucide-icon>
+              <p>Dirección de envío: Calle 123, Ciudad</p>
+            </div>
+            <div class="flex items-center gap-2 mb-2">
+              <lucide-icon
+                name="user"
+                class="w-4 h-4 text-gray-600"
+              ></lucide-icon>
+              <p>Nombre: Juan Pérez</p>
+            </div>
+            <div class="flex items-center gap-2 mb-2">
+              <lucide-icon
+                name="check"
+                class="w-4 h-4 text-gray-600"
+              ></lucide-icon>
+              <p>Estado: En camino</p>
+            </div>
+            <div class="flex items-center gap-2 mb-2">
+              <lucide-icon
+                name="phone"
+                class="w-4 h-4 text-gray-600"
+              ></lucide-icon>
+              <p>Teléfono: +123456789</p>
+            </div>
+            <div class="flex items-center gap-2 mb-2">
+              <lucide-icon
+                name="dollar-sign"
+                class="w-4 h-4 text-gray-600"
+              ></lucide-icon>
+              <p>Medio de pago: PayPal</p>
+            </div>
+          </div>
+        </div>
+        <div
+          class="min-h-[143px] w-full bg-white rounded-lg shadow-md flex-1 px-4 py-2"
+        >
+          <div
+            class="border-b border-black/10 w-full flex-1 flex items-center justify-between mb-2"
+          >
+            <h3 class="text-base font-bold text-gray-800">Mis direcciones</h3>
+            <button
+              (click)="openDialogMyAddressesEdit()"
+              class="text-gray-500 transition duration-300 hover:text-black"
+            >
+              Editar
+            </button>
+          </div>
+          <div class="text-gray-600 text-sm">
+            <div class="flex items-center gap-2 mb-2">
+              <lucide-icon
+                name="map-pin"
+                class="w-4 h-4 text-gray-600"
+              ></lucide-icon>
+              <p>Dirección de envío: Calle 123, Ciudad</p>
+            </div>
+            <div class="flex items-center gap-2 mb-2">
+              <lucide-icon
+                name="user"
+                class="w-4 h-4 text-gray-600"
+              ></lucide-icon>
+              <p>Nombre: Juan Pérez</p>
+            </div>
+            <div class="flex items-center gap-2 mb-2">
+              <lucide-icon
+                name="check"
+                class="w-4 h-4 text-gray-600"
+              ></lucide-icon>
+              <p>Estado: En camino</p>
+            </div>
+            <div class="flex items-center gap-2 mb-2">
+              <lucide-icon
+                name="phone"
+                class="w-4 h-4 text-gray-600"
+              ></lucide-icon>
+              <p>Teléfono: +123456789</p>
+            </div>
+            <div class="flex items-center gap-2 mb-2">
+              <lucide-icon
+                name="dollar-sign"
+                class="w-4 h-4 text-gray-600"
+              ></lucide-icon>
+              <p>Medio de pago: PayPal</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="w-[360px] flex flex-col gap-4 flex-1">
+        <div class="border-b border-black/10 w-full flex-1">
+          <h2 class="text-2xl font-bold text-gray-800">Mis Compras</h2>
+        </div>
+        <div class="w-full h-full flex flex-col min-h-[288px] bg-black/1 gap-2">
+          <div
+            class="w-full h-[60px] bg-white border border-gray-200 rounded-lg shadow-md flex items-center justify-between px-4"
+          >
+            <div class="flex items-center gap-4">
+              <!-- Ícono para el número de orden -->
+              <lucide-icon
+                name="package"
+                class="w-5 h-5 text-gray-700"
+              ></lucide-icon>
+              <p class="text-lg font-bold text-gray-800">Orden:</p>
+              <p class="text-lg font-semibold text-gray-700">#123</p>
+            </div>
+
+            <div class="flex items-center gap-4">
+              <!-- Fecha -->
+              <div class="flex items-center gap-2 text-gray-600">
+                <lucide-icon name="calendar" class="w-5 h-5"></lucide-icon>
+                <p class="text-base font-medium">12 / 02 / 2023</p>
+              </div>
+
+              <!-- Hora -->
+              <div class="flex items-center gap-2 text-gray-600">
+                <lucide-icon name="clock" class="w-5 h-5"></lucide-icon>
+                <p class="text-base font-medium">14:30</p>
+              </div>
+
+              <!-- Botón para ver detalles -->
+              <button
+                class="p-2 rounded-full bg-gray-100 hover:bg-gray-200 transition"
+                type="button"
+                aria-label="Ver detalles"
+                (click)="toGoToOrderDetail()"
+              >
+                <lucide-icon
+                  name="eye"
+                  class="w-5 h-5 text-gray-700"
+                ></lucide-icon>
+              </button>
+            </div>
+          </div>
+          <div
+            class="w-full h-[60px] bg-white border border-gray-200 rounded-lg shadow-md flex items-center justify-between px-4"
+          >
+            <div class="flex items-center gap-4">
+              <!-- Ícono para el número de orden -->
+              <lucide-icon
+                name="package"
+                class="w-5 h-5 text-gray-700"
+              ></lucide-icon>
+              <p class="text-lg font-bold text-gray-800">Orden:</p>
+              <p class="text-lg font-semibold text-gray-700">#123</p>
+            </div>
+
+            <div class="flex items-center gap-4">
+              <!-- Fecha -->
+              <div class="flex items-center gap-2 text-gray-600">
+                <lucide-icon name="calendar" class="w-5 h-5"></lucide-icon>
+                <p class="text-base font-medium">12 / 02 / 2023</p>
+              </div>
+
+              <!-- Hora -->
+              <div class="flex items-center gap-2 text-gray-600">
+                <lucide-icon name="clock" class="w-5 h-5"></lucide-icon>
+                <p class="text-base font-medium">14:30</p>
+              </div>
+
+              <!-- Botón para ver detalles -->
+              <button
+                class="p-2 rounded-full bg-gray-100 hover:bg-gray-200 transition"
+                type="button"
+                aria-label="Ver detalles"
+                (click)="toGoToOrderDetail()"
+              >
+                <lucide-icon
+                  name="eye"
+                  class="w-5 h-5 text-gray-700"
+                ></lucide-icon>
+              </button>
+            </div>
+          </div>
+
+          <div
+            class="w-full h-[60px] bg-white border border-gray-200 rounded-lg shadow-md flex items-center justify-between px-4"
+          >
+            <div class="flex items-center gap-4">
+              <!-- Ícono para el número de orden -->
+              <lucide-icon
+                name="package"
+                class="w-5 h-5 text-gray-700"
+              ></lucide-icon>
+              <p class="text-lg font-bold text-gray-800">Orden:</p>
+              <p class="text-lg font-semibold text-gray-700">#123</p>
+            </div>
+
+            <div class="flex items-center gap-4">
+              <!-- Fecha -->
+              <div class="flex items-center gap-2 text-gray-600">
+                <lucide-icon name="calendar" class="w-5 h-5"></lucide-icon>
+                <p class="text-base font-medium">12 / 02 / 2023</p>
+              </div>
+
+              <!-- Hora -->
+              <div class="flex items-center gap-2 text-gray-600">
+                <lucide-icon name="clock" class="w-5 h-5"></lucide-icon>
+                <p class="text-base font-medium">14:30</p>
+              </div>
+
+              <!-- Botón para ver detalles -->
+              <button
+                class="p-2 rounded-full bg-gray-100 hover:bg-gray-200 transition"
+                type="button"
+                aria-label="Ver detalles"
+                (click)="toGoToOrderDetail()"
+              >
+                <lucide-icon
+                  name="eye"
+                  class="w-5 h-5 text-gray-700"
+                ></lucide-icon>
+              </button>
+            </div>
+          </div>
+
+          <div
+            class="w-full h-[60px] bg-white border border-gray-200 rounded-lg shadow-md flex items-center justify-between px-4"
+          >
+            <div class="flex items-center gap-4">
+              <!-- Ícono para el número de orden -->
+              <lucide-icon
+                name="package"
+                class="w-5 h-5 text-gray-700"
+              ></lucide-icon>
+              <p class="text-lg font-bold text-gray-800">Orden:</p>
+              <p class="text-lg font-semibold text-gray-700">#123</p>
+            </div>
+
+            <div class="flex items-center gap-4">
+              <!-- Fecha -->
+              <div class="flex items-center gap-2 text-gray-600">
+                <lucide-icon name="calendar" class="w-5 h-5"></lucide-icon>
+                <p class="text-base font-medium">12 / 02 / 2023</p>
+              </div>
+
+              <!-- Hora -->
+              <div class="flex items-center gap-2 text-gray-600">
+                <lucide-icon name="clock" class="w-5 h-5"></lucide-icon>
+                <p class="text-base font-medium">14:30</p>
+              </div>
+
+              <!-- Botón para ver detalles -->
+              <button
+                class="p-2 rounded-full bg-gray-100 hover:bg-gray-200 transition"
+                type="button"
+                aria-label="Ver detalles"
+                (click)="toGoToOrderDetail()"
+              >
+                <lucide-icon
+                  name="eye"
+                  class="w-5 h-5 text-gray-700"
+                ></lucide-icon>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,63 @@
+<div class="address-container">
+    <form [formGroup]="addressForm" (ngSubmit)="onSubmit()">
+      <!-- Nombre (Alias) -->
+      <mat-form-field appearance="fill">
+        <mat-label>Nombre (Alias)</mat-label>
+        <input matInput formControlName="nombre" required />
+        <mat-error *ngIf="addressForm.get('nombre')?.hasError('required')">
+          El alias es obligatorio.
+        </mat-error>
+      </mat-form-field>
+  
+      <!-- Dirección -->
+      <mat-form-field appearance="fill">
+        <mat-label>Dirección</mat-label>
+        <input matInput formControlName="direccion" required />
+        <mat-error *ngIf="addressForm.get('direccion')?.hasError('required')">
+          La dirección es obligatoria.
+        </mat-error>
+      </mat-form-field>
+  
+      <!-- Código Postal -->
+      <mat-form-field appearance="fill">
+        <mat-label>Código Postal</mat-label>
+        <input matInput formControlName="codigoPostal" required />
+        <mat-error *ngIf="addressForm.get('codigoPostal')?.hasError('required')">
+          El código postal es obligatorio.
+        </mat-error>
+      </mat-form-field>
+  
+      <!-- Ciudad -->
+      <mat-form-field appearance="fill">
+        <mat-label>Ciudad</mat-label>
+        <input matInput formControlName="ciudad" required />
+        <mat-error *ngIf="addressForm.get('ciudad')?.hasError('required')">
+          La ciudad es obligatoria.
+        </mat-error>
+      </mat-form-field>
+  
+      <!-- Provincia -->
+      <mat-form-field appearance="fill">
+        <mat-label>Provincia</mat-label>
+        <input matInput formControlName="provincia" required />
+        <mat-error *ngIf="addressForm.get('provincia')?.hasError('required')">
+          La provincia es obligatoria.
+        </mat-error>
+      </mat-form-field>
+  
+      <!-- Teléfono -->
+      <mat-form-field appearance="fill">
+        <mat-label>Teléfono</mat-label>
+        <input matInput formControlName="telefono" required />
+        <mat-error *ngIf="addressForm.get('telefono')?.hasError('required')">
+          El teléfono es obligatorio.
+        </mat-error>
+      </mat-form-field>
+  
+      <!-- Guardar dirección -->
+      <button mat-raised-button color="primary" type="submit" [disabled]="addressForm.invalid">
+        Guardar Dirección
+      </button>
+    </form>
+  </div>
+  

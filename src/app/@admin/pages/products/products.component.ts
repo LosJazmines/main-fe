@@ -1,14 +1,26 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { AdminHeaderStore } from '../../../@core/store/admin-header.store';
 import { CommonModule } from '@angular/common';
 import { MaterialModule } from '../../../@shared/material/material.module';
 import { LucideModule } from '../../../@shared/lucide/lucide.module';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
+import { ProductsService } from '../../../@apis/products.service';
+import { TokenService } from '../../../@core/services/token.service';
+import { MessageService } from '../../../@core/services/snackbar.service';
+import { Store } from '@ngrx/store';
 
 @Component({
   selector: 'app-products',
   standalone: true,
-  imports: [CommonModule, MaterialModule, LucideModule, ReactiveFormsModule, FormsModule],
+  imports: [
+    CommonModule,
+    MaterialModule,
+    LucideModule,
+    ReactiveFormsModule,
+    FormsModule,
+    RouterModule,
+  ],
   templateUrl: './products.component.html',
   styleUrl: './products.component.scss',
 })
@@ -21,6 +33,7 @@ export default class ProductsComponent implements OnInit {
   outOfStock = 0;
   lowStock = 0;
 
+  productsOne = signal<any[]>([]);
   products = [
     {
       id: 101,
@@ -61,9 +74,21 @@ export default class ProductsComponent implements OnInit {
   minPrice = 0;
   maxPrice = 0;
 
+  constructor(
+    private _fb: FormBuilder,
+    // public dialogRef: DialogRef<string>,
+    // private _dialog: Dialog,
+    // @Inject(DIALOG_DATA) public data: any,
+    private _productsService: ProductsService,
+    private store: Store,
+    private _tokenService: TokenService,
+    private _messageService: MessageService
+  ) {}
+
   ngOnInit(): void {
     this._adminHeaderStore.updateHeaderTitle('Products');
     this.calculateStatistics();
+    this.getProducts();
   }
 
   calculateStatistics(): void {
@@ -95,14 +120,54 @@ export default class ProductsComponent implements OnInit {
     });
   }
 
+  private getProducts(): void {
+    this._productsService.getAllProducts().subscribe({
+      next: (response: any) => {
+        // Process the response here
+        this.products = [...response];
+        this.productsOne.set(this.products);
+        // If you need to handle the response, you can do so here
+        // For example:
+        // this.products = response.products;
+      },
+      error: (error) => {
+        // In case of error, handle it here
+        console.error('Error fetching products:', error);
+      },
+    });
+  }
+
   editProduct(product: any): void {
     console.log('Editando producto:', product);
   }
 
   deleteProduct(product: any): void {
-    console.log('Eliminando producto:', product);
     this.products = this.products.filter((p) => p.id !== product.id);
     this.applyFilters();
     this.calculateStatistics();
+
+    this._productsService.deleteProduct(product?.id).subscribe({
+      next: (response: any) => {
+        // Process the response here
+        this.products = this.products.filter((p) => p.id !== product.id);
+        // console.log({ products: this.products });
+        this.productsOne.set(this.products);
+        // If you need to handle the response, you can do so here
+        // For example:
+        this._messageService.showInfo(
+          'Producto eliminado correctamente',
+          'top right',
+          5000
+        );
+      },
+      complete: () => {
+        console.log('Request completed');
+        // This method is called once the request has completed successfully
+      },
+      error: (error) => {
+        // In case of error, handle it here
+        console.error('Error fetching products:', error);
+      },
+    });
   }
 }

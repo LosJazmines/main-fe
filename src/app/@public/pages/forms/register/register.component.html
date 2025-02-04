@@ -1,17 +1,3 @@
-<!-- <div class="register-container">
-  <div class="register">
-    <h1>register works!</h1>
-    <div>
-      <label id="favorite-animal">What's your favorite animal?</label>
-      <input for="favorite-animal" placeholder="Enter your name" />
-    </div>
-    <div>
-      <button (click)="dialogRef.close(data.animal)">OK</button>
-      <button (click)="dialogRef.close()">Cancel</button>
-    </div>
-  </div>
-</div> -->
-
 <div class="register-container">
   <div class="register">
     <div class="left">INFO</div>
@@ -24,6 +10,21 @@
         [formGroup]="registerGroup"
         (submit)="submitEvent()"
       >
+        <mat-form-field class="form-field" appearance="outline">
+          <mat-label class="form-label">Nombre</mat-label>
+          <input
+            class="form-input"
+            matInput
+            formControlName="username"
+            placeholder="Nombre"
+            required
+          />
+          <mat-error
+            class="form-error"
+            *ngIf="registerGroup.get('username')?.hasError('username')"
+            >Formato invalido.</mat-error
+          >
+        </mat-form-field>
         <mat-form-field class="form-field" appearance="outline">
           <mat-label class="form-label">Email</mat-label>
           <input

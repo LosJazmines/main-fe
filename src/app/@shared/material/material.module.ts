@@ -27,10 +27,11 @@ import { MatInputModule } from '@angular/material/input';
 // import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatMenuModule } from '@angular/material/menu';
-import {MatBadgeModule} from '@angular/material/badge';
+import { MatBadgeModule } from '@angular/material/badge';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatStepperModule } from '@angular/material/stepper';
 import { CdkStepperModule } from '@angular/cdk/stepper';
+import { MatSidenavModule } from '@angular/material/sidenav';
 
 // import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
@@ -38,7 +39,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatPaginatorModule } from '@angular/material/paginator';
 
-// import { MomentDateAdapter } from '@angular/material-moment-adapter';
+import {MatChipsModule} from '@angular/material/chips';
 
 // Cdk
 import { CdkTableModule } from '@angular/cdk/table';
@@ -76,12 +77,15 @@ export const MATERIAL_MODULES = [
   MatSlideToggleModule,
   MatPaginatorModule,
   MatTooltipModule,
+
+  MatChipsModule,
   // CDK
   CdkStepperModule,
   CdkTableModule,
   DialogModule,
   CdkAccordionModule,
   MatBadgeModule,
+  MatSidenavModule,
 ];
 
 @NgModule({

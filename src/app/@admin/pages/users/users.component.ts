@@ -3,7 +3,11 @@ import { AdminHeaderStore } from '../../../@core/store/admin-header.store';
 import { CommonModule } from '@angular/common';
 import { MaterialModule } from '../../../@shared/material/material.module';
 import { LucideModule } from '../../../@shared/lucide/lucide.module';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { UsersService } from '../../../@apis/users.service';
+import { Store } from '@ngrx/store';
+import { TokenService } from '../../../@core/services/token.service';
+import { MessageService } from '../../../@core/services/snackbar.service';
 
 @Component({
   selector: 'app-users',
@@ -42,6 +46,18 @@ export default class UsersComponent implements OnInit {
   statuses = ['Todos', 'Activo', 'Inactivo'];
   selectedStatus = 'Todos';
   searchQuery = '';
+
+  constructor(
+    private _fb: FormBuilder,
+    // public dialogRef: DialogRef<string>,
+    // private _dialog: Dialog,
+    // @Inject(DIALOG_DATA) public data: any,
+    private _usersService: UsersService,
+    private store: Store,
+    private _tokenService: TokenService,
+    private _messageService: MessageService
+  ) {}
+  
   ngOnInit(): void {
     this._adminHeaderStore.updateHeaderTitle('Users');
   }

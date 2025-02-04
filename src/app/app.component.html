@@ -1,1 +1,36 @@
-<router-outlet></router-outlet>
+<!-- <app-splash-screen></app-splash-screen> -->
+
+<mat-drawer-container class="h-full" [hasBackdrop]="true">
+  @if (isLeftAdminSidebarOpen$ | async) {
+  <mat-drawer
+    mode="over"
+    position="start"
+    [opened]="isLeftAdminSidebarOpen$ | async"
+    (closedStart)="closeLeftDrawerAdmin()"
+  >
+    <app-left-sidebar-filters></app-left-sidebar-filters>
+  </mat-drawer>
+  } @if (isLeftSidebarOpen$ | async) {
+  <mat-drawer
+    mode="over"
+    position="start"
+    [opened]="isLeftSidebarOpen$ | async"
+    (closedStart)="closeLeftDrawer()"
+  >
+    <app-left-sidebar></app-left-sidebar>
+  </mat-drawer>
+  }
+
+  <mat-drawer
+    mode="over"
+    position="end"
+    [opened]="isRightSidebarOpen$ | async"
+    (closedStart)="closeRightDrawer()"
+  >
+    <app-right-sidebar></app-right-sidebar>
+  </mat-drawer>
+
+  <mat-drawer-content>
+    <router-outlet></router-outlet>
+  </mat-drawer-content>
+</mat-drawer-container>
