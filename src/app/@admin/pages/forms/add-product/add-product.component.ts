@@ -65,7 +65,7 @@ export class AddProductComponent implements OnInit {
   ];
 
   selectedFiles: File[] = [];
-  imagePreview: string | ArrayBuffer | null = null;
+  imagePreviews: string[] = [];
 
   constructor(
     private _fb: FormBuilder,
@@ -131,7 +131,6 @@ export class AddProductComponent implements OnInit {
         console.log('Producto creado:', response);
         // Limpiar los archivos después de un envío exitoso
         this.selectedFiles = [];
-        this.imagePreview = null;
       },
       error: (error) => {
         console.error('Error al crear producto:', error);
@@ -139,27 +138,23 @@ export class AddProductComponent implements OnInit {
     });
   }
 
-  onFileSelected(event: Event) {
+   // Manejar la selección de imágenes
+   onFileSelected(event: Event) {
     const input = event.target as HTMLInputElement;
-    if (input?.files) {
-      // Obtener todos los archivos seleccionados
+    if (input.files) {
       const files: File[] = Array.from(input.files);
-  
-      // Guardar los archivos seleccionados en el array selectedFiles
-      this.selectedFiles.push(...files);
-  
-      // Crear vistas previas de las imágenes seleccionadas
-      const fileReaders: FileReader[] = [];
+
       files.forEach((file) => {
         const reader = new FileReader();
         reader.onload = () => {
-          this.imagePreview = reader.result; // Guardar la vista previa de la última imagen cargada
+          this.imagePreviews.push(reader.result as string);
         };
         reader.readAsDataURL(file);
-        fileReaders.push(reader);
+        this.selectedFiles.push(file);
       });
     }
   }
+  
   addImage() {
     console.log('Añadir imagen');
     let imageUrl = this.imageUrl.value;
@@ -168,11 +163,18 @@ export class AddProductComponent implements OnInit {
       return;
     }
   }
-
-  removeImage(index: number) {
-    this.imageList.splice(index, 1);
+  // Cambiar la imagen principal
+  setMainImage(index: number): void {
+    const selectedImage = this.imagePreviews[index];
+    this.imagePreviews.splice(index, 1); // Eliminar de la lista
+    this.imagePreviews.unshift(selectedImage); // Mover a principal
   }
 
+  // Eliminar imagen
+  removeImage(index: number) {
+    this.imagePreviews.splice(index, 1);
+    this.selectedFiles.splice(index, 1);
+  }
   isValidUrl(url: string): boolean {
     try {
       new URL(url);
