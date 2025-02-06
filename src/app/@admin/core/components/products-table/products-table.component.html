@@ -10,7 +10,7 @@
 </div>
 
 <!-- Lista de productos -->
-<div class="w-full flex flex-col min-h-[288px] bg-black/1 gap-2">
+<div class="w-full h-full flex flex-col min-h-[288px] bg-black/1 gap-2 overflow-auto">
   @for (product of products; track $index) {
   <app-products-table-row [product]="product"></app-products-table-row>
   }

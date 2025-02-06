@@ -256,10 +256,16 @@
 
       <button
         type="submit"
-        class="bg-black text-white px-4 py-2 rounded-lg flex items-center gap-2"
+        class="bg-black text-white px-4 py-2 rounded-lg flex items-center gap-2 disabled:opacity-20"
+        [disabled]="isLoading()"
       >
+        @if (isLoading()) {
+        <div class="w-[142px] flex items-center justify-center">
+          <app-loader [size]="'20px'"></app-loader>
+        </div>
+        } @if (!isLoading()) {
         <lucide-icon name="save" class="w-5 h-5"></lucide-icon>
-        Guardar Producto
+        Guardar Producto }
       </button>
     </div>
   </form>

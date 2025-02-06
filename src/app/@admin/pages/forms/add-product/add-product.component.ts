@@ -1,4 +1,4 @@
-import { Component, Inject, inject, OnInit } from '@angular/core';
+import { Component, Inject, inject, OnInit, signal } from '@angular/core';
 import { AdminHeaderStore } from '../../../../@core/store/admin-header.store';
 import {
   FormBuilder,
@@ -17,6 +17,7 @@ import { MaterialModule } from '../../../../@shared/material/material.module';
 import { LucideModule } from '../../../../@shared/lucide/lucide.module';
 import { RouterModule } from '@angular/router';
 import { Dialog, DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
+import { LoaderComponent } from '../../../../@shared/components/loader/loader.component';
 
 @Component({
   selector: 'app-add-product',
@@ -28,6 +29,7 @@ import { Dialog, DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
     FormsModule,
     RouterModule,
     ReactiveFormsModule,
+    LoaderComponent,
   ],
   templateUrl: './add-product.component.html',
   styleUrl: './add-product.component.scss',
@@ -40,6 +42,7 @@ export class AddProductComponent implements OnInit {
   imageUrl!: FormControl;
   imageList: string[] = [];
   isUrlInvalid: boolean = false;
+  isLoading = signal<boolean>(false);
 
   categories = [
     'Flores', // Flores frescas y arreglos florales
@@ -69,7 +72,7 @@ export class AddProductComponent implements OnInit {
 
   constructor(
     private _fb: FormBuilder,
-    public dialogRef: DialogRef<string>,
+    public dialogRef: DialogRef<{ success: boolean }>,
     private _dialog: Dialog,
 
     @Inject(DIALOG_DATA) public data: any,
@@ -108,38 +111,68 @@ export class AddProductComponent implements OnInit {
   }
 
   onSubmit(): void {
+    this.isLoading.set(true);
+
     if (this.productForm.invalid) {
       console.log('Formulario no válido', this.productForm.value);
       return;
     }
-  
+
     const formData = new FormData();
     formData.append('name', this.productForm.get('name')?.value);
     formData.append('category', this.productForm.get('category')?.value);
     formData.append('price', this.productForm.get('price')?.value);
     formData.append('stock', this.productForm.get('stock')?.value);
-    formData.append('maxPurchasePerUser', this.productForm.get('maxPurchasePerUser')?.value);
+    formData.append(
+      'maxPurchasePerUser',
+      this.productForm.get('maxPurchasePerUser')?.value
+    );
     formData.append('description', this.productForm.get('description')?.value);
-  
+
     // Adjuntar las imágenes seleccionadas al FormData
     this.selectedFiles.forEach((file) => {
       formData.append('files', file);
     });
-  
     this._productsService.createProduct(formData).subscribe({
       next: (response: any) => {
         console.log('Producto creado:', response);
-        // Limpiar los archivos después de un envío exitoso
+        this._messageService.showInfo(
+          'Producto creado exitosamente',
+          'bottom right',
+          5000
+        );
+        // Limpiar archivos e imágenes
         this.selectedFiles = [];
+        this.imagePreviews = [];
+
+        // Resetear el formulario sin activar alertas
+        this.productForm.reset();
+        this.productForm.markAsPristine();
+        this.productForm.markAsUntouched();
+
+        this.isLoading.set(false);
+
+        // Limpiar manualmente los errores de validación
+        Object.keys(this.productForm.controls).forEach((key) => {
+          this.productForm.get(key)?.setErrors(null);
+        });
+
+        this.dialogRef.close({ success: true });
       },
       error: (error) => {
         console.error('Error al crear producto:', error);
+        this._messageService.showError(
+          'Error al crear producto',
+          'bottom right',
+          5000
+        );
+        this.isLoading.set(false);
       },
     });
   }
 
-   // Manejar la selección de imágenes
-   onFileSelected(event: Event) {
+  // Manejar la selección de imágenes
+  onFileSelected(event: Event) {
     const input = event.target as HTMLInputElement;
     if (input.files) {
       const files: File[] = Array.from(input.files);
@@ -154,7 +187,7 @@ export class AddProductComponent implements OnInit {
       });
     }
   }
-  
+
   addImage() {
     console.log('Añadir imagen');
     let imageUrl = this.imageUrl.value;

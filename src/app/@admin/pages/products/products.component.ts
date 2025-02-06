@@ -179,8 +179,11 @@ export default class ProductsComponent implements OnInit {
       data: { name: 'hola', animal: 'hola' },
     });
 
-    dialogRef.closed.subscribe((result) => {
-      console.log('The dialog was closed');
+    dialogRef.closed.subscribe((result: any) => {
+      console.log({ result });
+      if (result.success) {
+        this.getProducts();
+      }
     });
   }
 }

@@ -17,23 +17,26 @@
 
   .rigth {
     height: 100vh;
-    max-height: calc(100vh - 2rem);
+    height: calc(100vh - 2rem);
     flex: 1;
     width: 80%;
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
     border-radius: v.$border-radius;
-    overflow: auto;
-    padding-right: .5rem;
+    padding-right: 0.5rem;
 
-    .content {
+    app-header {
+      position: sticky;
+      top: 0;
       width: 100%;
-      height: 100vh;
-      max-height: calc(100vh - 5.75rem);
-      // display: flex;
-      // justify-content: center;
-      // align-items: center;
+      z-index: 1000; // Asegura que esté sobre otros elementos
+    }
+
+    .conten {
+      flex: 1;
+      width: 100%;
+      overflow-y: auto; // Habilita el scroll solo en este contenedor
       border-radius: v.$border-radius;
       background-color: rgba(0, 0, 0, 0.1);
     }
