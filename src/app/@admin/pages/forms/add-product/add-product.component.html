@@ -1,0 +1,229 @@
+<div class="p-6 bg-white shadow rounded-lg min-h-full">
+  <h1 class="text-2xl text-center font-semibold text-black mb-6">
+    Agregar Producto
+  </h1>
+  <form [formGroup]="productForm" (ngSubmit)="onSubmit()" class="p-6">
+    <div class="flex gap-4">
+      <div
+        class="w-[180px] h-[215px] flex items-center justify-center bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:bg-gray-200 relative overflow-hidden"
+      >
+        <!-- Input de tipo archivo, invisible pero funcional -->
+        <input
+          type="file"
+          multiple
+          class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+          (change)="onFileSelected($event)"
+        />
+
+        <!-- Si hay imagen seleccionada, muestra la vista previa -->
+        <img
+          *ngIf="imagePreview"
+          [src]="imagePreview"
+          alt="Vista previa"
+          class="w-full h-full object-cover rounded-lg"
+        />
+
+        <!-- Icono de agregar imagen si no hay imagen seleccionada -->
+        <svg
+          *ngIf="!imagePreview"
+          xmlns="http://www.w3.org/2000/svg"
+          class="w-8 h-8 text-gray-500"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M12 5v14M5 12h14" />
+        </svg>
+      </div>
+
+      <div class="flex flex-col flex-1">
+        <mat-form-field class="w-full">
+          <mat-label>Nombre del Producto</mat-label>
+          <input matInput formControlName="name" placeholder="Ej: Rosa Roja" />
+          <mat-error *ngIf="productForm.get('name')?.invalid"
+            >Este campo es obligatorio</mat-error
+          >
+        </mat-form-field>
+
+        <!-- Categoría -->
+        <mat-form-field class="w-full">
+          <mat-label>Categoría</mat-label>
+          <mat-select formControlName="category">
+            <mat-option
+              *ngFor="let category of categories"
+              [value]="category"
+              >{{ category }}</mat-option
+            >
+          </mat-select>
+          <mat-error *ngIf="productForm.get('category')?.invalid"
+            >Selecciona una categoría</mat-error
+          >
+        </mat-form-field>
+
+        <!-- Precio -->
+        <mat-form-field class="w-full">
+          <mat-label>Precio</mat-label>
+          <input
+            matInput
+            type="number"
+            formControlName="price"
+            placeholder="Ej: 25.00"
+          />
+          <mat-error *ngIf="productForm.get('price')?.invalid"
+            >Introduce un precio válido</mat-error
+          >
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="flex gap-4">
+      <mat-form-field class="max-w-[180px] w-full">
+        <mat-label>Cantidad en Stock</mat-label>
+        <input
+          matInput
+          type="number"
+          formControlName="stock"
+          placeholder="Ej: 10"
+        />
+        <mat-error *ngIf="productForm.get('stock')?.invalid"
+          >Este campo es obligatorio</mat-error
+        >
+      </mat-form-field>
+
+      <mat-form-field class="w-full">
+        <mat-label>Compra Maxima</mat-label>
+        <input
+          matInput
+          type="number"
+          formControlName="maxPurchasePerUser"
+          placeholder="Ej: 10"
+        />
+        <mat-error *ngIf="productForm.get('maxPurchasePerUser')?.invalid"
+          >Este campo es obligatorio</mat-error
+        >
+      </mat-form-field>
+    </div>
+
+    <div class="w-full">
+      <!-- Nombre del producto -->
+
+      <!-- Precio en oferta -->
+      <!-- <mat-form-field class="w-full">
+          <mat-label>Precio en Oferta</mat-label>
+          <input matInput type="number" formControlName="offerPrice" placeholder="Ej: 20.00" />
+        </mat-form-field> -->
+
+      <!-- Cantidad en stock -->
+
+      <!-- SKU -->
+      <!-- <mat-form-field class="w-full">
+          <mat-label>Código (SKU)</mat-label>
+          <input matInput formControlName="sku" placeholder="Ej: FLO-001-RR" />
+          <mat-error *ngIf="productForm.get('sku')?.invalid">Este campo es obligatorio</mat-error>
+        </mat-form-field> -->
+
+      <!-- Descripción -->
+      <mat-form-field class="w-full">
+        <mat-label>Descripción</mat-label>
+        <textarea
+          matInput
+          formControlName="description"
+          placeholder="Descripción del producto"
+        ></textarea>
+        <mat-error *ngIf="productForm.get('description')?.invalid"
+          >Este campo es obligatorio</mat-error
+        >
+      </mat-form-field>
+
+      <!-- Etiquetas -->
+      <!-- <mat-form-field class="w-full md:col-span-2">
+          <mat-label>Etiquetas (separadas por coma)</mat-label>
+          <input
+            matInput
+            formControlName="tags"
+            placeholder="Ej: romántico, decoración"
+          />
+        </mat-form-field> -->
+
+      <!-- Imagen -->
+      <!-- <mat-form-field class="w-full md:col-span-2">
+          <mat-label>URL de la Imagen Principal</mat-label>
+          <input matInput formControlName="image" placeholder="https://example.com/imagen.jpg" />
+          <mat-error *ngIf="productForm.get('image')?.invalid">Introduce una URL válida</mat-error>
+        </mat-form-field> -->
+      <!-- <div class="w-full md:col-span-2">
+        <mat-form-field class="w-full">
+          <mat-label>URL de la Imagen Principal</mat-label>
+          <input
+            matInput
+            [formControl]="imageUrl"
+            placeholder="https://example.com/imagen.jpg"
+            class="w-full"
+          />
+          <button
+            mat-icon-button
+            (click)="addImage()"
+            aria-label="Agregar imagen"
+            class="ml-2"
+            type="button"
+          >
+            <mat-icon>add</mat-icon>
+          </button>
+          <mat-error *ngIf="isUrlInvalid" class="text-red-500 text-sm"
+            >Introduce una URL válida</mat-error
+          >
+        </mat-form-field>
+      </div> -->
+
+      <!-- Lista de Imágenes -->
+      <div class="mt-4 flex flex-wrap gap-4">
+        <div *ngFor="let imgCtrl of imageList; let i = index" class="relative">
+          <img
+            [src]="imgCtrl"
+            alt="Imagen {{ i + 1 }}"
+            class="w-24 h-24 object-cover rounded-md shadow-lg"
+          />
+
+          <!-- Botón de Eliminar Imagen -->
+          <button
+            mat-icon-button
+            color="warn"
+            type="button"
+            (click)="removeImage(i)"
+            aria-label="Eliminar imagen"
+            class="absolute top-0 right-0 m-1 p-1 bg-white rounded-full shadow-md"
+          >
+            <mat-icon>close</mat-icon>
+          </button>
+        </div>
+      </div>
+      <!-- Observaciones -->
+      <!-- <mat-form-field class="w-full md:col-span-2">
+          <mat-label>Observaciones</mat-label>
+          <textarea
+            matInput
+            formControlName="observations"
+            placeholder="Notas adicionales"
+          ></textarea>
+        </mat-form-field> -->
+    </div>
+
+    <!-- Botones -->
+    <div class="flex justify-between items-center gap-4">
+      <button mat-button color="warn" type="button" (click)="onCancel()">
+        Cancelar
+      </button>
+
+      <button
+        type="submit"
+        class="bg-black text-white px-4 py-2 rounded-lg flex items-center gap-2"
+      >
+        <lucide-icon name="save" class="w-5 h-5"></lucide-icon>
+        Guardar Producto
+      </button>
+    </div>
+  </form>
+</div>

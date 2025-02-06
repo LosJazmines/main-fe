@@ -9,6 +9,9 @@ import { ProductsService } from '../../../@apis/products.service';
 import { TokenService } from '../../../@core/services/token.service';
 import { MessageService } from '../../../@core/services/snackbar.service';
 import { Store } from '@ngrx/store';
+import { ProductsTableComponent } from '../../core/components/products-table/products-table.component';
+import { Dialog, DialogRef } from '@angular/cdk/dialog';
+import { AddProductComponent } from '../forms/add-product/add-product.component';
 
 @Component({
   selector: 'app-products',
@@ -20,6 +23,7 @@ import { Store } from '@ngrx/store';
     ReactiveFormsModule,
     FormsModule,
     RouterModule,
+    ProductsTableComponent,
   ],
   templateUrl: './products.component.html',
   styleUrl: './products.component.scss',
@@ -76,9 +80,7 @@ export default class ProductsComponent implements OnInit {
 
   constructor(
     private _fb: FormBuilder,
-    // public dialogRef: DialogRef<string>,
-    // private _dialog: Dialog,
-    // @Inject(DIALOG_DATA) public data: any,
+    private _dialog: Dialog,
     private _productsService: ProductsService,
     private store: Store,
     private _tokenService: TokenService,
@@ -168,6 +170,17 @@ export default class ProductsComponent implements OnInit {
         // In case of error, handle it here
         console.error('Error fetching products:', error);
       },
+    });
+  }
+
+  openDialogAddProduct(): void {
+    const dialogRef = this._dialog.open<string>(AddProductComponent, {
+      // width: '250px',
+      data: { name: 'hola', animal: 'hola' },
+    });
+
+    dialogRef.closed.subscribe((result) => {
+      console.log('The dialog was closed');
     });
   }
 }
