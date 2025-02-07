@@ -8,37 +8,63 @@ import { OrdersService } from '../../../@apis/orders.service';
 import { Store } from '@ngrx/store';
 import { TokenService } from '../../../@core/services/token.service';
 import { MessageService } from '../../../@core/services/snackbar.service';
+import { Order, OrderCardRowComponent } from '../../core/components/order-card-row/order-card-row.component';
 
 @Component({
   selector: 'app-ordes',
   standalone: true,
-  imports: [CommonModule, MaterialModule, LucideModule],
+  imports: [CommonModule, MaterialModule, LucideModule, OrderCardRowComponent],
   templateUrl: './ordes.component.html',
   styleUrl: './ordes.component.scss',
 })
 export default class OrdesComponent implements OnInit {
   private _adminHeaderStore = inject(AdminHeaderStore);
   public readonly adminHeaderStore$ = this._adminHeaderStore.getHeaderTitle();
-  pedidos = [
+  orders: Order[] = [
     {
-      id: 1001,
-      cliente: 'Juan Pérez',
-      fecha: '2025-01-15',
-      estado: 'Pendiente',
-      total: 200,
-      detalles: 'Incluye 3 productos: A, B y C.',
-    },
-    {
-      id: 1002,
-      cliente: 'María López',
-      fecha: '2025-01-16',
-      estado: 'Entregada',
-      total: 350,
-      detalles: 'Incluye 5 productos: X, Y y Z.',
+      id: '1001',
+      date: new Date('2025-02-07T10:30:00Z'), // Convertir string a Date
+      status: 'Pendiente',
+      total: 250.75,
+      shipping: {
+        isGift: true,
+        recipient: {
+          name: 'María González',
+        },
+        method: 'Express',
+        estimatedDelivery: new Date('2025-02-10T14:00:00Z'), // Convertir string a Date
+      },
+      payment: {
+        method: 'Tarjeta de Crédito',
+        status: 'paid',
+      },
+      products: [
+        {
+          id: 'p1',
+          name: 'Ramo de Rosas Rojas',
+          quantity: 1,
+          price: 100.5,
+          image: 'https://example.com/rosas.jpg',
+        },
+        {
+          id: 'p2',
+          name: 'Caja de Bombones',
+          quantity: 1,
+          price: 50.25,
+          image: 'https://example.com/bombones.jpg',
+        },
+        {
+          id: 'p3',
+          name: 'Tarjeta Personalizada',
+          quantity: 1,
+          price: 25.0,
+          image: 'https://example.com/tarjeta.jpg',
+        },
+      ],
     },
   ];
 
-  orders = signal([]);
+  // orders = signal([]);
 
   constructor(
     private _fb: FormBuilder,
@@ -63,8 +89,8 @@ export default class OrdesComponent implements OnInit {
       next: (response: any) => {
         // Process the response here
         // this.orderscal = [...response] ;
-        this.orders.set(response);
-        console.log('orders', this.orders());
+        // this.orders.set(response);
+        // console.log('orders', this.orders());
         // If you need to handle the response, you can do so here
         // For example:
         // this.products = response.products;
@@ -75,8 +101,6 @@ export default class OrdesComponent implements OnInit {
       },
     });
   }
-
-  
 
   // Método para alternar la expansión del panel
   togglePanel(panel: any): void {

@@ -102,6 +102,8 @@ import {
   Box,
   Package,
   Save,
+  Timer,
+  Printer,
 } from 'lucide-angular';
 
 export const LUCIDE_MODULES = [
@@ -207,6 +209,8 @@ export const LUCIDE_MODULES = [
     Box,
     Package,
     Save,
+    Printer,
+    Timer,
   }),
 ];
 
