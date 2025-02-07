@@ -32,27 +32,31 @@ export class ProductsService {
   }
 
   // Método para crear un nuevo producto  // Método para crear un nuevo producto
-  createProduct(productData: {
-    name: string;
-    description: string;
-    price: number;
-    stock: number;
-    images: string[];
-    category: string;
-    characteristics: {
-      color: string;
-      batteryLife: string;
-      connectivity: string;
-    };
-    maxPurchasePerUser: number;
-  }) {
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-    });
-    return this._http.post(`${this.urlProducts}`, productData, {
-      headers: headers,
-    });
+  createProduct(productData: FormData) {
+    return this._http.post(`${this.urlProducts}`, productData);
   }
+  
+  // createProduct(productData: {
+  //   name: string;
+  //   description: string;
+  //   price: number;
+  //   stock: number;
+  //   images: string[];
+  //   category: string;
+  //   characteristics: {
+  //     color: string;
+  //     batteryLife: string;
+  //     connectivity: string;
+  //   };
+  //   maxPurchasePerUser: number;
+  // }) {
+  //   const headers = new HttpHeaders({
+  //     'Content-Type': 'application/json',
+  //   });
+  //   return this._http.post(`${this.urlProducts}`, productData, {
+  //     headers: headers,
+  //   });
+  // }
 
   // Método para actualizar un producto existente
   updateProduct(productId: string, productData: any) {

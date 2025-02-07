@@ -101,6 +101,7 @@ import {
   Layers,
   Box,
   Package,
+  Save,
 } from 'lucide-angular';
 
 export const LUCIDE_MODULES = [
@@ -204,7 +205,8 @@ export const LUCIDE_MODULES = [
     Truck,
     Layers,
     Box,
-    Package 
+    Package,
+    Save,
   }),
 ];
 

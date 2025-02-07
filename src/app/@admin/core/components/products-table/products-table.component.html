@@ -1,0 +1,17 @@
+<div
+  class="grid grid-cols-6 w-full items-center text-center gap-4 border-b border-black/10 py-2 mb-2"
+>
+  <div class="w-[40px] text-lg font-semibold text-gray-800">Imagen</div>
+  <div class="text-lg font-semibold text-gray-800">ID</div>
+  <h2 class="text-lg font-semibold text-gray-800">Producto</h2>
+  <h2 class="text-lg font-semibold text-gray-800">Stock</h2>
+  <h2 class="text-lg font-semibold text-gray-800">Precio</h2>
+  <h2 class="text-lg font-semibold text-gray-800">Accion</h2>
+</div>
+
+<!-- Lista de productos -->
+<div class="w-full h-full flex flex-col min-h-[288px] bg-black/1 gap-2 overflow-auto">
+  @for (product of products; track $index) {
+  <app-products-table-row [product]="product"></app-products-table-row>
+  }
+</div>
