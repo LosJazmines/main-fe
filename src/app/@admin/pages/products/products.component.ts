@@ -88,7 +88,7 @@ export default class ProductsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this._adminHeaderStore.updateHeaderTitle('Products');
+    this._adminHeaderStore.updateHeaderTitle('Productos');
     this.calculateStatistics();
     this.getProducts();
   }
@@ -181,9 +181,11 @@ export default class ProductsComponent implements OnInit {
 
     dialogRef.closed.subscribe((result: any) => {
       console.log({ result });
-      if (result.success) {
+      if (result?.success) {
         this.getProducts();
       }
+
+      this._adminHeaderStore.updateHeaderTitle('Productos');
     });
   }
 }

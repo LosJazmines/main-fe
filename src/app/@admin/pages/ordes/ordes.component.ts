@@ -8,7 +8,12 @@ import { OrdersService } from '../../../@apis/orders.service';
 import { Store } from '@ngrx/store';
 import { TokenService } from '../../../@core/services/token.service';
 import { MessageService } from '../../../@core/services/snackbar.service';
-import { Order, OrderCardRowComponent } from '../../core/components/order-card-row/order-card-row.component';
+import {
+  Order,
+  OrderCardRowComponent,
+} from '../../core/components/order-card-row/order-card-row.component';
+import { AddOrderComponent } from '../forms/add-order/add-order.component';
+import { Dialog } from '@angular/cdk/dialog';
 
 @Component({
   selector: 'app-ordes',
@@ -69,7 +74,7 @@ export default class OrdesComponent implements OnInit {
   constructor(
     private _fb: FormBuilder,
     // public dialogRef: DialogRef<string>,
-    // private _dialog: Dialog,
+    private _dialog: Dialog,
     // @Inject(DIALOG_DATA) public data: any,
     private _ordersService: OrdersService,
     private store: Store,
@@ -78,7 +83,7 @@ export default class OrdesComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this._adminHeaderStore.updateHeaderTitle('Orders');
+    this._adminHeaderStore.updateHeaderTitle('Pedidos');
 
     this.getOrdes();
   }
@@ -116,5 +121,21 @@ export default class OrdesComponent implements OnInit {
   accionAprobar(pedido: any): void {
     // Lógica para aprobar el pedido
     console.log('Aprobar pedido', pedido);
+  }
+
+  openDialogAddOrder() {
+    const dialogRef = this._dialog.open<string>(AddOrderComponent, {
+      // width: '250px',
+      data: { name: 'hola', animal: 'hola' },
+    });
+
+    dialogRef.closed.subscribe((result: any) => {
+      console.log({ result });
+      if (result?.success) {
+        // this.getProducts();
+      }
+
+      this._adminHeaderStore.updateHeaderTitle('Pedidos');
+    });
   }
 }

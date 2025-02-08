@@ -1,5 +1,7 @@
-import { Component, Inject, inject, OnInit, signal } from '@angular/core';
-import { AdminHeaderStore } from '../../../../@core/store/admin-header.store';
+import { CommonModule } from '@angular/common';
+import { Component, inject, Inject, OnInit, signal } from '@angular/core';
+import { MaterialModule } from '../../../../@shared/material/material.module';
+import { LucideModule } from '../../../../@shared/lucide/lucide.module';
 import {
   FormBuilder,
   FormControl,
@@ -8,19 +10,17 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { RouterModule } from '@angular/router';
+import { LoaderComponent } from '../../../../@shared/components/loader/loader.component';
+import { Dialog, DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { ProductsService } from '../../../../@apis/products.service';
 import { Store } from '@ngrx/store';
 import { TokenService } from '../../../../@core/services/token.service';
 import { MessageService } from '../../../../@core/services/snackbar.service';
-import { CommonModule } from '@angular/common';
-import { MaterialModule } from '../../../../@shared/material/material.module';
-import { LucideModule } from '../../../../@shared/lucide/lucide.module';
-import { RouterModule } from '@angular/router';
-import { Dialog, DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
-import { LoaderComponent } from '../../../../@shared/components/loader/loader.component';
+import { AdminHeaderStore } from '../../../../@core/store/admin-header.store';
 
 @Component({
-  selector: 'app-add-product',
+  selector: 'app-add-order',
   standalone: true,
   imports: [
     CommonModule,
@@ -31,10 +31,10 @@ import { LoaderComponent } from '../../../../@shared/components/loader/loader.co
     ReactiveFormsModule,
     LoaderComponent,
   ],
-  templateUrl: './add-product.component.html',
-  styleUrl: './add-product.component.scss',
+  templateUrl: './add-order.component.html',
+  styleUrl: './add-order.component.scss',
 })
-export class AddProductComponent implements OnInit {
+export class AddOrderComponent implements OnInit {
   private _adminHeaderStore = inject(AdminHeaderStore);
   public readonly adminHeaderStore$ = this._adminHeaderStore.getHeaderTitle();
 
@@ -83,7 +83,7 @@ export class AddProductComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this._adminHeaderStore.updateHeaderTitle('Productos - Agregar Producto');
+    this._adminHeaderStore.updateHeaderTitle('Pedidos - Agregar Pedido');
     this.initGroupLogin();
   }
 
