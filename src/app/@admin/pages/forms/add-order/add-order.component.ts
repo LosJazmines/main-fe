@@ -3,6 +3,7 @@ import { Component, inject, Inject, OnInit, signal } from '@angular/core';
 import { MaterialModule } from '../../../../@shared/material/material.module';
 import { LucideModule } from '../../../../@shared/lucide/lucide.module';
 import {
+  FormArray,
   FormBuilder,
   FormControl,
   FormGroup,
@@ -18,6 +19,10 @@ import { Store } from '@ngrx/store';
 import { TokenService } from '../../../../@core/services/token.service';
 import { MessageService } from '../../../../@core/services/snackbar.service';
 import { AdminHeaderStore } from '../../../../@core/store/admin-header.store';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { OrderStep1tComponent } from './order-step1/order-step1.component';
+import { SearchModernoReactiveModule } from '../../../core/components/search-moderno-reactive/search-moderno-reactive.module';
 
 @Component({
   selector: 'app-add-order',
@@ -29,7 +34,10 @@ import { AdminHeaderStore } from '../../../../@core/store/admin-header.store';
     FormsModule,
     RouterModule,
     ReactiveFormsModule,
-    LoaderComponent,
+    MatFormFieldModule,
+    MatInputModule,
+    OrderStep1tComponent,
+    SearchModernoReactiveModule,
   ],
   templateUrl: './add-order.component.html',
   styleUrl: './add-order.component.scss',
@@ -38,186 +46,68 @@ export class AddOrderComponent implements OnInit {
   private _adminHeaderStore = inject(AdminHeaderStore);
   public readonly adminHeaderStore$ = this._adminHeaderStore.getHeaderTitle();
 
-  productForm!: FormGroup;
-  imageUrl!: FormControl;
-  imageList: string[] = [];
-  isUrlInvalid: boolean = false;
-  isLoading = signal<boolean>(false);
+  orderForm: FormGroup;
 
-  categories = [
-    'Flores', // Flores frescas y arreglos florales
-    'Ramos y Bouquets', // Ramos para diferentes ocasiones
-    'Plantas', // Plantas vivas, ornamentales, y de interior/exterior
-    'Macetas', // Macetas de diversos tamaños y estilos
-    'Fertilizantes', // Productos para cuidar las plantas
-    'Herramientas', // Herramientas de jardinería
-    'Decoración', // Artículos decorativos como velas, figuras, etc.
-    'Chocolates', // Chocolates para regalos
-    'Peluches', // Osos y otros peluches
-    'Cajas de Regalo', // Cajas de regalo personalizadas
-    'Eventos y Festividades', // Decoraciones y productos para eventos (cumpleaños, bodas)
-    'Bautismo', // Productos específicos para bautismos
-    'Nacimiento', // Regalos para recién nacidos
-    'Novia', // Arreglos y detalles para novias
-    'Funerales', // Arreglos funerarios
-    'Centros de Mesa', // Decoraciones de mesa
-    'Tarjetas Personalizadas', // Tarjetas para acompañar los regalos
-    'Regalos Personalizados', // Regalos con personalización
-    'Rosas Eternas', // Rosas preservadas de larga duración
-    'Ambientadores', // Aromatizantes para el hogar
-  ];
+  currentStep: number = 0;
+  userFound: boolean = false;
 
-  selectedFiles: File[] = [];
-  imagePreviews: string[] = [];
+  step1Form!: FormGroup; // Add this line to define step1Form
 
-  constructor(
-    private _fb: FormBuilder,
-    public dialogRef: DialogRef<{ success: boolean }>,
-    private _dialog: Dialog,
+  goToStep(step: number) {
+    this.currentStep = step;
+  }
 
-    @Inject(DIALOG_DATA) public data: any,
-    private _productsService: ProductsService,
-    private store: Store,
-    private _tokenService: TokenService,
-    private _messageService: MessageService
-  ) {}
+  constructor(private fb: FormBuilder) {
+    this.orderForm = this.fb.group({
+      customerId: ['', Validators.required],
+      total: [0, [Validators.required, Validators.min(0)]],
+      status: ['pending', Validators.required],
+      shippingInfo: this.fb.group({
+        address: ['', Validators.required],
+        city: ['', Validators.required],
+        postalCode: ['', Validators.required],
+        country: ['', Validators.required],
+      }),
+      items: this.fb.array([]),
+    });
+  }
 
   ngOnInit(): void {
     this._adminHeaderStore.updateHeaderTitle('Pedidos - Agregar Pedido');
-    this.initGroupLogin();
+    // this.initGroupLogin();
+  }
+  get items(): FormArray {
+    return this.orderForm.get('items') as FormArray;
   }
 
-  private initGroupLogin() {
-    this.imageUrl = new FormControl('');
-
-    this.productForm = this._fb.group({
-      name: ['', [Validators.required, Validators.minLength(3)]],
-      category: ['', Validators.required],
-      price: [null, [Validators.required, Validators.min(0)]],
-      // offerPrice: [null, Validators.min(0)],
-      stock: [null, [Validators.required, Validators.min(0)]],
-      maxPurchasePerUser: [null, [Validators.required, Validators.min(0)]],
-
-      // sku: ['', [Validators.required]],
-      description: ['', [Validators.required, Validators.minLength(10)]],
-      // tags: [''],
-      // imageUrl: [
-      //   '',
-
-      // ],
-      // images: [this.imagePreview, [Validators.required]],
-      // observations: [''],
+  addItem() {
+    const itemGroup = this.fb.group({
+      productId: ['', Validators.required],
+      quantity: [1, [Validators.required, Validators.min(1)]],
+      price: [0, [Validators.required, Validators.min(0)]],
     });
+    this.items.push(itemGroup);
+    this.updateTotal();
   }
 
-  onSubmit(): void {
-    this.isLoading.set(true);
+  removeItem(index: number) {
+    this.items.removeAt(index);
+    this.updateTotal();
+  }
 
-    if (this.productForm.invalid) {
-      console.log('Formulario no válido', this.productForm.value);
-      return;
+  updateTotal() {
+    const total = this.items.controls.reduce((sum, item) => {
+      return sum + item.value.quantity * item.value.price; // ✅ Usar `price3`
+    }, 0);
+    this.orderForm.patchValue({ total });
+  }
+
+  onSubmit() {
+    if (this.orderForm.valid) {
+      console.log('Order submitted', this.orderForm.value);
+      // Aquí puedes hacer la petición HTTP para enviar la orden
+    } else {
+      console.log('Form is invalid');
     }
-
-    const formData = new FormData();
-    formData.append('name', this.productForm.get('name')?.value);
-    formData.append('category', this.productForm.get('category')?.value);
-    formData.append('price', this.productForm.get('price')?.value);
-    formData.append('stock', this.productForm.get('stock')?.value);
-    formData.append(
-      'maxPurchasePerUser',
-      this.productForm.get('maxPurchasePerUser')?.value
-    );
-    formData.append('description', this.productForm.get('description')?.value);
-
-    // Adjuntar las imágenes seleccionadas al FormData
-    this.selectedFiles.forEach((file) => {
-      formData.append('files', file);
-    });
-    this._productsService.createProduct(formData).subscribe({
-      next: (response: any) => {
-        console.log('Producto creado:', response);
-        this._messageService.showInfo(
-          'Producto creado exitosamente',
-          'bottom right',
-          5000
-        );
-        // Limpiar archivos e imágenes
-        this.selectedFiles = [];
-        this.imagePreviews = [];
-
-        // Resetear el formulario sin activar alertas
-        this.productForm.reset();
-        this.productForm.markAsPristine();
-        this.productForm.markAsUntouched();
-
-        this.isLoading.set(false);
-
-        // Limpiar manualmente los errores de validación
-        Object.keys(this.productForm.controls).forEach((key) => {
-          this.productForm.get(key)?.setErrors(null);
-        });
-
-        this.dialogRef.close({ success: true });
-      },
-      error: (error) => {
-        console.error('Error al crear producto:', error);
-        this._messageService.showError(
-          'Error al crear producto',
-          'bottom right',
-          5000
-        );
-        this.isLoading.set(false);
-      },
-    });
-  }
-
-  // Manejar la selección de imágenes
-  onFileSelected(event: Event) {
-    const input = event.target as HTMLInputElement;
-    if (input.files) {
-      const files: File[] = Array.from(input.files);
-
-      files.forEach((file) => {
-        const reader = new FileReader();
-        reader.onload = () => {
-          this.imagePreviews.push(reader.result as string);
-        };
-        reader.readAsDataURL(file);
-        this.selectedFiles.push(file);
-      });
-    }
-  }
-
-  addImage() {
-    console.log('Añadir imagen');
-    let imageUrl = this.imageUrl.value;
-    if (imageUrl) {
-      this.imageList.push(imageUrl);
-      return;
-    }
-  }
-  // Cambiar la imagen principal
-  setMainImage(index: number): void {
-    const selectedImage = this.imagePreviews[index];
-    this.imagePreviews.splice(index, 1); // Eliminar de la lista
-    this.imagePreviews.unshift(selectedImage); // Mover a principal
-  }
-
-  // Eliminar imagen
-  removeImage(index: number) {
-    this.imagePreviews.splice(index, 1);
-    this.selectedFiles.splice(index, 1);
-  }
-  isValidUrl(url: string): boolean {
-    try {
-      new URL(url);
-      return true;
-    } catch {
-      return false;
-    }
-  }
-
-  onCancel(): void {
-    this.productForm.reset();
   }
 }

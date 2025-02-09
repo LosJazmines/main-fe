@@ -110,15 +110,53 @@
   <!-- Header -->
   <div class="flex justify-between items-center mb-6">
     <h1 class="text-2xl font-semibold text-gray-700">Lista de Pedidos</h1>
-    <button
-      (click)="openDialogAddOrder()"
-      class="bg-black text-white px-4 py-2 rounded-lg flex items-center gap-2"
-    >
-      <lucide-icon name="plus" class="w-5 h-5"></lucide-icon>
-      Agregar Pedido
-    </button>
+
+    <div class="flex items-center gap-4">
+      <mat-form-field appearance="fill">
+        <mat-label>Fecha de Creación</mat-label>
+        <input
+          matInput
+          [matDatepicker]="picker"
+          placeholder="Elija una fecha"
+          (dateChange)="onDateChange($event)"
+          readonly
+        />
+        <mat-datepicker #picker></mat-datepicker>
+
+        <!-- Botón para limpiar la fecha si hay una seleccionada -->
+        <button
+          *ngIf="selectedDate"
+          mat-icon-button
+          matSuffix
+          color="warn"
+          (click)="clearDateFilter()"
+        >
+          <mat-icon>close</mat-icon>
+        </button>
+
+        <!-- Ícono de calendario solo si no hay fecha seleccionada -->
+        <mat-datepicker-toggle *ngIf="!selectedDate" matSuffix [for]="picker">
+        </mat-datepicker-toggle>
+      </mat-form-field>
+      <app-search-moderno-reactive
+        [inputPlaceholder]="'Buscar por Direccion o Nombre del destinatario'"
+        (search)="handleSearch($event)"
+      ></app-search-moderno-reactive>
+      <button
+        (click)="openDialogAddOrder()"
+        class="bg-black text-white px-4 py-2 rounded-lg flex items-center gap-2"
+      >
+        <lucide-icon name="plus" class="w-5 h-5"></lucide-icon>
+        Agregar Pedido
+      </button>
+    </div>
   </div>
-  @for (order of orders; track $index) {
-  <app-order-card-row [order]="order"></app-order-card-row>
-  }
+  <div class="flex flex-col gap-4">
+    @for (order of orders(); track $index) {
+    <app-order-card-row
+      [order]="order"
+      (updateStatus)="updateOrder(order.id, $event)"
+    ></app-order-card-row>
+    }
+  </div>
 </div>

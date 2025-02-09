@@ -38,6 +38,20 @@ export class AuthService {
     });
   }
 
+  registerEmail(email: string): Observable<any> {
+    console.log('email', email);
+    
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+    });
+
+    return this._http.post(
+      `${this.urlUsers}/register-email`,
+      { email },
+      { headers: headers }
+    );
+  }
+
   validateToken(token: string) {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',

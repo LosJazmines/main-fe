@@ -14,68 +14,33 @@ import {
 } from '../../core/components/order-card-row/order-card-row.component';
 import { AddOrderComponent } from '../forms/add-order/add-order.component';
 import { Dialog } from '@angular/cdk/dialog';
+import { SearchModernoReactiveModule } from '../../core/components/search-moderno-reactive/search-moderno-reactive.module';
 
 @Component({
   selector: 'app-ordes',
   standalone: true,
-  imports: [CommonModule, MaterialModule, LucideModule, OrderCardRowComponent],
+  imports: [
+    CommonModule,
+    MaterialModule,
+    LucideModule,
+    OrderCardRowComponent,
+    SearchModernoReactiveModule,
+  ],
   templateUrl: './ordes.component.html',
-  styleUrl: './ordes.component.scss',
+  styleUrls: ['./ordes.component.scss'],
 })
 export default class OrdesComponent implements OnInit {
   private _adminHeaderStore = inject(AdminHeaderStore);
   public readonly adminHeaderStore$ = this._adminHeaderStore.getHeaderTitle();
-  orders: Order[] = [
-    {
-      id: '1001',
-      date: new Date('2025-02-07T10:30:00Z'), // Convertir string a Date
-      status: 'Pendiente',
-      total: 250.75,
-      shipping: {
-        isGift: true,
-        recipient: {
-          name: 'María González',
-        },
-        method: 'Express',
-        estimatedDelivery: new Date('2025-02-10T14:00:00Z'), // Convertir string a Date
-      },
-      payment: {
-        method: 'Tarjeta de Crédito',
-        status: 'paid',
-      },
-      products: [
-        {
-          id: 'p1',
-          name: 'Ramo de Rosas Rojas',
-          quantity: 1,
-          price: 100.5,
-          image: 'https://example.com/rosas.jpg',
-        },
-        {
-          id: 'p2',
-          name: 'Caja de Bombones',
-          quantity: 1,
-          price: 50.25,
-          image: 'https://example.com/bombones.jpg',
-        },
-        {
-          id: 'p3',
-          name: 'Tarjeta Personalizada',
-          quantity: 1,
-          price: 25.0,
-          image: 'https://example.com/tarjeta.jpg',
-        },
-      ],
-    },
-  ];
 
-  // orders = signal([]);
+  orders = signal<Order[]>([]);
+  // Variables para búsqueda
+  searchTerm: string = '';
+  selectedDate: Date | null = null;
 
   constructor(
     private _fb: FormBuilder,
-    // public dialogRef: DialogRef<string>,
     private _dialog: Dialog,
-    // @Inject(DIALOG_DATA) public data: any,
     private _ordersService: OrdersService,
     private store: Store,
     private _tokenService: TokenService,
@@ -84,58 +49,135 @@ export default class OrdesComponent implements OnInit {
 
   ngOnInit(): void {
     this._adminHeaderStore.updateHeaderTitle('Pedidos');
-
     this.getOrdes();
   }
 
   getOrdes() {
-    console.log('hola');
     this._ordersService.getAllOrders().subscribe({
       next: (response: any) => {
-        // Process the response here
-        // this.orderscal = [...response] ;
-        // this.orders.set(response);
-        // console.log('orders', this.orders());
-        // If you need to handle the response, you can do so here
-        // For example:
-        // this.products = response.products;
+        this.orders.set(response);
       },
       error: (error) => {
-        // In case of error, handle it here
-        console.error('Error fetching products:', error);
+        console.error('Error fetching orders:', error);
+      },
+    });
+  }
+  // Método para armar los filtros y disparar la búsqueda mediante POST
+  handleSearch(event: string): void {
+    this.searchTerm = event.trim(); // Extrae el término del evento y elimina espacios innecesarios
+
+    // Arma el objeto de filtros incluyendo solo los valores no vacíos
+    const filters: { searchTerm?: string; creationDate?: string } = {};
+
+    if (this.searchTerm) {
+      filters.searchTerm = this.searchTerm;
+    }
+    if (this.selectedDate) {
+      filters.creationDate = this.formatDate(this.selectedDate);
+    }
+
+    // Si no hay filtros, carga todas las órdenes
+    if (!filters.searchTerm && !filters.creationDate) {
+      this.getOrdes();
+      return;
+    }
+
+    console.log('Buscando órdenes con filtros:', filters);
+    this._ordersService.searchOrders(filters).subscribe({
+      next: (orders: any) => {
+        console.log('Órdenes encontradas:', orders);
+        this.orders.set(orders);
+      },
+      error: (error: any) => {
+        console.error('Error al buscar órdenes:', error);
       },
     });
   }
 
-  // Método para alternar la expansión del panel
+  // Se dispara al seleccionar una fecha en el datepicker
+  onDateChange(event: any): void {
+    this.selectedDate = event.value; // event.value es un objeto Date
+    // Dispara la búsqueda automáticamente al cambiar la fecha
+    this.handleSearch(this.searchTerm);
+  }
+
+  // Función para formatear la fecha a 'YYYY-MM-DD'
+  private formatDate(date: Date): string {
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
+
+  // Otros métodos del componente...
+
   togglePanel(panel: any): void {
     panel.expanded ? panel.close() : panel.open();
   }
 
-  // Métodos para otras acciones
   accionEliminar(pedido: any): void {
-    // Lógica para eliminar el pedido
     console.log('Eliminar pedido', pedido);
   }
 
   accionAprobar(pedido: any): void {
-    // Lógica para aprobar el pedido
     console.log('Aprobar pedido', pedido);
   }
 
   openDialogAddOrder() {
     const dialogRef = this._dialog.open<string>(AddOrderComponent, {
-      // width: '250px',
       data: { name: 'hola', animal: 'hola' },
     });
 
     dialogRef.closed.subscribe((result: any) => {
       console.log({ result });
-      if (result?.success) {
-        // this.getProducts();
-      }
-
       this._adminHeaderStore.updateHeaderTitle('Pedidos');
+    });
+  }
+
+  clearDateFilter(): void {
+    this.selectedDate = null; // Resetea la fecha seleccionada
+    (document.querySelector('input[matInput]') as HTMLInputElement).value = ''; // Limpia el input manualmente
+    this.handleSearch(this.searchTerm); // Vuelve a ejecutar la búsqueda sin filtro de fecha
+  }
+
+  // updateOrder(orderId: string, newStatus: OrderStatus) {
+  //   this.orderService.updateOrderStatus(orderId, newStatus).subscribe({
+  //     next: () => {
+  //       this.orders = this.orders.map((order) =>
+  //         order.id === orderId ? { ...order, status: newStatus } : order
+  //       );
+  //     },
+  //     error: (err) => console.error('Error al actualizar estado:', err),
+  //   });
+  // }
+  updateOrder(orderId: string, newStatus: any) {
+    console.log({ orderId, newStatus });
+    this._messageService.closeSnackBar();
+
+    this._ordersService.updateOrderStatus(orderId, newStatus).subscribe({
+      next: (updatedOrder: any) => {
+        // Busca la orden en la lista y actualiza solo el estado
+        const updatedOrders = this.orders().map((o) =>
+          o.id === updatedOrder.id ? { ...o, status: updatedOrder.status } : o
+        );
+
+        this.orders.set(updatedOrders);
+
+        this._messageService.showInfo(
+          `Pedido actualizado a "${updatedOrder.status}"`,
+          'top right',
+          5000
+        );
+      },
+      error: (error) => {
+        console.error('Error actualizando el pedido:', error);
+        this._messageService.showInfo(
+          'Error al actualizar el pedido ',
+          'top right',
+          5000,
+          'success'
+        );
+      },
     });
   }
 }

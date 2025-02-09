@@ -10,22 +10,50 @@
       </div>
 
       <div class="flex items-start flex-col">
-        <h2 class="text-lg font-bold text-black">Pedido #{{ order.id }}</h2>
-        <p class="text-sm text-gray-600">
-          {{ order.date | date : "dd/MM/yyyy hh:mm a" }}
-        </p>
+        <h2
+          class="text-lg font-bold text-black flex items-center justify-center gap-2"
+        >
+          Pedido
+          <div class="flex items-center justify-center gap-2">
+            <lucide-icon name="box" class="w-4 h-4 text-gray-600"></lucide-icon>
+            <p class="text-sm font-semibold text-gray-800">
+              #{{ order.orderNumber }}
+            </p>
+          </div>
+        </h2>
+
+        <div class="flex items-center justify-center gap-2">
+          <lucide-icon
+            name="alarm-clock"
+            class="w-4 h-4 text-gray-600"
+          ></lucide-icon>
+
+          <p class="text-sm text-gray-600">
+            {{ order.createdAt | date : "dd/MM/yyyy hh:mm a" }}
+          </p>
+        </div>
       </div>
     </div>
 
-    <span
-      class="px-2 py-1 text-sm font-medium rounded {{
-        order.status === 'paid'
-          ? 'bg-green-100 text-green-800'
-          : 'bg-yellow-100 text-yellow-800'
-      }}"
-    >
-      {{ order.status }}
-    </span>
+    <div class="flex items-start flex-col gap-2">
+      <span
+        class="px-2 py-1 text-sm font-medium rounded"
+        [ngClass]="(order.status | orderStatus).colorClass"
+      >
+        {{ (order.status | orderStatus).translatedStatus }}
+      </span>
+
+      <div class="flex items-center justify-center gap-2">
+        <lucide-icon
+          name="AlarmClockCheck"
+          class="w-4 h-4 text-green-600"
+        ></lucide-icon>
+
+        <p class="text-sm text-green-600">
+          {{ order.updatedAt | date : "dd/MM/yyyy hh:mm a" }}
+        </p>
+      </div>
+    </div>
   </div>
 
   <div class="mt-2 flex gap-4">
@@ -35,19 +63,33 @@
       </div>
       <div class="flex gap-2 items-center">
         <lucide-icon [size]="16" name="user"></lucide-icon>
-        <p class="text-base">Juan Perez</p>
+        <p class="text-base">
+          {{
+            order.customer.username ? order.customer.username : "Sin Nombre"
+          }}
+        </p>
       </div>
       <div class="flex gap-2 items-center">
         <lucide-icon [size]="16" name="mail"></lucide-icon>
-        <p class="text-base">juan&#64;eczample.com</p>
+        <p class="text-base">
+          {{ order.customer.email ? order.customer.email : "Sin Email" }}
+        </p>
       </div>
       <div class="flex gap-2 items-center">
         <lucide-icon [size]="16" name="phone"></lucide-icon>
-        <p class="text-base">+54 11 2345-6789</p>
+        <p class="text-base">
+          {{ order.telefono ? order.telefono : "Sin Telefono" }}
+        </p>
       </div>
       <div class="flex gap-2 items-center">
         <lucide-icon [size]="16" name="map-pin"></lucide-icon>
-        <p class="text-base">Calle Principal 123, Ciudad</p>
+        <p class="text-base">
+          {{
+            order.customer.direccion
+              ? order.customer.direccion
+              : "Sin Direccion"
+          }}
+        </p>
       </div>
     </div>
 
@@ -58,12 +100,24 @@
       </div>
       <div class="flex gap-2 items-center">
         <lucide-icon [size]="16" name="user"></lucide-icon>
-        <p class="text-base">Juan Perez</p>
+        <p class="text-base">
+          {{
+            order.nombreDestinatario
+              ? order.nombreDestinatario
+              : "Sin nombre Destinatario"
+          }}
+        </p>
       </div>
       <div class="flex gap-2 items-center">
         <lucide-icon [size]="16" name="timer"></lucide-icon>
         <p class="text-base">
-          {{ order.date | date : "dd/MM/yyyy hh:mm a" }}
+          {{ (order.createdAt | date : "dd/MM/yyyy hh:mm a") ?? "Sin Fecha" }}
+        </p>
+      </div>
+      <div class="flex gap-2 items-center">
+        <lucide-icon [size]="16" name="info"></lucide-icon>
+        <p class="text-base">
+          {{ order.comentarios ? order.comentarios : "Sin Comentarios" }}
         </p>
       </div>
       <div class="flex gap-2 items-center">
@@ -72,11 +126,18 @@
       </div>
       <div class="flex gap-2 items-center">
         <lucide-icon [size]="16" name="phone"></lucide-icon>
-        <p class="text-base">+54 11 2345-6789</p>
+        <p class="text-base">
+          {{ order.telefonoMovil ? order.telefonoMovil : "Sin Telefono" }}
+        </p>
       </div>
       <div class="flex gap-2 items-center">
         <lucide-icon [size]="16" name="map-pin"></lucide-icon>
-        <p class="text-base">Calle Principal 123, Ciudad</p>
+        <p class="text-base">
+          {{ order.direccion ? order.direccion : "Sin Direccion" }} -
+          {{ order.ciudad ? order.ciudad : "Sin ciudad" }} -
+          {{ order.estado ? order.estado : "Sin estado" }} -
+          {{ order.pais ? order.pais : "Sin pais" }}
+        </p>
       </div>
     </div>
   </div>
@@ -89,18 +150,18 @@
         <h4 class="text-sm font-semibold mb-2">Productos</h4>
         <ul>
           <li
-            *ngFor="let product of order.products"
+            *ngFor="let item of order.items"
             class="flex items-center space-x-3 py-2 border-b last:border-none"
           >
             <img
-              [src]="product.image"
-              alt="{{ product.name }}"
+              [src]="item.product.images[0]"
+              alt="{{ item.product.name }}"
               class="w-12 h-12 object-cover rounded-md"
             />
             <div>
-              <p class="text-sm font-medium">{{ product.name }}</p>
+              <p class="text-sm font-medium">{{ item.product.name }}</p>
               <p class="text-sm text-gray-500">
-                {{ product.quantity }} x ${{ product.price.toFixed(2) }}
+                {{ item.quantity }} x ${{ item.price }}
               </p>
             </div>
           </li>
@@ -113,15 +174,15 @@
         <div class="text-sm text-gray-700 space-y-2">
           <div class="flex justify-between">
             <span>Subtotal:</span>
-            <span>${{ order.total.toFixed(2) }}</span>
+            <span>${{ order.subtotal }}</span>
           </div>
           <div class="flex justify-between">
             <span>Envío:</span>
-            <span>${{ order.total.toFixed(2) }}</span>
+            <span>${{ order.costoEnvio }}</span>
           </div>
           <div class="flex justify-between">
             <span>Impuestos:</span>
-            <span>${{ order.total.toFixed(2) }}</span>
+            <span>${{ order.metodoEnvio }}</span>
           </div>
           <div
             class="border-t pt-2 flex justify-between font-semibold text-black"
@@ -137,21 +198,23 @@
     <div class="flex justify-end space-x-2 mt-4">
       <button
         class="flex items-center gap-2 px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600"
-        (click)="process.emit()"
+        (click)="changeStatus('shipped')"
       >
-        <lucide-icon name="check" [size]="16"></lucide-icon>
-        Procesar
+        <lucide-icon name="truck" [size]="16"></lucide-icon>
+        Enviar
       </button>
+
       <button
-        class="flex items-center gap-2 px-4 py-2 bg-yellow-500 text-white rounded-md hover:bg-yellow-600"
-        (click)="postpone.emit()"
+        class="flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+        (click)="changeStatus('completed')"
       >
-        <lucide-icon name="clock" [size]="16"></lucide-icon>
-        Posponer
+        <lucide-icon name="circle-check" [size]="16"></lucide-icon>
+        Completar
       </button>
+
       <button
         class="flex items-center gap-2 px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600"
-        (click)="cancel.emit()"
+        (click)="changeStatus('cancelled')"
       >
         <lucide-icon name="x" [size]="16"></lucide-icon>
         Cancelar

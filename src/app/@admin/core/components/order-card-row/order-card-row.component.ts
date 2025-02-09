@@ -2,37 +2,62 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MaterialModule } from '../../../../@shared/material/material.module';
 import { LucideModule } from '../../../../@shared/lucide/lucide.module';
+import { OrderStatusPipe } from '../../../../@core/pipes/order-status.pipe';
+import { PipesModule } from '../../../../@core/pipes/pipes.module';
 
 export interface Order {
   id: string;
-  date: Date;
-  status: string;
+  orderNumber: number;
   total: number;
-  shipping: {
-    isGift: boolean;
-    recipient: {
-      name: string;
-    };
-    method: string;
-    estimatedDelivery: Date;
-  };
-  payment: {
-    method: string;
-    status: 'paid' | 'pending';
-  };
-  products: {
+  subtotal: number;
+  status: string;
+  nombreDestinatario: string;
+  direccion: string;
+  ciudad: string;
+  estado: string;
+  pais: string;
+  telefono: string;
+  telefonoMovil: string;
+  comentarios: string;
+  latitud: number;
+  longitud: number;
+  costoEnvio: string; // Nuevo campo agregado
+  metodoEnvio: string; // Nuevo campo agregado
+  createdAt: Date;
+  updatedAt: Date;
+  items: {
     id: string;
-    name: string;
+    productId: string;
     quantity: number;
     price: number;
-    image: string;
+    product: {
+      id: string;
+      name: string;
+      description: string;
+      price: number;
+      stock: number;
+      images: string[];
+      category: string;
+      characteristics: string | null;
+    };
   }[];
+  customer: {
+    id: string;
+    username?: string ;
+    direccion?: string;
+    telefono?: string;
+    email: string;
+    password: string;
+    isActive: boolean;
+    createdAt: Date;
+    roles: string[];
+  };
 }
 
 @Component({
   selector: 'app-order-card-row',
   standalone: true,
-  imports: [CommonModule, MaterialModule, LucideModule],
+  imports: [CommonModule, MaterialModule, LucideModule, PipesModule],
   templateUrl: './order-card-row.component.html',
   styleUrl: './order-card-row.component.scss',
 })
@@ -46,6 +71,12 @@ export class OrderCardRowComponent {
 
   toggleOpen() {
     this.isOpen = !this.isOpen;
+  }
+
+  @Output() updateStatus = new EventEmitter<void>();
+
+  changeStatus(newStatus: any) {
+    this.updateStatus.emit(newStatus);
   }
 
   printReceipt(order: any) {

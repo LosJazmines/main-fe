@@ -72,4 +72,33 @@ export class OrdersService {
       headers: headers,
     });
   }
+
+  // Método para buscar órdenes por nombreDestinatario o dirección
+  // searchOrders(searchTerm: string, formattedDate: string) {
+  //   const headers = new HttpHeaders({
+  //     'Content-Type': 'application/json',
+  //   });
+  //   return this._http.get(`${this.urlOrders}/search?searchTerm=${searchTerm}&creationDate=${formattedDate}`, {
+  //     headers,
+  //   });
+  // }
+
+  updateOrderStatus(orderId: string, status: string) {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+    });
+
+    return this._http.patch(
+      `${this.urlOrders}/${orderId}/status`,
+      { status },
+      { headers }
+    );
+  }
+
+  searchOrders(filters: { searchTerm?: string; creationDate?: string } = {}) {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+    });
+    return this._http.post(`${this.urlOrders}/search`, filters, { headers });
+  }
 }
