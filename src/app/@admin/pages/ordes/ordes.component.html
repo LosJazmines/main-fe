@@ -108,7 +108,7 @@
 
   <!-- Tabla de Órdenes -->
   <!-- Header -->
-  <div class="flex justify-between items-center mb-6">
+  <div class="flex justify-between items-center mb-4">
     <h1 class="text-2xl font-semibold text-gray-700">Lista de Pedidos</h1>
 
     <div class="flex items-center gap-4">
@@ -151,12 +151,36 @@
       </button>
     </div>
   </div>
-  <div class="flex flex-col gap-4">
-    @for (order of orders(); track $index) {
-    <app-order-card-row
-      [order]="order"
-      (updateStatus)="updateOrder(order.id, $event)"
-    ></app-order-card-row>
-    }
+  <div class="w-full">
+    <div class="flex justify-end items-center mb-5">
+      <!-- Filtro de Ordenación -->
+      <!-- <div class="flex items-center space-x-4">
+        <label for="orderBy" class="text-sm font-medium">Ordenar por:</label>
+        <select
+          id="orderBy"
+          [(ngModel)]="selectedOrder"
+          (change)="applyFilter()"
+          class="border p-2 rounded-md text-sm"
+        >
+          <option value="ascendente">Ascendente</option>
+          <option value="descendente">Descendente</option>
+          <option value="mayorValor">Mayor Valor</option>
+          <option value="menorValor">Menor Valor</option>
+        </select>
+      </div> -->
+
+      <!-- Contador de Items -->
+      <div class="text-sm font-medium">
+        <span>{{ orders().length }} Items disponibles</span>
+      </div>
+    </div>
+    <div class="flex flex-col gap-4">
+      @for (order of orders(); track $index) {
+      <app-order-card-row
+        [order]="order"
+        (updateStatus)="updateOrder(order.id, $event)"
+      ></app-order-card-row>
+      }
+    </div>
   </div>
 </div>

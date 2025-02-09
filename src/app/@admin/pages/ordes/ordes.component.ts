@@ -3,7 +3,7 @@ import { AdminHeaderStore } from '../../../@core/store/admin-header.store';
 import { CommonModule } from '@angular/common';
 import { MaterialModule } from '../../../@shared/material/material.module';
 import { LucideModule } from '../../../@shared/lucide/lucide.module';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, FormsModule } from '@angular/forms';
 import { OrdersService } from '../../../@apis/orders.service';
 import { Store } from '@ngrx/store';
 import { TokenService } from '../../../@core/services/token.service';
@@ -24,6 +24,7 @@ import { SearchModernoReactiveModule } from '../../core/components/search-modern
     MaterialModule,
     LucideModule,
     OrderCardRowComponent,
+    FormsModule,
     SearchModernoReactiveModule,
   ],
   templateUrl: './ordes.component.html',
@@ -32,6 +33,9 @@ import { SearchModernoReactiveModule } from '../../core/components/search-modern
 export default class OrdesComponent implements OnInit {
   private _adminHeaderStore = inject(AdminHeaderStore);
   public readonly adminHeaderStore$ = this._adminHeaderStore.getHeaderTitle();
+
+  selectedOrder: string = 'ascendente'; // Valor por defecto
+
 
   orders = signal<Order[]>([]);
   // Variables para búsqueda
