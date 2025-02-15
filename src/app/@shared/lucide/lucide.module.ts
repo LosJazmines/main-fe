@@ -105,6 +105,7 @@ import {
   Save,
   Timer,
   Printer,
+  MapPinHouse,
 } from 'lucide-angular';
 
 export const LUCIDE_MODULES = [
@@ -213,6 +214,7 @@ export const LUCIDE_MODULES = [
     Save,
     Printer,
     Timer,
+    MapPinHouse 
   }),
 ];
 

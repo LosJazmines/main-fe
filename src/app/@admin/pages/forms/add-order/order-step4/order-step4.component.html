@@ -1,1 +1,47 @@
-<p>order-step4-component works!</p>
+<div class="container mx-auto max-w-4xl p-2 bg-white">
+  <h2 class="text-2xl font-semibold mb-4">Seleccione la Forma de Pago</h2>
+  <form [formGroup]="formaPagoForm" (ngSubmit)="onSubmit()">
+    <div class="flex gap-2 items-center">
+      <div class="mb-4 flex-1">
+        <label for="formaDePago" class="block text-sm font-medium text-gray-700"
+          >Forma de Pago</label
+        >
+        <select
+          id="formaDePago"
+          formControlName="formaDePago"
+          class="mt-1 p-2 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        >
+          <option value="" disabled selected>Seleccione una opción</option>
+          <option *ngFor="let forma of formasDePago" [value]="forma.id">
+            {{ forma.nombre }}
+          </option>
+        </select>
+        <div
+          *ngIf="
+            formaPagoForm.get('formaDePago')?.invalid &&
+            formaPagoForm.get('formaDePago')?.touched
+          "
+          class="text-sm text-red-500"
+        >
+          La forma de pago es obligatoria.
+        </div>
+      </div>
+    </div>
+    <div class="flex justify-between items-center gap-4">
+      <button
+        mat-button
+        *ngIf="true"
+        (click)="stepBack.emit()"
+        class="bg-gray-300 px-4 py-2 rounded"
+      >
+        Volver
+      </button>
+      <button
+        type="submit"
+        class="bg-blue-500 text-white px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-blue-600"
+      >
+        Siguiente
+      </button>
+    </div>
+  </form>
+</div>

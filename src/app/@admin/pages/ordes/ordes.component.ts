@@ -132,8 +132,13 @@ export default class OrdesComponent implements OnInit {
       data: { name: 'hola', animal: 'hola' },
     });
 
+
     dialogRef.closed.subscribe((result: any) => {
       console.log({ result });
+      if (result?.success) {
+        this.getOrdes();
+      }
+
       this._adminHeaderStore.updateHeaderTitle('Pedidos');
     });
   }

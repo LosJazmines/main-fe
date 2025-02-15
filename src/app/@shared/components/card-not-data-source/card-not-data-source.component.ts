@@ -20,6 +20,8 @@ export class CardNotDataSourceComponent {
   @Input() textInfo!: string;
   @Input() buttonText: string = 'Descubrir productos';
 
+  @Input() isButtonText: boolean = true;
+
   goTo() {
     this._router.navigate(['/online-store']);
   }

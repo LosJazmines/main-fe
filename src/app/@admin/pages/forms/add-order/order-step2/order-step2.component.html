@@ -1,1 +1,276 @@
-<p>order-step2-component works!</p>
+<div class="min-h-[360px] w-full rounded p-2 overflow-hidden">
+  <!-- @if (shoppingCart().length !== 0) {  } -->
+  <!-- <div class="border-b border-black/10 px-4 pt-4 bg-white rounded-t"> -->
+  <!-- <h2 class="text-2xl font-bold text-gray-800">Productos</h2> -->
+  <div class="flex items-center justify-between">
+    <div class="flex items-center gap-2">
+      <h2 class="text-2xl font-semibold mb-4">Paso 2: Agregar Productos</h2>
+    </div>
+
+    <div class="flex items-center gap-2">
+      <p>
+        <mat-slide-toggle labelPosition="before" (change)="toggleView()">
+          {{ showCartItems() ? "Ver productos" : "Ver artículos agregados" }}
+        </mat-slide-toggle>
+      </p>
+
+      <button
+        mat-icon-button
+        class="relative text-black custom-badge"
+        [routerLink]="['/card-order']"
+        routerLinkActive="router-link-active"
+      >
+        <span
+          class="absolute -top-[-10px] right-[23px] transform translate-x-1/2 -translate-y-1/2 text-black text-xs font-semibold px-2 py-0.5 rounded-full"
+        >
+          {{ shoppingCartLength() }}
+        </span>
+        <lucide-icon [size]="24" name="shopping-cart"></lucide-icon>
+      </button>
+    </div>
+  </div>
+
+  <app-search-moderno-reactive
+    [inputPlaceholder]="'Buscar por Direccion o Nombre del destinatario'"
+    (search)="handleSearch($event)"
+  ></app-search-moderno-reactive>
+  <!-- </div> -->
+  @if(!showCartItems()){
+  <div class="w-full flex flex-col gap-1 max-h-[300px] overflow-y-auto my-2">
+    @for (item of products(); track $index){
+    <!-- <div class="w-full flex items-center justify-around bg-white p-2 gap-4">
+      <div class="flex-1 flex items-center gap-4 py-4">
+        <div
+          class="bg-blue-100 text-blue-400 rounded w-[70px] h-[70px] flex items-center justify-center overflow-hidden"
+        >
+          <img
+            [src]="item.images[0]"
+            alt="Oso de peluche"
+            class="w-full h-full object-cover"
+          />
+        </div>
+        <div class="flex flex-col gap-2">
+          <h3 class="text-lg font-bold text-gray-700">
+            {{ item.name }}
+          </h3>
+
+          <p class="text-sm text-blue-500 hover:text-blue-400 cursor-pointer">
+            {{ item.description }}
+          </p>
+        </div>
+      </div>
+      <div class="flex flex-col items-start gap-2 py-4">
+        <div class="flex items-start justify-center w-full gap-4 pt-1">
+          <button
+            matRipple
+            class="flex justify-center items-center min-h-8 min-w-8 border border-solid border-black/10 cursor-pointer bg-transparent text-black rounded"
+            (click)="decreaseQuantity(item.id)"
+          >
+            <lucide-icon name="minus" [size]="16"></lucide-icon>
+          </button>
+
+          <div class="number text-lg font-semibold">
+            {{ quantity }}
+          </div>
+
+          <button
+            matRipple
+            class="flex justify-center items-center min-h-8 min-w-8 border border-solid border-black/10 cursor-pointer bg-transparent text-black rounded"
+            (click)="increaseQuantity(item.id)"
+          >
+            <lucide-icon name="plus" [size]="16"></lucide-icon>
+          </button>
+          <div></div>
+          <div class="flex items-center gap-2 justify-center">
+            <lucide-icon
+              name="dollar-sign"
+              class="w-4 h-4 text-gray-600"
+            ></lucide-icon>
+            <p class="text-sm font-bold text-black">{{ item.price }}</p>
+          </div>
+        </div>
+
+        <div class="w-full flex items-center gap-4 justify-between">
+          <div class="flex items-center gap-2 justify-center">
+            <lucide-icon
+              name="layers"
+              class="w-4 h-4 text-gray-600"
+            ></lucide-icon>
+            <p class="text-sm font-bold text-black">{{ item.stock }}</p>
+          </div>
+          <button
+            matRipple
+            class="text-sm bg-black text-white px-4 py-2 rounded-lg flex items-center gap-2"
+            (click)="addToCart(item)"
+          >
+            <lucide-icon name="shopping-cart" [size]="16"></lucide-icon>
+            Agregar
+          </button>
+        </div>
+      </div>
+    </div> -->
+    <app-product-card-add
+      [product]="item"
+      [showCartAdd]="true"
+      [quantity]="quantities[item.id] || 0"
+      (addToCartEvent)="addToCart($event)"
+      (removeFromCartEvent)="removeFromCart($event)"
+      (increaseQuantityEvent)="increaseQuantity($event)"
+      (decreaseQuantityEvent)="decreaseQuantity($event)"
+    ></app-product-card-add>
+    }
+  </div>
+  } @if(showCartItems()){
+
+  <div
+    class="w-full flex flex-col gap-1 max-h-[300px] min-h-[300px] overflow-y-auto my-2"
+  >
+    @if (shoppingCart().length === 0) {
+    <div class="w-full h-full">
+      <app-card-not-data-source
+        class=""
+        [textTitle]="'Tu carrito está vacío.'"
+        [textInfo]="'Elegí el regalo ideal y sorprendé a alguien hoy.'"
+        [isButtonText]="false"
+      ></app-card-not-data-source>
+    </div>
+
+    } @else { @for (item of shoppingCart(); track $index){
+
+    <app-product-card-add
+      [product]="item"
+      [showCartAdd]="false"
+      [quantity]="quantities[item.id] || 0"
+      (addToCartEvent)="addToCart($event)"
+      (removeFromCartEvent)="removeFromCart($event)"
+      (increaseQuantityEvent)="increaseQuantity($event)"
+      (decreaseQuantityEvent)="decreaseQuantity($event)"
+    ></app-product-card-add>
+    <!-- <div class="w-full flex items-center justify-around bg-white p-2 gap-4">
+      <div class="flex-1 flex items-center gap-4 py-4">
+        <div
+          class="bg-blue-100 text-blue-400 rounded w-[70px] h-[70px] flex items-center justify-center overflow-hidden"
+        >
+          <img
+            [src]="item.images[0]"
+            alt="Oso de peluche"
+            class="w-full h-full object-cover"
+          />
+        </div>
+        <div class="flex flex-col gap-2">
+          <h3 class="text-lg font-bold text-gray-700">
+            {{ item.name }}
+          </h3>
+
+          <p class="text-sm text-blue-500 hover:text-blue-400 cursor-pointer">
+            {{ item.description }}
+          </p>
+        </div>
+      </div>
+      <div class="flex flex-col items-start gap-2 py-4">
+        <div class="flex items-start justify-center w-full gap-4 pt-1">
+          <button
+            matRipple
+            class="flex justify-center items-center min-h-8 min-w-8 border border-solid border-black/10 cursor-pointer bg-transparent text-black rounded"
+            (click)="decreaseQuantity(item.id)"
+          >
+            <lucide-icon name="minus" [size]="16"></lucide-icon>
+          </button>
+
+          <div class="number text-lg font-semibold">
+            {{ item.quantity }}
+          </div>
+
+          <button
+            matRipple
+            class="flex justify-center items-center min-h-8 min-w-8 border border-solid border-black/10 cursor-pointer bg-transparent text-black rounded"
+            (click)="increaseQuantity(item.id)"
+          >
+            <lucide-icon name="plus" [size]="16"></lucide-icon>
+          </button>
+
+          <div></div>
+          <div class="flex items-center gap-2 justify-center">
+            <lucide-icon
+              name="dollar-sign"
+              class="w-4 h-4 text-gray-600"
+            ></lucide-icon>
+            <p class="text-sm font-bold text-black">{{ item.price }}</p>
+          </div>
+        </div>
+
+        <div class="w-full flex items-center gap-4 justify-between">
+
+          <div class="flex items-center gap-2 justify-center">
+            <lucide-icon
+              name="layers"
+              class="w-4 h-4 text-gray-600"
+            ></lucide-icon>
+            <p class="text-sm font-bold text-black">{{ item.stock }}</p>
+          </div>
+          @if (!showCartItems()) {
+          <button
+            matRipple
+            class="text-sm bg-black text-white px-4 py-2 rounded-lg flex items-center gap-2"
+            (click)="addToCart(item)"
+          >
+            <lucide-icon name="shopping-cart" [size]="16"></lucide-icon>
+            Agregar
+          </button>
+          } @if (showCartItems()) {
+          <button
+            matRipple
+            class="text-sm bg-red-500 text-white px-4 py-2 rounded-lg flex items-center gap-2"
+            (click)="addToCart(item)"
+          >
+            <lucide-icon name="trash-2" [size]="16"></lucide-icon>
+            Eliminar
+          </button>
+          }
+        </div>
+      </div>
+    </div> -->
+    } }
+  </div>
+
+  }
+
+  <!-- @if (shoppingCart().length !== 0) {
+  <div
+    class="flex items-center justify-around bg-white p-4 border-t border-black/10 rounded-b shadow-lg overflow-hidden"
+  >
+    <div class="flex-1 flex items-center gap-4 py-4">
+      <h3 class="text-lg font-bold text-gray-700 mb-2">Envio</h3>
+    </div>
+    <div class="flex items-start gap-4 py-4">
+      <div class="w-[40px] h-[30px] flex items-center justify-center">
+        <p class="p-0 text-sm font-bold text-gray-700 mb-2">-</p>
+      </div>
+    </div>
+  </div>
+  } -->
+
+  <div class="flex justify-between items-center gap-4">
+    <button
+      mat-button
+      *ngIf="true"
+      (click)="stepBack.emit()"
+      class="bg-gray-300 px-4 py-2 rounded border border-black/10"
+    >
+      Volver
+    </button>
+
+    <div class="flex justify-end items-center gap-4">
+      <div class="flex justify-end">
+        <p class="text-lg font-bold">Total: ${{ getTotalPrice() }}</p>
+      </div>
+      <button
+        type="submit"
+        (click)="onSubmit()"
+        class="bg-blue-500 text-white px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-blue-600"
+      >
+        Siguiente
+      </button>
+    </div>
+  </div>
+</div>

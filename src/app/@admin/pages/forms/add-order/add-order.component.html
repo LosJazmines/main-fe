@@ -1,43 +1,51 @@
-<div class="max-w-3xl mx-auto p-6 bg-white shadow-lg rounded-lg">
-  <h2 class="text-2xl font-bold mb-4">Crear Orden</h2>
+<div class="max-w-3xl mx-auto p-2 bg-white shadow-lg rounded-lg">
+  <div class="pt-2">
+    <h1 class="text-2xl font-bold mb-4 text-center">Crear Orden</h1>
+  </div>
 
   <mat-horizontal-stepper
     [selectedIndex]="currentStep"
     labelPosition="bottom"
-    class="p-4"
+    class="h-full"
   >
     <!-- Step 1: User Form -->
-    <mat-step [stepControl]="step1Form" [completed]="userFound">
-      <app-order-step1></app-order-step1>
-      <button mat-button (click)="goToStep(1)">Siguiente</button>
+    <mat-step class="flex flex-col justify-between">
+      <app-order-step1
+        (stepCompleted)="onStep1Completed($event)"
+      ></app-order-step1>
     </mat-step>
 
     <!-- Step 2: Product Selection Form -->
     <mat-step>
-      <h3>Seleccionar Productos</h3>
-      <p>Formulario para seleccionar productos</p>
-      <button mat-button (click)="goToStep(2)">Siguiente</button>
+      <app-order-step2
+        (stepBack)="goBack()"
+        (stepCompleted)="onStep2Completed($event)"
+      ></app-order-step2>
     </mat-step>
 
     <!-- Step 3: Shipping Data -->
     <mat-step>
-      <h3>Datos de Envío</h3>
-      <p>Formulario para ingresar datos de envío</p>
-      <button mat-button (click)="goToStep(3)">Siguiente</button>
+      <app-order-step3
+        (stepBack)="goBack()"
+        (stepCompleted)="onStep3Completed($event)"
+      ></app-order-step3>
     </mat-step>
 
     <!-- Step 4: Payment Method -->
     <mat-step>
-      <h3>Método de Pago</h3>
-      <p>Formulario para elegir el método de pago</p>
-      <button mat-button (click)="goToStep(4)">Siguiente</button>
+      <app-order-step4
+        (stepBack)="goBack()"
+        (stepCompleted)="onStep4Completed($event)"
+      ></app-order-step4>
     </mat-step>
 
     <!-- Final Step -->
     <mat-step>
-      <h3>Revisar y Confirmar</h3>
-      <p>Revisa todos los datos antes de confirmar el pedido</p>
-      <button mat-button>Confirmar Pedido</button>
+      <app-order-step5
+        [order]="orderData()"
+        (stepBack)="goBack()"
+        (confirm)="onStep5Completed($event)"
+      ></app-order-step5>
     </mat-step>
   </mat-horizontal-stepper>
 </div>

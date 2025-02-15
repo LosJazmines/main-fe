@@ -40,7 +40,7 @@ export class AuthService {
 
   registerEmail(email: string): Observable<any> {
     console.log('email', email);
-    
+
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
     });

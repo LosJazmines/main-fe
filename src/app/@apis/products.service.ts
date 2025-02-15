@@ -8,9 +8,7 @@ import { environment } from '../../environments/environment.dev';
 export class ProductsService {
   urlProducts: string = `${environment.api}/product`;
 
-  constructor(
-    private _http: HttpClient,
-  ) {}
+  constructor(private _http: HttpClient) {}
   // Método para obtener todos los productos
   getAllProducts() {
     const headers = new HttpHeaders({
@@ -35,7 +33,7 @@ export class ProductsService {
   createProduct(productData: FormData) {
     return this._http.post(`${this.urlProducts}`, productData);
   }
-  
+
   // createProduct(productData: {
   //   name: string;
   //   description: string;
@@ -63,13 +61,36 @@ export class ProductsService {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
     });
-    return this._http.put(
-      `${this.urlProducts}/${productId}`,
-      productData,
-      {
-        headers: headers,
+    return this._http.put(`${this.urlProducts}/${productId}`, productData, {
+      headers: headers,
+    });
+  }
+
+  // Método mejorado para buscar productos con filtros dinámicos
+  searchProducts(filters: {
+    searchTerm?: string;
+    minPrice?: number;
+    maxPrice?: number;
+    category?: string;
+  }) {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+    });
+    // Limpia filtros vacíos para no afectar la API
+    const cleanedFilters: any = {};
+    (Object.keys(filters) as (keyof typeof filters)[]).forEach((key) => {
+      if (
+        filters[key] !== undefined &&
+        filters[key] !== '' &&
+        filters[key] !== 0
+      ) {
+        cleanedFilters[key] = filters[key];
       }
-    );
+    });
+
+    return this._http.post(`${this.urlProducts}/search`, cleanedFilters, {
+      headers,
+    });
   }
 
   // Método para eliminar un producto por su ID

@@ -1,4 +1,11 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  OnDestroy,
+  OnInit,
+  Output,
+  signal,
+} from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -14,7 +21,16 @@ import { RouterModule } from '@angular/router';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { LoaderComponent } from '../../../../../@shared/components/loader/loader.component';
-import { debounceTime, of, Subject, switchMap, takeUntil } from 'rxjs';
+import {
+  debounceTime,
+  distinctUntilChanged,
+  map,
+  of,
+  Subject,
+  switchMap,
+  take,
+  takeUntil,
+} from 'rxjs';
 import { AuthService } from '../../../../../@apis/auth.service';
 
 @Component({
@@ -34,11 +50,14 @@ import { AuthService } from '../../../../../@apis/auth.service';
   templateUrl: './order-step1.component.html',
   styleUrl: './order-step1.component.scss',
 })
-export class OrderStep1tComponent implements OnInit, OnDestroy {
-  userForm: FormGroup;
-  userFound: boolean = false;
+export class OrderStep1Component implements OnInit, OnDestroy {
+  @Output() stepCompleted = new EventEmitter<any>(); // Emitir evento al padre
+  @Output() stepBack = new EventEmitter<void>(); // Evento para regresar al paso anterior
+
+
+  userForm!: FormGroup;
+  userFound = signal<boolean>(false); // Indica si el usuario fue encontrado en la base de datos o false;
   loading: boolean = false;
-  searchCount: number = 0;
   private destroy$ = new Subject<void>();
 
   constructor(
@@ -46,59 +65,94 @@ export class OrderStep1tComponent implements OnInit, OnDestroy {
     private userService: UsersService,
     private authService: AuthService
   ) {
-    this.userForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
-      name: [''],
-      phone: [''],
-    });
+    this.setUserForm();
   }
 
   ngOnInit(): void {
     this.setupEmailSearch();
   }
 
+  private setUserForm() {
+    this.userForm = this.fb.group({
+      email: ['', [Validators.required, Validators.email]],
+      customerId: ['', [Validators.required]],
+      name: [''],
+      phone: [''],
+    });
+  }
+
   setupEmailSearch(): void {
     this.userForm
       .get('email')
       ?.valueChanges.pipe(
-        debounceTime(400), // Esperar 400ms después de la última tecla
-        switchMap((email: string) => {
-          if (email.length < 4 || this.searchCount >= 3) {
-            return of(null); // No hacer la búsqueda si el correo tiene menos de 4 caracteres o ya se ha hecho 3 búsquedas
-          }
-          this.searchCount++; // Incrementar el contador de búsquedas
-          return this.userService.getUserByEmail(email); // Llamar al servicio para buscar el usuario
-        }),
-        takeUntil(this.destroy$) // Desuscribirse cuando el componente sea destruido
+        // debounceTime(400),
+        map((search) => search?.trim()),
+        debounceTime(400),
+        distinctUntilChanged(),
+        // switchMap((email: string) => {
+        //   if (email.length < 4) return of(null);
+        //   this.loading = true;
+        //   return of(email);
+        // }),
+        takeUntil(this.destroy$)
       )
-      .subscribe((user: any) => {
-        this.loading = false;
-        if (user) {
-          this.userForm.patchValue(user);
-          this.userFound = true;
-        } else {
-          this.userFound = true;
-        }
+      .subscribe((email: any) => {
+        console.log('email', email);
+
+        this.userService.getUserByEmail(email).subscribe((user: any) => {
+          console.log('user', user);
+
+          this.loading = false;
+          if (user) {
+            this.userForm.get('email')?.setValue(user.email);
+            this.userForm.get('customerId')?.setValue(user.id);
+            this.userForm.get('name')?.setValue(user.username);
+            this.userFound.set(true);
+          } else {
+            this.userFound.set(false);
+          }
+        });
       });
   }
 
+  searchUserByEmail(): void {
+    // const email = this.userForm.get('email')?.value;
+    // if (!email || email.length < 4) return; // No buscar si el email es inválido
+    // this.loading = true;
+    // this.userService
+    //   .getUserByEmail(email)
+    //   .pipe(take(1))
+    //   .subscribe((user: any) => {
+    //     this.loading = false;
+    //     if (user) {
+    //       this.userForm.patchValue(user);
+    //       this.userFound = true;
+    //     } else {
+    //       this.userFound = false; // Habilita el botón de guardar
+    //     }
+    //   });
+  }
+  // Método para guardar nuevo usuario si no existe
+  saveUser(): void {
+    const email = this.userForm.get('email')?.value;
+
+    if (email !== '') {
+      this.authService.registerEmail(email).subscribe((user: any) => {
+        this.userFound.set(true);
+        this.userForm.get('customerId')?.setValue(user.id);
+      });
+    }
+  }
   onSubmit() {
-      // Si no se encontró el usuario, registrar solo el correo electrónico
-      const email = this.userForm.get('email')?.value;
-      this.authService.registerEmail(email).subscribe(
-        (user: any) => {
-          // Aquí puedes manejar la respuesta, por ejemplo, redirigir al siguiente paso
-          console.log('Correo registrado:', user);
-        },
-        (error: any) => {
-          console.error('Error al registrar el correo:', error);
-        }
-      );
-    
+    console.log('Formulario enviado:', this.userForm.value, this.userFound());
+
+    if (this.userForm.valid && this.userFound()) {
+      this.stepCompleted.emit(this.userForm.value); // Enviar datos al padre
+    }
   }
 
   ngOnDestroy(): void {
-    this.destroy$.next(); // Emitir valor para que se desuscriba
-    this.destroy$.complete(); // Completar el observable
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

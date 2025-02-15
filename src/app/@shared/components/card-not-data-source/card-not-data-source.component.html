@@ -1,12 +1,11 @@
 <div
   [@zoomOut]
   [@zoomIn]
-  class="bg-white rounded shadow-lg overflow-hidden w-full h-full  min-h-[147px] p-4 flex items-center "
+  class="bg-white rounded shadow-lg overflow-hidden w-full h-full min-h-[147px] p-4 flex items-center"
 >
   <div class="W-full h-full flex items-center justify-between gap-4 flex-1">
     <div class="flex items-center justify-start">
       <div class="h-[70px] w-[70px] mr-4 flex items-center justify-center">
-
         <img
           class="w-full h-full"
           src="../../../../assets/icons/CartSupermarketIcon.svg"
@@ -31,11 +30,12 @@
         </p>
       </div>
     </div>
-
+    @if (isButtonText) {
     <div class="flex items-center justify-center">
       <button *ngIf="buttonText" class="btn text-blue-600" (click)="goTo()">
         {{ buttonText }}
       </button>
     </div>
+    }
   </div>
 </div>

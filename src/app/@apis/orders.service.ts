@@ -31,20 +31,7 @@ export class OrdersService {
   }
 
   // Método para crear un nuevo producto  // Método para crear un nuevo producto
-  createOrder(productData: {
-    title: string;
-    description: string;
-    price: number;
-    stock: number;
-    images: string[];
-    category: string;
-    characteristics: {
-      color: string;
-      batteryLife: string;
-      connectivity: string;
-    };
-    maxPurchasePerUser: number;
-  }) {
+  createOrder(productData: any) {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
     });
