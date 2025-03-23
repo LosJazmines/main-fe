@@ -1,82 +1,208 @@
-<div class="online-store-container">
-  <div class="online-store">
-    <div class="right">
-      <div class="header">
-        <div [@zoomIn] [@zoomOut] class="carrousel">
-          <app-carrousel-swiper [images]="imgHeader"></app-carrousel-swiper>
-        </div>
+<div class="w-screen">
+  <div [@zoomIn] [@zoomOut] class="w-full h-full">
+    <app-carrousel-swiper [images]="imgHeader"></app-carrousel-swiper>
+  </div>
+</div>
+<div class="w-full flex justify-center items-center min-h-[280px]">
+  <div class="w-full h-full max-w-[1200px]">
+    <h2 class="!text-3xl font-bold !font-playfair text-[#588157] text-center">
+      Arte Floral para Cada Momento
+    </h2>
+    <div class="filters flex justify-center items-center gap-6 my-8">
+      @for (filter of filters; track $index) {
+      <app-circle-filter
+        [categoryName]="filter.categoryName"
+        [iconPath]="filter.iconPath"
+        (categorySelected)="onCategorySelected($event)"
+      >
+      </app-circle-filter>
+      }
+    </div>
+  </div>
+</div>
+
+<div class="w-full flex justify-center items-center bg-[#588157] my-4">
+  <div class="w-full h-full bg-[#588157] max-w-[1200px]">
+    <div class="w-full py-8">
+      <h2 class="!text-3xl font-bold !font-playfair text-white">
+        Colecciones de {{ temporada }}
+      </h2>
+      <div
+        class="w-full h-full flex items-center gap-4 overflow-hidden pb-4 mt-8"
+      >
+        <app-card-item
+          *ngFor="let product of products()"
+          [name]="product.name"
+          [description]="product.description"
+          [price]="product.price"
+          [image]="product.images[0]"
+          [category]="product.category"
+          [isNew]="product.isNew"
+          [product]="product"
+        ></app-card-item>
       </div>
-      <div class="body">
-        <div class="left">
-          <div class="filters flex justify-center items-center gap-6">
-            @for (filter of filters; track $index) {
-            <app-circle-filter
-              [categoryName]="filter.categoryName"
-              [iconPath]="filter.iconPath"
-              (categorySelected)="onCategorySelected($event)"
-            >
-            </app-circle-filter>
-            }
+
+      <div class="w-full flex justify-end items-center mt-4">
+        <button
+          class="w-full md:max-w-[150px] bg-white/10 text-white py-2 rounded-[4px] hover:bg-black/10 flex items-center justify-center gap-4"
+        >
+          <!-- <svg xmlns="http://www.w3.org/2000/svg" class="mr-2 h-4 w-4" fill="none" viewBox="0 0 24 24"
+        stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M3 3h2l.4 2M7 13h10l3.6-7H5.4M7 13L5.4 5M7 13l2 9m5-9l-2 9m5-9h2M10 21h4"></path>
+      </svg> -->
+          <!-- <lucide-icon name="plus"></lucide-icon> -->
+          <span>Ir a ver mas</span>
+          <lucide-icon [size]="16" name="chevron-right"></lucide-icon>
+        </button>
+        <!-- <a
+          href="/"
+          class="text-white md:max-w-[150px] bg-white/10  hover:text-[#588157] elegant-transition text-base flex items-center gap-2 backdrop-blur-md"
+        >
+          Ir a ver mas
+          <lucide-icon [size]="16" name="chevron-right"></lucide-icon>
+        </a> -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="w-full flex justify-center items-center bg-transparent my-4 py-4">
+  <div class="w-full h-full max-w-[1200px]">
+    <div class="w-full">
+      <h2 class="!text-3xl font-bold !font-playfair text-[#588157] text-center">
+        Servicios Especiales
+      </h2>
+      <p class="!text-xl font-bold !font-playfair text-[#588157] text-center">
+        Experiencias florales únicas para cada momento
+      </p>
+      <div
+        class="w-full h-full flex flex-col md:grid md:grid-cols-2 gap-4 overflow-hidden pb-4 mt-8 md:mb-[60px]"
+      >
+        <div
+          class="px-4 flex-1 w-full backdrop-blur-md shadow-sm transition-shadow hover:shadow-lg bg-[#588157]/80 text-white py-2 rounded-[4px] hover:bg-[#588157]/80 flex items-center justify-center gap-4 min-h-[178px]"
+        >
+          <div class="w-[20%] flex justify-center items-center">
+            <div class="!w-[70px] !h-[70px]">
+              <lucide-icon
+                class="text-white"
+                name="building-2"
+                [size]="70"
+              ></lucide-icon>
+            </div>
+          </div>
+
+          <div class="flex-1">
+            <h2 class="!text-xl font-bold !font-playfair text-white">
+              Decoración de Salones
+            </h2>
+            <p class="!text-base font-bold text-white">
+              Transformamos cualquier espacio en un ambiente mágico con nuestros
+              arreglos florales personalizados para eventos sociales,
+              corporativos y celebraciones especiales.
+            </p>
           </div>
         </div>
+        <div
+          class="px-4 flex-1 w-full backdrop-blur-md shadow-sm transition-shadow hover:shadow-lg bg-[#588157]/80 text-white py-2 rounded-[4px] hover:bg-[#588157]/80 flex items-center justify-center gap-4 min-h-[178px]"
+        >
+          <div class="w-[20%] flex justify-center items-center">
+            <div class="!w-[70px] !h-[70px]">
+              <lucide-icon
+                class="text-white"
+                name="church"
+                [size]="70"
+              ></lucide-icon>
+            </div>
+          </div>
+
+          <div class="flex-1">
+            <h2 class="!text-xl font-bold !font-playfair text-white">
+              Decoración de Iglesias
+            </h2>
+            <p class="!text-base font-bold text-white">
+              Creamos arreglos florales elegantes y solemnes para ceremonias
+              religiosas, respetando la santidad del espacio mientras aportamos
+              belleza y significado.
+            </p>
+          </div>
+        </div>
+        <div
+          class="px-4 flex-1 w-full backdrop-blur-md shadow-sm transition-shadow hover:shadow-lg bg-[#588157]/80 text-white py-2 rounded-[4px] hover:bg-[#588157]/80 flex items-center justify-center gap-4 min-h-[178px]"
+        >
+          <div class="w-[20%] flex justify-center items-center">
+            <div class="!w-[70px] !h-[70px]">
+              <lucide-icon
+                class="text-white"
+                name="car"
+                [size]="70"
+              ></lucide-icon>
+            </div>
+          </div>
+
+          <div class="flex-1">
+            <h2 class="!text-xl font-bold !font-playfair text-white">
+              Decoración de Autos
+            </h2>
+            <p class="!text-base font-bold text-white">
+              Adornamos vehículos con elegantes arreglos florales para bodas,
+              aniversarios y ocasiones especiales, creando un detalle
+              inolvidable para tu llegada.
+            </p>
+          </div>
+        </div>
+        <div
+          class="px-4 flex-1 w-full backdrop-blur-md shadow-sm transition-shadow hover:shadow-lg bg-[#588157]/80 text-white py-2 rounded-[4px] hover:bg-[#588157]/80 flex items-center justify-center gap-4 min-h-[178px]"
+        >
+          <div class="w-[20%] flex justify-center items-center">
+            <div class="!w-[70px] !h-[70px]">
+              <lucide-icon
+                class="text-white"
+                name="flower"
+                [size]="70"
+              ></lucide-icon>
+            </div>
+          </div>
+
+          <div class="flex-1">
+            <h2 class="!text-xl font-bold !font-playfair text-white">
+              Arreglos Personalizados
+            </h2>
+            <p class="!text-base font-bold text-white">
+              Diseñamos creaciones florales únicas según tus preferencias,
+              ocasión y presupuesto. Cada arreglo cuenta una historia y
+              transmite emociones específicas.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- <div class="online-store-container">
+  <div class="online-store">
+    <div class="right">
+      <div class="body">
+        <div class="left"></div>
       </div>
       <div class="w-full">
         <h2 class="text-4xl uppercase font-bold text-gray-800">
           Colecciones de {{ temporada }}
         </h2>
-        <div
-          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 h-full"
-        >
+        <div class="w-full h-full flex items-center gap-4 overflow-auto">
           <app-card-item
-            *ngFor="let product of filteredProducts"
+            *ngFor="let product of products()"
             [name]="product.name"
             [description]="product.description"
             [price]="product.price"
-            [image]="product.image"
+            [image]="product.images[0]"
             [category]="product.category"
             [isNew]="product.isNew"
             [product]="product"
           ></app-card-item>
         </div>
       </div>
-
-      <div class="w-full">
-        <h2 class="text-4xl uppercase font-bold text-gray-800">
-          Colecciones de {{ temporada }}
-        </h2>
-        <div
-          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 h-full"
-        >
-          <app-card-item
-            *ngFor="let product of filteredProducts"
-            [name]="product.name"
-            [description]="product.description"
-            [price]="product.price"
-            [image]="product.image"
-            [category]="product.category"
-            [isNew]="product.isNew"
-          ></app-card-item>
-        </div>
-      </div>
-
-      <div class="w-full">
-        <h2 class="text-4xl uppercase font-bold text-gray-800">
-          Colecciones de {{ temporada }}
-        </h2>
-        <div
-          class="grid items-center justify-center grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4"
-        >
-          <app-card-item
-            *ngFor="let product of products"
-            [name]="product.name"
-            [description]="product.description"
-            [price]="product.price"
-            [image]="product.image"
-            [category]="product.category"
-            [isNew]="product.isNew"
-          ></app-card-item>
-        </div>
-      </div>
     </div>
   </div>
-</div>
+</div> -->

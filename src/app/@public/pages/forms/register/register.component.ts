@@ -1,6 +1,6 @@
 import { DIALOG_DATA, Dialog, DialogRef } from '@angular/cdk/dialog';
 import { CommonModule } from '@angular/common';
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, EventEmitter, Inject, OnInit, Output } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { MaterialModule } from '../../../../@shared/material/material.module';
 import {
@@ -13,16 +13,22 @@ import { MatDialog } from '@angular/material/dialog';
 import CheckoutComponent from '../checkout/checkout.component';
 import { Animations } from '../../../../@shared/animations';
 import { AuthService } from '../../../../@apis/auth.service';
+import { LucideModule } from '@shared/lucide/lucide.module';
+import { Store } from '@ngrx/store';
+import { TokenService } from '@core/services/token.service';
+import * as userActions from '../../../../@shared/store/actions/user.actions';
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [CommonModule, RouterModule, MaterialModule, ReactiveFormsModule],
+  imports: [CommonModule, RouterModule, MaterialModule, ReactiveFormsModule, LucideModule],
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss',
   animations: [Animations],
 })
 export default class RegisterComponent implements OnInit {
+  @Output() setViewType = new EventEmitter<any>();
+
   registerGroup!: FormGroup;
   hide = true;
   formTouched = false;
@@ -30,10 +36,12 @@ export default class RegisterComponent implements OnInit {
   constructor(
     private _fb: FormBuilder,
     public dialogRef: DialogRef<string>,
-    private _dialog: Dialog,
-    @Inject(DIALOG_DATA) public data: any,
-    private _authService: AuthService
-  ) {}
+    // private _dialog: Dialog,
+    // @Inject(DIALOG_DATA) public data: any,
+    private _authService: AuthService,
+    private store: Store,
+    private _tokenService: TokenService,
+  ) { }
 
   ngOnInit(): void {
     this.initGroupRegister();
@@ -47,11 +55,15 @@ export default class RegisterComponent implements OnInit {
     });
   }
 
+
+  emitViewType(view: string) {
+    this.setViewType.emit(view);
+  }
   closeDialog(): void {
-    this.dialogRef.close();
-    this.dialogRef.closed.subscribe((result) => {
-      console.log('The dialog was closed');
-    });
+    // this.dialogRef.close();
+    // this.dialogRef.closed.subscribe((result) => {
+    //   console.log('The dialog was closed');
+    // });
   }
 
   submitEvent() {
@@ -62,7 +74,7 @@ export default class RegisterComponent implements OnInit {
     this.registerUser()
   }
 
- private registerUser() {
+  private registerUser() {
     if (this.registerGroup.valid) {
       const formData = this.registerGroup.value;
 
@@ -74,6 +86,9 @@ export default class RegisterComponent implements OnInit {
           // En caso de éxito, se puede agregar más lógica aquí si es necesario
           console.log('Usuario registrado con éxito:', response);
           // Puedes agregar un mensaje de éxito o redirigir al usuario a otra página
+
+          this.store.dispatch(userActions.setCurrentUser({ currentUser: response }));
+          this.dialogRef.close();
         },
         error: (error) => {
           // En caso de error, se maneja aquí
@@ -86,14 +101,14 @@ export default class RegisterComponent implements OnInit {
     }
   }
   openDialogCheckout(): void {
-    this.dialogRef.close();
-    const dialogRef = this._dialog.open<string>(CheckoutComponent, {
-      width: '250px',
-      data: { name: 'hola', animal: 'hola' },
-    });
+    // this.dialogRef.close();
+    // const dialogRef = this._dialog.open<string>(CheckoutComponent, {
+    //   width: '250px',
+    //   data: { name: 'hola', animal: 'hola' },
+    // });
 
-    dialogRef.closed.subscribe((result) => {
-      console.log('The dialog was closed');
-    });
+    // dialogRef.closed.subscribe((result) => {
+    //   console.log('The dialog was closed');
+    // });
   }
 }

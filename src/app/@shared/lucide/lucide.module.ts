@@ -106,6 +106,14 @@ import {
   Timer,
   Printer,
   MapPinHouse,
+  Store,
+  Flower,
+  Church,
+  Car,
+  Facebook,
+  Leaf,
+  Fuel,
+  ListFilter
 } from 'lucide-angular';
 
 export const LUCIDE_MODULES = [
@@ -214,7 +222,15 @@ export const LUCIDE_MODULES = [
     Save,
     Printer,
     Timer,
-    MapPinHouse 
+    MapPinHouse,
+    Store,
+    Flower,
+    Church,
+    Car,
+    Facebook,
+    Leaf,
+    Fuel,
+    ListFilter 
   }),
 ];
 
@@ -222,4 +238,4 @@ export const LUCIDE_MODULES = [
   imports: [LUCIDE_MODULES],
   exports: [LUCIDE_MODULES],
 })
-export class LucideModule {}
+export class LucideModule { }

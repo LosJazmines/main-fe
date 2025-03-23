@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnDestroy, OnInit, signal } from '@angular/core';
+import { Component, HostListener, OnDestroy, OnInit, signal } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { MaterialModule } from '../../material/material.module';
 import { Dialog } from '@angular/cdk/dialog';
@@ -19,6 +19,7 @@ import {
   selectUserRoles,
 } from '../../store/selectors/user.selector';
 import { toggleRightSidebar } from '../sidebars/right-sidebar/store/actions/right-sidebar.actions';
+import { AuthComponent } from '@public-pages/forms/auth/auth.component';
 
 @Component({
   selector: 'app-header',
@@ -37,16 +38,26 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   private _unsuscribeAll!: Subscription;
 
+  scrolled = false; // Controla el estado del header
+
   constructor(
     private _tokenService: TokenService,
     private _messageService: MessageService,
     public dialog: Dialog,
     private store: Store<AppState>
-  ) {}
+  ) { }
   ngOnInit(): void {
     this.getUser();
     this.getShoppingCart();
+
   }
+
+
+  @HostListener('window:scroll', [])
+  onWindowScroll() {
+    this.scrolled = window.scrollY > 0;
+  }
+
   ngOnDestroy(): void {
     this._unsuscribeAll.unsubscribe();
   }
@@ -83,7 +94,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   openDialogLogin(): void {
-    const dialogRef = this.dialog.open<string>(LoginComponent, {
+    const dialogRef = this.dialog.open<string>(AuthComponent, {
       width: '250px',
       data: { name: 'hola', animal: 'hola' },
     });

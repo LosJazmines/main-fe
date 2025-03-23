@@ -1,50 +1,89 @@
-<div class="w-64 bg-gray-200 rounded-lg p-6">
-  <div class="flex items-center justify-between mb-6">
-    <h2 class="text-lg font-medium">Filtros</h2>
-    <button class="text-sm text-muted-foreground hover:underline" (click)="clearFilters()">
+<div
+  class="w-72 bg-[#588157]/90 h-full backdrop-blur-lg rounded-[4px] p-6 shadow-lg"
+>
+  <div class="flex items-center justify-between mb-2">
+    <h2 class="text-xl font-semibold text-white !m-0">Filtros</h2>
+    <button
+      class="text-sm hover:underline text-gray-200"
+      (click)="clearFilters()"
+    >
       Borrar filtros
     </button>
   </div>
 
-  <div class="space-y-6">
+  <div class="space-y-5">
     <!-- Categorías -->
     <div>
-      <h3 class="text-sm font-medium mb-3">Categorías</h3>
-      <div class="space-y-2">
-        <div *ngFor="let category of categories" class="flex items-center space-x-2">
-          <input type="checkbox" [id]="category.id" [(ngModel)]="filters.categories[category.id]" />
-          <label [for]="category.id" class="text-sm font-normal">
-            {{ category.label }}
-          </label>
+      <!-- Categorías -->
+      <h3 class="text-base font-medium text-white !m-0">Categorías</h3>
+      <div class="space-y-1">
+        <div
+          *ngFor="let category of categories"
+          (click)="selectCategory(category.id)"
+          [ngClass]="{
+            'bg-[#588157]/80': filters.selectedCategory === category.id
+          }"
+          class="text-white/80 cursor-pointer px-4 py-2 rounded-[4px]"
+        >
+          {{ category.label }}
         </div>
       </div>
     </div>
 
-    <hr />
+    <hr class="border-white/20 !mt-2" />
 
     <!-- Tipo de Flores -->
     <div>
-      <h3 class="text-sm font-medium mb-3">Tipo de Flores</h3>
-      <div class="space-y-2">
-        <div *ngFor="let type of flowerTypes" class="flex items-center space-x-2">
-          <input type="checkbox" [id]="type.id" [(ngModel)]="filters.types[type.id]" />
-          <label [for]="type.id" class="text-sm font-normal">
-            {{ type.label }}
-          </label>
+      <h3 class="text-base font-medium text-white !m-0">Tipo de Flores</h3>
+      <div class="space-y-1">
+        <div
+          *ngFor="let type of flowerTypes"
+          (click)="selectFlowerType(type.id)"
+          [ngClass]="{
+            'bg-[#588157]/80': filters.selectedFlowerType === type.id
+          }"
+          class="text-white/80 cursor-pointer px-4 py-2 rounded-[4px]"
+        >
+          {{ type.label }}
         </div>
       </div>
     </div>
-
-    <hr />
+    <hr class="my-6 border-gray-500/50" />
 
     <!-- Precio -->
     <div>
-      <h3 class="text-sm font-medium mb-3">Precio</h3>
-      <div class="grid grid-cols-2 gap-2">
-        <input type="number" [(ngModel)]="filters.priceRange.min" placeholder="Min"
-          class="h-8 border border-gray-300 p-1 rounded" />
-        <input type="number" [(ngModel)]="filters.priceRange.max" placeholder="Max"
-          class="h-8 border border-gray-300 p-1 rounded" />
+      <!-- Filtro de Precio -->
+      <h3 class="text-base font-medium text-white !m-0">Precio</h3>
+      <!-- Lista de precios fijos -->
+      <div class="w-full flex flex-col items-start space-y-2">
+        <div
+          *ngFor="let price of fixedPrices"
+          (click)="selectFixedPrice(price.value)"
+          [ngClass]="{
+            'bg-[#588157]/80': filters.selectedFixedPrice === price.value
+          }"
+          class="w-full text-white/80 cursor-pointer px-4 py-2 rounded-[4px]"
+        >
+          {{ price.label }}
+        </div>
+      </div>
+      <!-- Inputs personalizados de min y max -->
+      <div class="flex items-center mt-2 space-x-2">
+        <input
+          type="number"
+          [(ngModel)]="filters.customPrice.min"
+          (input)="onCustomPriceInput()"
+          placeholder="Min"
+          class="w-20 p-1 rounded-[4px]"
+        />
+        <span class="text-white font-bold">→</span>
+        <input
+          type="number"
+          [(ngModel)]="filters.customPrice.max"
+          (input)="onCustomPriceInput()"
+          placeholder="Max"
+          class="w-20 p-1 rounded-[4px]"
+        />
       </div>
     </div>
   </div>

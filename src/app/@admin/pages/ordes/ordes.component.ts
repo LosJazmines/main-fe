@@ -36,7 +36,6 @@ export default class OrdesComponent implements OnInit {
 
   selectedOrder: string = 'ascendente'; // Valor por defecto
 
-
   orders = signal<Order[]>([]);
   // Variables para búsqueda
   searchTerm: string = '';
@@ -86,7 +85,6 @@ export default class OrdesComponent implements OnInit {
       return;
     }
 
-    console.log('Buscando órdenes con filtros:', filters);
     this._ordersService.searchOrders(filters).subscribe({
       next: (orders: any) => {
         console.log('Órdenes encontradas:', orders);
@@ -132,7 +130,6 @@ export default class OrdesComponent implements OnInit {
       data: { name: 'hola', animal: 'hola' },
     });
 
-
     dialogRef.closed.subscribe((result: any) => {
       console.log({ result });
       if (result?.success) {
@@ -160,7 +157,6 @@ export default class OrdesComponent implements OnInit {
   //   });
   // }
   updateOrder(orderId: string, newStatus: any) {
-    console.log({ orderId, newStatus });
     this._messageService.closeSnackBar();
 
     this._ordersService.updateOrderStatus(orderId, newStatus).subscribe({

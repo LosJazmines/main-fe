@@ -17,12 +17,18 @@
     "target": "ES2022",
     "module": "ES2022",
     "useDefineForClassFields": false,
-    "lib": [
-      "ES2022",
-      "dom",
-      "esnext.asynciterable"
-    ],
-    "allowSyntheticDefaultImports": true
+    "lib": ["ES2022", "dom", "esnext.asynciterable"],
+    "allowSyntheticDefaultImports": true,
+    "paths": {
+      "@angular/google-maps": ["./node_modules/@angular/google-maps"],
+      "@environments/*": ["./src/environments/*"],
+      "@assets/*": ["./src/assets/*"],
+      "@admin-pages/*": ["./src/app/@admin/pages/*"],
+      "@public-pages/*": ["./src/app/@public/pages/*"],
+      "@shared/*": ["./src/app/@shared/*"],
+      "@core/*": ["./src/app/@core/*"],
+      "@apis/*": ["./src/app/@apis/*"]
+    }
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,

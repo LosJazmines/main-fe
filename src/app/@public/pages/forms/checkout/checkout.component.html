@@ -1,3 +1,87 @@
+<div
+  class="z-2 w-full h-full flex flex-col justify-center items-center shadow-lg bg-primary rounded-[4px] px-8 py-4 relative"
+>
+  <a
+    (click)="emitViewType('login')"
+    class="text-white/80 hover:text-[#A2E100]/20 text-base font-semibold absolute top-4 left-4 cursor-pointer"
+  >
+    <span class="flex items-center space-x-1">
+      <lucide-icon [name]="'arrow-left'" class="w-4 h-4 mb-1"></lucide-icon>
+      <span>Volver</span>
+    </span>
+  </a>
+  <h1 class="title !text-xl !font-playfair !mb-[24px] text-white">
+    Recuperar Contraseña
+  </h1>
+
+  <form class="login-form" [formGroup]="checkouGroup" (submit)="submitEvent()">
+    <div class="flex-1 w-full">
+      <label for="email" class="block text-sm font-medium text-white/80"
+        >Email</label
+      >
+      <input
+        id="email"
+        formControlName="email"
+        type="email"
+        class="mt-1 p-2 w-full border border-gray-300 rounded-[4px] focus:outline-none focus:ring-2 focus:ring-[#A2E100]/20"
+        placeholder="Ingresar tu correo electrónico"
+      />
+    </div>
+
+    <div class="w-full mt-2">
+      <p
+        class="text-sm text-white/80 mt-4 cursor-pointer w-full text-start py-2"
+      >
+        Te enviaremos un código de verificación para restablecer tu contraseña.
+      </p>
+    </div>
+
+    <div class="flex flex-col gap-2 w-full">
+      <button
+        (click)="submitEvent()"
+        type="submit"
+        class="px-4 py-2 bg-[#3a5a40]/80 text-white rounded-[4px] shadow hover:bg-[#A2E100]/20 focus:outline-none transition"
+      >
+        <span class="tracking-widest">Enviar</span>
+      </button>
+      <!-- <button
+          class="login-button login-button--submit"
+          (click)="submitEvent()"
+          type="submit"
+          mat-flat-button
+        >
+          <span>Ingresar</span>
+          <div  *ngIf="(_loandingService._loading$ | async)" class="loading"></div>
+        </button> -->
+    </div>
+  </form>
+
+  <div class="w-full flex items-center justify-center mt-8">
+    <p class="text-sm text-white mt-4 cursor-pointer w-full text-start">
+      No tienes una cuenta? <br />
+      <span
+        (click)="emitViewType('register')"
+        class="hover:text-[#A2E100]/50 text-sm"
+        >Crear cuenta.</span
+      >
+    </p>
+  </div>
+
+  <!-- <button
+          (click)="submitEvent()"
+          class="w-100"
+          mat-raised-button
+          color="primary"
+          [disabled]="_loandingService._loading$ | async"
+        >
+          <span *ngIf="!(_loandingService._loading$ | async)">Ingresar</span>
+          <div
+            *ngIf="_loandingService._loading$ | async"
+            class="loading"
+          ></div>
+        </button> -->
+</div>
+
 <!-- <div class="checkout-container">
   <div class="checkout">
     <h1>checkout works!</h1>
@@ -10,9 +94,9 @@
       <button (click)="dialogRef.close()">Cancel</button>
     </div>
   </div>
-</div> -->
+</div>
 
-<!-- <div class="register-container">
+<div class="register-container">
   <div class="register">
     <h1>register works!</h1>
     <div>
@@ -24,7 +108,7 @@
       <button (click)="dialogRef.close()">Cancel</button>
     </div>
   </div>
-</div> -->
+</div>
 
 <div class="checkout-container">
   <div class="checkout">
@@ -78,7 +162,10 @@
             mat-button
           >
             <span>close</span>
-            <!-- <div  *ngIf="(_loandingService._loading$ | async)" class="loading"></div> -->
+            <div
+              *ngIf="_loandingService._loading$ | async"
+              class="loading"
+            ></div>
           </button>
 
           <button
@@ -88,24 +175,24 @@
             mat-flat-button
           >
             <span>Checkout</span>
-            <!-- <div  *ngIf="(_loandingService._loading$ | async)" class="loading"></div> -->
-          </button>
-        </div>
-      </form>
-
-      <!-- <button
-            (click)="submitEvent()"
-            class="w-100"
-            mat-raised-button
-            color="primary"
-            [disabled]="_loandingService._loading$ | async"
-          >
-            <span *ngIf="!(_loandingService._loading$ | async)">Ingresar</span>
             <div
               *ngIf="_loandingService._loading$ | async"
               class="loading"
             ></div>
-          </button> -->
+          </button>
+        </div>
+      </form>
+
+      <button
+        (click)="submitEvent()"
+        class="w-100"
+        mat-raised-button
+        color="primary"
+        [disabled]="_loandingService._loading$ | async"
+      >
+        <span *ngIf="!(_loandingService._loading$ | async)">Ingresar</span>
+        <div *ngIf="_loandingService._loading$ | async" class="loading"></div>
+      </button>
     </div>
   </div>
-</div>
+</div> -->

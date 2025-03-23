@@ -1,0 +1,248 @@
+<div class="flex flex-col gap-4">
+  <!-- Radio buttons para seleccionar método de entrega -->
+  <div
+    class="container mx-auto max-w-4xl p-2 bg-white w-full shadow rounded-md"
+  >
+    <h2 class="text-2xl font-semibold mb-4">Método de Entrega</h2>
+    <div class="flex gap-4">
+      <label class="flex items-center gap-2 cursor-pointer">
+        <input
+          type="radio"
+          [(ngModel)]="metodoEntrega"
+          value="domicilio"
+          name="entrega"
+          class="hidden"
+          (click)="seleccionarSucursal($event)"
+        />
+        <div
+          class="flex items-center p-4 border rounded-md shadow cursor-pointer"
+          [class.bg-blue-100]="metodoEntrega === 'domicilio'"
+        >
+          <lucide-icon name="truck" [size]="24"></lucide-icon>
+          <span class="ml-2 font-semibold">Envío a Domicilio</span>
+        </div>
+      </label>
+
+      <label class="flex items-center gap-2 cursor-pointer">
+        <input
+          type="radio"
+          [(ngModel)]="metodoEntrega"
+          value="sucursal"
+          name="entrega"
+          class="hidden"
+          (click)="seleccionarSucursal($event)"
+        />
+        <div
+          class="flex items-center p-4 border rounded-md shadow cursor-pointer"
+          [class.bg-blue-100]="metodoEntrega === 'sucursal'"
+        >
+          <lucide-icon name="store" [size]="24"></lucide-icon>
+          <span class="ml-2 font-semibold">Retiro en Sucursal</span>
+        </div>
+      </label>
+    </div>
+  </div>
+
+  <!-- Card de Retiro en Sucursal -->
+  <div
+    *ngIf="metodoEntrega === 'sucursal'"
+    class="container mx-auto max-w-4xl p-2 bg-white w-full shadow rounded-md"
+  >
+    <div class="flex items-center gap-4">
+      <lucide-icon name="store" [size]="24"></lucide-icon>
+      <h2 class="text-2xl font-semibold mb-4">Retiro en Sucursal</h2>
+    </div>
+    <div class="flex items-center gap-4 p-2">
+      <lucide-icon name="info" [size]="16"></lucide-icon>
+      <p class="font-semibold text-base">
+        Debes acercarte a nuestra sucursal para retirar tu pedido.
+      </p>
+    </div>
+    <div class="flex items-center gap-4 p-2">
+      <lucide-icon name="map-pin-house" [size]="16"></lucide-icon>
+      <p class="font-semibold text-base">
+        Dirección: Avenida España 995, Tandil, Buenos Aires.
+      </p>
+    </div>
+    <div class="flex items-center gap-4 p-2">
+      <lucide-icon name="calendar-clock" [size]="16"></lucide-icon>
+      <p class="font-semibold text-base">
+        Horario de atención: Lunes a Sabado, 9:00 AM - 18:00 PM.
+      </p>
+    </div>
+
+    <div
+      class="w-full h-[120px] lg:h-auto rounded shadow-lg overflow-hidden mb-4"
+    >
+      <google-map [center]="center" [zoom]="zoom" width="100%" height="150px">
+        <map-marker [position]="center"></map-marker>
+      </google-map>
+    </div>
+  </div>
+
+  <!-- Card de Envío a Domicilio -->
+  <!-- Card de Envío a Domicilio -->
+  <div
+    *ngIf="metodoEntrega === 'domicilio'"
+    class="container mx-auto max-w-4xl p-2 bg-white w-full shadow rounded-md"
+  >
+    <h2 class="text-2xl font-semibold mb-4">Datos del Destinatario</h2>
+
+    <!-- Campo de Código Postal -->
+    <div class="mb-4 w-full">
+      <label for="codigoPostal" class="block text-sm font-medium text-gray-700"
+        >Código Postal</label
+      >
+      <input
+        id="codigoPostal"
+        [formControl]="codigoPostal"
+        type="text"
+        class="mt-1 p-2 w-full border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
+        placeholder="Ej: 7000"
+        (input)="validarCodigoPostal()"
+      />
+    </div>
+
+    <p *ngIf="codigoPostalInvalido" class="text-red-500 text-sm">
+      Solo realizamos envíos dentro de Tandil (CP 7000).
+    </p>
+    <p *ngIf="codigoPostalInvalido" class="text-red-500 text-sm">
+      El código postal ingresado no está dentro del área permitida.
+    </p>
+
+    <!-- Formulario aparece solo si el CP es válido -->
+    <form
+      *ngIf="codigoPostalValido"
+      [formGroup]="destinatarioForm"
+      (ngSubmit)="onSubmit()"
+    >
+      <div class="flex gap-2 items-center">
+        <div class="mb-4 flex-1">
+          <label for="nombre" class="block text-sm font-medium text-gray-700"
+            >Nombre del destinatario</label
+          >
+          <input
+            id="nombre"
+            formControlName="nombre"
+            type="text"
+            class="mt-1 p-2 w-full border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
+            placeholder="Nombre completo"
+          />
+        </div>
+
+        <div class="mb-4 flex-1">
+          <label for="telefono" class="block text-sm font-medium text-gray-700"
+            >Teléfono destinatario</label
+          >
+          <input
+            id="telefonoMovil"
+            formControlName="telefonoMovil"
+            type="tel"
+            class="mt-1 p-2 w-full border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
+            placeholder="+549 11 12345678"
+          />
+        </div>
+      </div>
+
+      <div class="mb-4">
+        <label for="direccion" class="block text-sm font-medium text-gray-700"
+          >Dirección completa de entrega</label
+        >
+        <div class="flex gap-2 items-center">
+          <input
+            id="direccion"
+            formControlName="direccion"
+            type="text"
+            class="mt-1 p-2 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="Ejemplo: Avenida España 995, Tandil"
+            ngx-google-places-autocomplete
+            (onAddressChange)="handleAddressChange($event)"
+            (input)="onAddressInput()"
+          />
+          <button
+            matRipple
+            class="mt-1 flex justify-center items-center min-h-[38px] min-w-[38px] border border-gray-300 bg-black text-white rounded hover:bg-gray-300"
+            (click)="usarMiUbicacion()"
+          >
+            <lucide-icon name="map-pin-house" [size]="24"></lucide-icon>
+          </button>
+        </div>
+      </div>
+
+      <!-- <div class="flex gap-2 items-center">
+        <div class="mb-4 w-full">
+          <label for="pais" class="block text-sm font-medium text-gray-700"
+            >País</label
+          >
+          <input
+            id="pais"
+            formControlName="pais"
+            type="text"
+            class="mt-1 p-2 w-full border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
+            placeholder="Argentina"
+          />
+        </div>
+        <div class="mb-4 w-full">
+          <label for="estado" class="block text-sm font-medium text-gray-700"
+            >Provincia</label
+          >
+          <input
+            id="estado"
+            formControlName="estado"
+            type="text"
+            class="mt-1 p-2 w-full border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
+            placeholder="Buenos Aires"
+          />
+        </div>
+        <div class="mb-4 w-full">
+          <label for="ciudad" class="block text-sm font-medium text-gray-700"
+            >Ciudad</label
+          >
+          <input
+            id="ciudad"
+            formControlName="ciudad"
+            type="text"
+            class="mt-1 p-2 w-full border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
+            placeholder="Ciudad"
+          />
+        </div>
+      </div> -->
+
+      <div
+        class="w-full h-[120px] lg:h-auto rounded shadow-lg overflow-hidden mb-4"
+      >
+        <google-map [center]="center" [zoom]="zoom" width="100%" height="150px">
+          <map-marker [position]="center"></map-marker>
+        </google-map>
+      </div>
+
+      <div class="mb-4">
+        <label for="comentarios" class="block text-sm font-medium text-gray-700"
+          >Comentarios</label
+        >
+        <textarea
+          id="comentarios"
+          formControlName="comentarios"
+          class="mt-1 p-2 w-full border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
+          placeholder="Ejemplo: No funciona bien el timbre"
+        ></textarea>
+      </div>
+
+      <div class="flex justify-between items-center gap-4">
+        <button
+          mat-button
+          [routerLink]="['/card-order']"
+          class="bg-gray-300 px-4 py-2 rounded"
+        >
+          Volver
+        </button>
+        <button
+          type="submit"
+          class="bg-blue-500 text-white px-4 py-2 rounded-md focus:ring-2 focus:ring-blue-500 hover:bg-blue-600"
+        >
+          Siguiente
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

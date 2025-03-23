@@ -1,6 +1,6 @@
 <div class="online-store-container">
-  <div class="online-store">
-    <div class="left">
+  <div class="online-store mb-8">
+    <div class="hidden lg:block left">
       <app-shop-filters></app-shop-filters>
     </div>
 
@@ -10,33 +10,76 @@
       <div class="header">
         <div [@zoomIn] [@zoomOut] class="carrousel">
           <div class="carrousel-items">
-            <app-carrousel-swiper [images]="imgHeader"></app-carrousel-swiper>
+            <app-carrousel-swiper-store
+              [images]="imgHeader"
+            ></app-carrousel-swiper-store>
           </div>
         </div>
       </div>
 
       <div class="w-full">
-        <div class="flex justify-between items-center mb-6">
+        <div
+          class="flex flex-col md:flex-row gap-2 justify-between md:items-center mb-6"
+        >
           <!-- Filtro de Ordenación -->
-          <div class="flex items-center space-x-4">
-            <label for="orderBy" class="text-sm font-medium"
-              >Ordenar por:</label
-            >
-            <select
-              id="orderBy"
-              [(ngModel)]="selectedOrder"
-              (change)="applyFilter()"
-              class="border p-2 rounded-md text-sm"
-            >
-              <option value="ascendente">Ascendente</option>
-              <option value="descendente">Descendente</option>
-              <option value="mayorValor">Mayor Valor</option>
-              <option value="menorValor">Menor Valor</option>
-            </select>
+          <div class="flex justify-between items-center">
+            <div class="block lg:hidden">
+              <div class="">
+                <button
+                  class="px-4 py-2 rounded-[4px] border border-black/10 min:w-[100px]"
+                >
+                  <div
+                    class="w-full h-full flex items-center gap-4"
+                    (click)="openLeftFiltersDrawer()"
+                  >
+                    <span class="text-sm font-medium">Filtros</span>
+                    <lucide-icon
+                      class="text-black"
+                      name="list-filter"
+                      [size]="16"
+                    ></lucide-icon>
+                  </div>
+                </button>
+              </div>
+            </div>
+            <div class="flex items-center space-x-4">
+              <label for="orderBy" class="text-sm font-medium">Orden:</label>
+              <div class="relative">
+                <!-- Botón que muestra el menú -->
+                <div
+                  (click)="toggleDropdown()"
+                  class="border px-4 py-2 pr-8 rounded-[4px] text-sm bg-white cursor-pointer relative"
+                >
+                  {{ selectedOrderText }}
+                  <div
+                    class="absolute inset-y-0 right-2 flex items-center pointer-events-none"
+                  >
+                    <lucide-icon
+                      name="chevron-down"
+                      class="w-4 h-4 text-black z-10"
+                    ></lucide-icon>
+                  </div>
+                </div>
+
+                <!-- Menú de opciones -->
+                <ul
+                  *ngIf="dropdownOpen"
+                  class="absolute top-full left-0 w-full bg-white border mt-1 rounded-md shadow-md z-10"
+                >
+                  <li
+                    *ngFor="let option of orderOptions"
+                    (click)="selectOrder(option)"
+                    class="px-4 py-2 text-sm cursor-pointer hover:bg-green-200"
+                  >
+                    {{ option.text }}
+                  </li>
+                </ul>
+              </div>
+            </div>
           </div>
 
           <!-- Contador de Items -->
-          <div class="text-sm font-medium">
+          <div class="hidden lg:block text-sm font-medium">
             <span>{{ filteredItems.length }} Items disponibles</span>
           </div>
         </div>
@@ -44,7 +87,7 @@
           Colecciones de {{ temporada }}
         </h2> -->
         <div
-          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 h-full"
+          class="grid justify-items-center grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 h-full"
         >
           <app-card-item
             *ngFor="let product of filteredProducts"
@@ -54,6 +97,7 @@
             [image]="product.image"
             [category]="product.category"
             [isNew]="product.isNew"
+            [isActiveBg]="true"
           ></app-card-item>
         </div>
       </div>

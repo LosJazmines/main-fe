@@ -15,6 +15,12 @@ import { ShopFiltersComponent } from '../../../@shared/components/shop-filters/s
 import { BreadcrumbComponent } from '../../../@shared/components/breadcrumb/breadcrumb.component';
 import { FormsModule } from '@angular/forms';
 import { CarrouselSwiperComponent } from '../../../@shared/components/carrousel-swiper/carrousel-swiper.component';
+import { LucideModule } from '@shared/lucide/lucide.module';
+import { MaterialModule } from '@shared/material/material.module';
+import { CarrouselSwiperStoreComponent } from '@shared/components/carrousel-swiper-store/carrousel-swiper-store.component';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Store } from '@ngrx/store';
+import { toggleLeftSidebarFilters } from '@shared/components/sidebars/left-sidebar-filters/store/actions/left-sidebar-filters.actions';
 // register Swiper custom elements
 register();
 
@@ -26,8 +32,10 @@ register();
     CardItemComponent,
     ShopFiltersComponent,
     BreadcrumbComponent,
-    CarrouselSwiperComponent,
+    CarrouselSwiperStoreComponent,
     FormsModule,
+    LucideModule,
+    MaterialModule,
   ],
   templateUrl: './online-store.component.html',
   styleUrl: './online-store.component.scss',
@@ -49,9 +57,48 @@ export default class OnlineStoreComponent implements OnInit {
 
   isBrowser: boolean;
 
-  constructor(@Inject(PLATFORM_ID) private platformId: Object) {
+  selectedOrder: string = 'ascendente';
+  selectedOrderText: string = 'Ascendente';
+  dropdownOpen = false;
+
+  orderOptions = [
+    { value: 'ascendente', text: 'Ascendente' },
+    { value: 'descendente', text: 'Descendente' },
+    { value: 'mayorValor', text: 'Mayor Valor' },
+    { value: 'menorValor', text: 'Menor Valor' }
+  ];
+
+  toggleDropdown() {
+    this.dropdownOpen = !this.dropdownOpen;
+  }
+
+  selectOrder(option: any) {
+    this.selectedOrder = option.value;
+    this.selectedOrderText = option.text;
+    this.dropdownOpen = false;
+    this.applyFilter();
+
+    // Actualizar la URL con el parámetro 'order'
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { order: this.selectedOrder },
+      queryParamsHandling: 'merge'
+    });
+  }
+
+
+  constructor(
+    @Inject(PLATFORM_ID) private platformId: Object,
+    private router: Router,
+    private store: Store,
+    private route: ActivatedRoute
+  ) {
     this.isBrowser = isPlatformBrowser(this.platformId);
     this.temporada = this.obtenerTemporada();
+  }
+
+  openLeftDrawer() {
+    this.store.dispatch(toggleLeftSidebarFilters({ isOpen: true }));
   }
 
   // Datos de ejemplo
@@ -78,7 +125,7 @@ export default class OnlineStoreComponent implements OnInit {
     },
   ];
 
-  selectedOrder: string = 'ascendente'; // Valor por defecto
+  // selectedOrder: string = 'ascendente'; // Valor por defecto
   filteredItems = [...this.items]; // Items filtrados según el orden seleccionado
 
   // Método para aplicar el filtro de orden
@@ -95,12 +142,30 @@ export default class OnlineStoreComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // Generar un título aleatorio
+    // Configurar estado inicial del orden si está presente en los query params
+    this.route.queryParams.subscribe(params => {
+      if (params['order']) {
+        this.selectedOrder = params['order'];
+        const foundOption = this.orderOptions.find(option => option.value === params['order']);
+        if (foundOption) {
+          this.selectedOrderText = foundOption.text;
+        }
+        this.applyFilter(); // Reordena los productos según el orden obtenido
+      }
+    });
+
+    // Otras inicializaciones, por ejemplo, para la temporada
     this.temporada =
       this.coleccionesTipos[
-        Math.floor(Math.random() * this.coleccionesTipos.length)
+      Math.floor(Math.random() * this.coleccionesTipos.length)
       ];
   }
+
+  openLeftFiltersDrawer() {
+    this.store.dispatch(toggleLeftSidebarFilters({ isOpen: true }));
+  }
+
+
 
   products = [
     {

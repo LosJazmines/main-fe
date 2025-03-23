@@ -64,15 +64,13 @@
       <div class="flex gap-2 items-center">
         <lucide-icon [size]="16" name="user"></lucide-icon>
         <p class="text-base">
-          {{
-            order.customer.username ? order.customer.username : "Sin Nombre"
-          }}
+          {{ order.customer ? order.customer.username : "Sin Nombre" }}
         </p>
       </div>
       <div class="flex gap-2 items-center">
         <lucide-icon [size]="16" name="mail"></lucide-icon>
         <p class="text-base">
-          {{ order.customer.email ? order.customer.email : "Sin Email" }}
+          {{ order.customer ? order.customer.email : "Sin Email" }}
         </p>
       </div>
       <div class="flex gap-2 items-center">
@@ -84,11 +82,7 @@
       <div class="flex gap-2 items-center">
         <lucide-icon [size]="16" name="map-pin"></lucide-icon>
         <p class="text-base">
-          {{
-            order.customer.direccion
-              ? order.customer.direccion
-              : "Sin Direccion"
-          }}
+          {{ order.customer ? order.customer.direccion : "Sin Direccion" }}
         </p>
       </div>
     </div>

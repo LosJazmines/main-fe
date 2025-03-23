@@ -5,6 +5,7 @@ import {
   Inject,
   OnInit,
   PLATFORM_ID,
+  signal,
 } from '@angular/core';
 import { CardItemComponent } from '../../../@shared/components/card-item/card-item.component';
 
@@ -13,6 +14,8 @@ import { register } from 'swiper/element/bundle';
 import { Animations } from '../../../@shared/animations';
 import { CarrouselSwiperComponent } from '../../../@shared/components/carrousel-swiper/carrousel-swiper.component';
 import { CircleFilterComponent } from '../../../@shared/components/circle-filter/circle-filter.component';
+import { ProductsService } from '../../../@apis/products.service';
+import { LucideModule } from '@shared/lucide/lucide.module';
 // register Swiper custom elements
 register();
 @Component({
@@ -21,6 +24,7 @@ register();
   imports: [
     CommonModule,
     CardItemComponent,
+    LucideModule,
     CarrouselSwiperComponent,
     CircleFilterComponent,
   ],
@@ -30,6 +34,7 @@ register();
   animations: [Animations],
 })
 export default class HomeComponent implements OnInit {
+
   // Lista de posibles colecciones
   coleccionesTipos: string[] = [
     'Primavera',
@@ -76,7 +81,10 @@ export default class HomeComponent implements OnInit {
 
   isBrowser: boolean;
 
-  constructor(@Inject(PLATFORM_ID) private platformId: Object) {
+  constructor(
+    private _productsService: ProductsService,
+    @Inject(PLATFORM_ID) private platformId: Object
+  ) {
     this.isBrowser = isPlatformBrowser(this.platformId);
     this.temporada = this.obtenerTemporada();
   }
@@ -85,49 +93,51 @@ export default class HomeComponent implements OnInit {
     // Generar un título aleatorio
     this.temporada =
       this.coleccionesTipos[
-        Math.floor(Math.random() * this.coleccionesTipos.length)
+      Math.floor(Math.random() * this.coleccionesTipos.length)
       ];
+
+    // this.getProducts();
   }
 
-  products = [
-    {
-      id: 1,
-      name: 'Oso de Peluche',
-      description: 'Suave y adorable oso de peluche.',
-      price: 29.99,
-      image: './../../../../assets/img/casamientos/ramos-principales/02.jpg',
-      category: 'osos',
-      isNew: false,
-    },
-    {
-      id: 2,
-      name: 'Arreglo de Tulipanes',
-      description: 'Hermoso arreglo de tulipanes frescos.',
-      price: 45.99,
-      image: './../../../../assets/img/casamientos/Boutonniere/01.jpg',
-      category: 'flores',
-      isNew: false,
-    },
-    {
-      id: 4,
-      name: 'Bouquet de Novia',
-      description: 'Bouquet especial para bodas.',
-      price: 89.99,
-      image: './../../../../assets/img/casamientos/centros-mesa-novia/01.jpg',
-      category: 'novia',
-      isNew: true,
-    },
-    {
-      id: 5,
-      name: 'Osito con Rosas',
-      description: 'Un oso decorado con rosas artificiales.',
-      price: 69.99,
-      image: './../../../../assets/img/casamientos/ramos-de-novias/01.jpg',
-      category: 'osos',
-      isNew: true,
-    },
-    // Más productos
-  ];
+  // products = [
+  //   {
+  //     id: 1,
+  //     name: 'Oso de Peluche',
+  //     description: 'Suave y adorable oso de peluche.',
+  //     price: 29.99,
+  //     image: './../../../../assets/img/casamientos/ramos-principales/02.jpg',
+  //     category: 'osos',
+  //     isNew: false,
+  //   },
+  //   {
+  //     id: 2,
+  //     name: 'Arreglo de Tulipanes',
+  //     description: 'Hermoso arreglo de tulipanes frescos.',
+  //     price: 45.99,
+  //     image: './../../../../assets/img/casamientos/Boutonniere/01.jpg',
+  //     category: 'flores',
+  //     isNew: false,
+  //   },
+  //   {
+  //     id: 4,
+  //     name: 'Bouquet de Novia',
+  //     description: 'Bouquet especial para bodas.',
+  //     price: 89.99,
+  //     image: './../../../../assets/img/casamientos/centros-mesa-novia/01.jpg',
+  //     category: 'novia',
+  //     isNew: true,
+  //   },
+  //   {
+  //     id: 5,
+  //     name: 'Osito con Rosas',
+  //     description: 'Un oso decorado con rosas artificiales.',
+  //     price: 69.99,
+  //     image: './../../../../assets/img/casamientos/ramos-de-novias/01.jpg',
+  //     category: 'osos',
+  //     isNew: true,
+  //   },
+  //   // Más productos
+  // ];
 
   imgHeader: any[] = [
     {
@@ -152,15 +162,34 @@ export default class HomeComponent implements OnInit {
 
   // Categoría seleccionada para el filtro
   selectedCategory: string = '';
+  products = signal<any[]>([]);
 
   // Método para filtrar productos
-  get filteredProducts() {
-    if (!this.selectedCategory) {
-      return this.products; // Mostrar todos los productos si no hay filtro
-    }
-    return this.products.filter(
-      (product) => product.category === this.selectedCategory
-    );
+  // get filteredProducts() {
+  //   if (!this.selectedCategory) {
+  //     return this.products; // Mostrar todos los productos si no hay filtro
+  //   }
+  //   return this.products.filter(
+  //     (product) => product.category === this.selectedCategory
+  //   );
+  // }
+
+  private getProducts(): void {
+    this._productsService.getAllProducts().subscribe({
+      next: (response: any) => {
+        // Process the response here
+        // const products = [...response];
+        this.products.set([...response]);
+        // If you need to handle the response, you can do so here
+        // For example:
+        // this.products = response.products;
+      },
+      error: (error) => {
+        // In case of error, handle it here
+        console.error('Error fetching products:', error);
+      },
+    });
+
   }
 
   // Método para seleccionar una categoría

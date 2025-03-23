@@ -86,6 +86,8 @@ export const MATERIAL_MODULES = [
   CdkAccordionModule,
   MatBadgeModule,
   MatSidenavModule,
+  MatSlideToggleModule,
+  MatDividerModule
 ];
 
 @NgModule({
@@ -109,4 +111,4 @@ export const MATERIAL_MODULES = [
     },
   ],
 })
-export class MaterialModule {}
+export class MaterialModule { }

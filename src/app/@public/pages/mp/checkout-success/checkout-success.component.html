@@ -1,0 +1,21 @@
+<div class="modal-container">
+  <div class="modal-content">
+    <lucide-icon name="circle-check" [size]="50" color="#10B981"></lucide-icon>
+    <h2 class="modal-title">¡Compra exitosa!</h2>
+    <p class="modal-text">Tu compra se ha realizado con éxito.</p>
+    <div class="button-container">
+      <button
+        class="flex items-center justify-center w-full cursor-pointer center-span tracking-wide md:w-[150px] h-[36px] bg-[#2196f3] border-none shadow-none text-sm text-white rounded hover:bg-[#1e88e5] focus:outline-none focus:ring-2 focus:ring-[#1976d2]"
+        (click)="goToEvents()"
+      >
+        Ir a Home
+      </button>
+      <button
+        class="flex items-center justify-center w-full cursor-pointer center-span tracking-wide md:w-[150px] h-[36px] bg-[#2196f3] border-none shadow-none text-sm text-white rounded hover:bg-[#1e88e5] focus:outline-none focus:ring-2 focus:ring-[#1976d2]"
+        (click)="goToTransactions()"
+      >
+        Mi Compra
+      </button>
+    </div>
+  </div>
+</div>

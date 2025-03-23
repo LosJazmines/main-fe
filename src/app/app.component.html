@@ -1,12 +1,12 @@
 <!-- <app-splash-screen></app-splash-screen> -->
 
 <mat-drawer-container class="h-full" [hasBackdrop]="true">
-  @if (isLeftAdminSidebarOpen$ | async) {
+  @if (isLeftFilterSidebarOpen$ | async) {
   <mat-drawer
     mode="over"
     position="start"
-    [opened]="isLeftAdminSidebarOpen$ | async"
-    (closedStart)="closeLeftDrawerAdmin()"
+    [opened]="isLeftFilterSidebarOpen$ | async"
+    (closedStart)="closeLeftDrawerFilters()"
   >
     <app-left-sidebar-filters></app-left-sidebar-filters>
   </mat-drawer>
@@ -30,7 +30,8 @@
     <app-right-sidebar></app-right-sidebar>
   </mat-drawer>
 
-  <mat-drawer-content>
+  <!-- class="h-full bg-gradient-to-br from-[#4d7c0f] via-[#2d4c0f] to-black " -->
+  <mat-drawer-content class="!overflow-hidden">
     <router-outlet></router-outlet>
   </mat-drawer-content>
 </mat-drawer-container>

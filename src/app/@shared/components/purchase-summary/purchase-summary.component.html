@@ -1,0 +1,115 @@
+<div class="w-[360px] bg-white rounded shadow-lg">
+  <div
+    class="w-full h-full flex flex-col p-4"
+    [ngClass]="{
+      'min-h-[147px]': shoppingCart().length === 0,
+      'min-h-[295px]': shoppingCart().length !== 0
+    }"
+  >
+    <div class="w-full h-full">
+      <div class="border-b border-black/10">
+        <h2
+          class="text-2xl font-bold pb-4"
+          [ngClass]="{
+            'text-black/30': shoppingCart().length === 0,
+            'text-gray-800': shoppingCart().length !== 0
+          }"
+        >
+          Resumen de Compra
+        </h2>
+      </div>
+      @if (shoppingCart().length !== 0 ) {
+      <div class="p-2">
+        <div class="flex gap-2 justify-between items-center">
+          <p class="pb-2 text-sm font-semibold text-gray-800">
+            Productos <span>({{ totalCantidadProductos() }})</span>
+          </p>
+          <p class="pb-2 text-sm font-semibold text-gray-800">
+            ${{ totalPrecioCarrito() | number : "1.2-2" }}
+          </p>
+        </div>
+        <div class="flex gap-2 justify-between items-center">
+          <p class="pb-2 text-sm font-semibold text-gray-800">Envio</p>
+          <p class="pb-2 text-sm font-semibold text-gray-800">-</p>
+        </div>
+        <!-- <div class="flex gap-2 justify-start items-center">
+          <p
+            class="text-sm font-normal text-blue-500 cursor-pointer"
+            (click)="showCouponInput = !showCouponInput"
+          >
+            Ingresar código de cupón
+          </p>
+        </div>
+
+        <div *ngIf="showCouponInput" class="mt-2">
+          <input
+            type="text"
+            [(ngModel)]="couponCode"
+            class="border p-2 w-full rounded"
+            placeholder="Ingresa tu código"
+          />
+          <button
+            (click)="applyCoupon()"
+            class="mt-2 w-full bg-blue-500 text-white py-2 px-4 rounded"
+          >
+            Aplicar
+          </button>
+          <p *ngIf="couponMessage" class="text-sm text-red-500 mt-1">
+            {{ couponMessage }}
+          </p>
+        </div> -->
+
+        <div class="flex gap-2 justify-between items-center mt-4">
+          <p class="pb-2 text-sm font-semibold text-gray-800">Total :</p>
+          <p class="pb-2 text-sm font-semibold text-gray-800">
+            ${{ totalCarrito() | number : "1.2-2" }}
+          </p>
+        </div>
+      </div>
+      } @else {
+      <div class="h-full p-2 flex justify-center items-center">
+        <p class="text-sm font-semibold text-black/30">
+          Aquí verás los importes de tu compra una vez que agregues productos.
+        </p>
+      </div>
+
+      }
+    </div>
+    @if (shoppingCart().length !== 0 ) {
+    <div
+      class="w-full h-full flex-1 flex flex-col gap-4 justify-between items-end"
+    >
+      @if( !IsButtom() ) {
+      <button
+        (click)="onContinuarCompra()"
+        type="submit"
+        class="text-[16px] bg-black h-[40px] text-white border-none rounded-md hover:bg-gray-800 transition duration-300 shadow-md flex items-center justify-center w-full py-2"
+      >
+        Continuar compra</button
+      >} @if (IsButtom()) {
+
+      <!-- [disabled]="isDisabledMp()"
+        [ngClass]="{
+          'bg-gray-400 cursor-not-allowed': isDisabledMp(),
+          'bg-[#009ee3] hover:bg-[#008cba] active:bg-[#007bb5] cursor-pointer':
+            !isDisabledMp()
+        }" -->
+      <button
+        class="bg-[#009ee3] hover:bg-[#008cba] active:bg-[#007bb5] cursor-pointer text-white text-[16px] border-none rounded-md transition-colors duration-300 shadow-md flex items-center justify-center w-full py-2"
+        (click)="pagar()"
+      >
+        <img
+          class="w-8 h-8 mr-4"
+          src="../../../../assets/icons/mercado-pago.svg"
+          alt="Mercado Pago"
+        />
+        Pagar con Mercado Pago
+      </button>
+
+      }
+
+      <!-- <button (click)="pagar()">Pagar con Mercado Pago</button> -->
+    </div>
+    }
+  </div>
+</div>
