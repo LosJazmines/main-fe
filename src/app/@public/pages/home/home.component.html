@@ -62,44 +62,62 @@
 <div class="w-full flex justify-center items-center bg-[#588157] my-4">
   <div class="w-full h-full bg-[#588157] max-w-[1200px]">
     <div class="w-full py-8">
-      <h2 class="!text-3xl font-bold !font-playfair text-white">
-        Colecciones de {{ temporada }}
-      </h2>
-      <div
-        class="w-full h-full flex items-center gap-4 overflow-hidden pb-4 mt-8"
+      <h2
+        class="text-center !text-2xl md:!text-3xl font-bold !font-playfair text-white"
       >
-        <app-card-item
-          *ngFor="let product of products()"
-          [name]="product.name"
-          [description]="product.description"
-          [price]="product.price"
-          [image]="product.images[0]"
-          [category]="product.category"
-          [isNew]="product.isNew"
-          [product]="product"
-        ></app-card-item>
-      </div>
-
-      <div class="w-full flex justify-end items-center mt-4">
-        <button
-          class="w-full md:max-w-[150px] bg-white/10 text-white py-2 rounded-[4px] hover:bg-black/10 flex items-center justify-center gap-4"
+        Coleccion {{ temporada }}
+      </h2>
+      <div class="relative">
+        <div
+          #scrollContainer
+          (scroll)="onScroll()"
+          class="mx-4 md:mx-0 filters flex items-center gap-6 my-8 overflow-x-auto snap-x snap-mandatory scrollbar-hide"
         >
-          <!-- <svg xmlns="http://www.w3.org/2000/svg" class="mr-2 h-4 w-4" fill="none" viewBox="0 0 24 24"
-        stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-          d="M3 3h2l.4 2M7 13h10l3.6-7H5.4M7 13L5.4 5M7 13l2 9m5-9l-2 9m5-9h2M10 21h4"></path>
-      </svg> -->
-          <!-- <lucide-icon name="plus"></lucide-icon> -->
+          @for(product of products(); track $index){
+          <app-card-item
+            [name]="product.name"
+            [description]="product.description"
+            [price]="product.price"
+            [image]="product.images[0]"
+            [category]="product.category"
+            [isNew]="product.isNew"
+            [product]="product"
+            [ngClass]="{ 'pl-12': $index === 0 }"
+          ></app-card-item>
+          }
+        </div>
+
+        <!-- Gradiente izquierdo (visible si hay scroll a la izquierda) -->
+        <div
+          id="leftShadow"
+          class="absolute top-0 left-0 h-full w-16 pointer-events-none bg-gradient-to-r from-white/30 to-transparent md:hidden"
+        ></div>
+
+        <!-- Gradiente derecho (visible si hay scroll a la derecha) -->
+        <div
+          id="rightShadow"
+          class="absolute top-0 right-0 h-full w-16 pointer-events-none bg-gradient-to-l from-white/30 to-transparent md:hidden"
+        ></div>
+      </div>
+      <!-- Sombras laterales para indicar más contenido -->
+      <div
+        class="absolute top-0 left-0 w-12 h-full bg-gradient-to-r from-white/30 to-transparent pointer-events-none hidden lg:hidden"
+        id="leftShadow"
+      ></div>
+      <div
+        class="absolute top-0 right-0 w-12 h-full bg-gradient-to-l from-white/30 to-transparent pointer-events-none hidden lg:hidden"
+        id="rightShadow"
+      ></div>
+
+      <div class="w-full flex justify-end items-center px-4 xl:px-0">
+        <button
+          [routerLink]="['/online-store']"
+          routerLinkActive="router-link-active"
+          class="w-[150px] bg-white/10 text-white py-2 rounded-[4px] hover:bg-black/10 flex items-center justify-center gap-4"
+        >
           <span>Ir a ver mas</span>
           <lucide-icon [size]="16" name="chevron-right"></lucide-icon>
         </button>
-        <!-- <a
-          href="/"
-          class="text-white md:max-w-[150px] bg-white/10  hover:text-[#588157] elegant-transition text-base flex items-center gap-2 backdrop-blur-md"
-        >
-          Ir a ver mas
-          <lucide-icon [size]="16" name="chevron-right"></lucide-icon>
-        </a> -->
       </div>
     </div>
   </div>
@@ -108,109 +126,183 @@
 <div class="w-full flex justify-center items-center bg-transparent my-4 py-4">
   <div class="w-full h-full max-w-[1200px]">
     <div class="w-full">
-      <h2 class="!text-3xl font-bold !font-playfair text-[#588157] text-center">
+      <h2
+        class="!text-2xl md:!text-3xl font-bold !font-playfair text-[#588157] text-center"
+      >
         Servicios Especiales
       </h2>
-      <p class="!text-xl font-bold !font-playfair text-[#588157] text-center">
+      <p class="!text-xl text-[#588157] text-center">
         Experiencias florales únicas para cada momento
       </p>
       <div
-        class="w-full h-full flex flex-col md:grid md:grid-cols-2 gap-4 overflow-hidden pb-4 mt-8 md:mb-[60px]"
+        class="w-full h-full flex flex-col md:grid md:grid-cols-2 gap-4 overflow-hidden px-4 xl:px-0 pb-4 mt-8 md:mb-[60px]"
       >
+        <!-- Decoración de Espacios (Salones e Iglesias) -->
         <div
-          class="px-4 flex-1 w-full backdrop-blur-md shadow-sm transition-shadow hover:shadow-lg bg-[#588157]/80 text-white py-2 rounded-[4px] hover:bg-[#588157]/80 flex items-center justify-center gap-4 min-h-[178px]"
+          class="px-4 flex-1 w-full backdrop-blur-md shadow-sm transition-shadow hover:shadow-lg bg-[#588157]/80 text-white py-4 rounded-[4px] flex flex-col gap-4 min-h-[220px]"
         >
-          <div class="w-[20%] flex justify-center items-center">
-            <div class="!w-[70px] !h-[70px]">
-              <lucide-icon
-                class="text-white"
-                name="building-2"
-                [size]="70"
-              ></lucide-icon>
+          <div class="flex items-center gap-4">
+            <div class="w-[20%] flex justify-center h-full">
+              <div class="w-[70px] h-[70px]">
+                <lucide-icon
+                  class="text-white"
+                  name="home"
+                  [size]="70"
+                ></lucide-icon>
+              </div>
             </div>
-          </div>
-
-          <div class="flex-1">
-            <h2 class="!text-xl font-bold !font-playfair text-white">
-              Decoración de Salones
-            </h2>
-            <p class="!text-base font-bold text-white">
-              Transformamos cualquier espacio en un ambiente mágico con nuestros
-              arreglos florales personalizados para eventos sociales,
-              corporativos y celebraciones especiales.
-            </p>
+            <div class="flex-1">
+              <h2 class="!text-xl font-bold !font-playfair text-white">
+                Decoración de Espacios
+              </h2>
+              <p class="text-base font-sans text-white">
+                Transformamos salones, iglesias y cualquier ambiente en
+                escenarios inolvidables.
+              </p>
+              <ul class="list-disc list-inside text-white text-sm font-sans">
+                <li
+                  class="flex items-center gap-2 before:content-['•'] before:text-white"
+                >
+                  Ambientes personalizados
+                </li>
+                <li
+                  class="flex items-center gap-2 before:content-['•'] before:text-white"
+                >
+                  Detalles que cautivan
+                </li>
+                <li
+                  class="flex items-center gap-2 before:content-['•'] before:text-white"
+                >
+                  Respeto por cada contexto
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
+        <!-- Decoración de Autos -->
         <div
-          class="px-4 flex-1 w-full backdrop-blur-md shadow-sm transition-shadow hover:shadow-lg bg-[#588157]/80 text-white py-2 rounded-[4px] hover:bg-[#588157]/80 flex items-center justify-center gap-4 min-h-[178px]"
+          class="px-4 flex-1 w-full backdrop-blur-md shadow-sm transition-shadow hover:shadow-lg bg-[#588157]/80 text-white py-4 rounded-[4px] flex flex-col gap-4 min-h-[220px]"
         >
-          <div class="w-[20%] flex justify-center items-center">
-            <div class="!w-[70px] !h-[70px]">
-              <lucide-icon
-                class="text-white"
-                name="church"
-                [size]="70"
-              ></lucide-icon>
+          <div class="flex items-center gap-4">
+            <div class="w-[20%] flex justify-center h-full">
+              <div class="w-[70px] h-[70px]">
+                <lucide-icon
+                  class="text-white"
+                  name="car"
+                  [size]="70"
+                ></lucide-icon>
+              </div>
             </div>
-          </div>
-
-          <div class="flex-1">
-            <h2 class="!text-xl font-bold !font-playfair text-white">
-              Decoración de Iglesias
-            </h2>
-            <p class="!text-base font-bold text-white">
-              Creamos arreglos florales elegantes y solemnes para ceremonias
-              religiosas, respetando la santidad del espacio mientras aportamos
-              belleza y significado.
-            </p>
+            <div class="flex-1">
+              <h2 class="!text-xl font-bold !font-playfair text-white">
+                Decoración de Autos
+              </h2>
+              <p class="text-base font-sans text-white">
+                Resalta en tu gran día con un toque floral que marca la
+                diferencia.
+              </p>
+              <ul class="list-disc list-inside text-white text-sm font-sans">
+                <li
+                  class="flex items-center gap-2 before:content-['•'] before:text-white"
+                >
+                  Diseño exclusivo para vehículos
+                </li>
+                <li
+                  class="flex items-center gap-2 before:content-['•'] before:text-white"
+                >
+                  Toque elegante y sofisticado
+                </li>
+                <li
+                  class="flex items-center gap-2 before:content-['•'] before:text-white"
+                >
+                  Detalles memorables
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
+        <!-- Arreglos y Ramos Personalizados -->
         <div
-          class="px-4 flex-1 w-full backdrop-blur-md shadow-sm transition-shadow hover:shadow-lg bg-[#588157]/80 text-white py-2 rounded-[4px] hover:bg-[#588157]/80 flex items-center justify-center gap-4 min-h-[178px]"
+          class="px-4 flex-1 w-full backdrop-blur-md shadow-sm transition-shadow hover:shadow-lg bg-[#588157]/80 text-white py-4 rounded-[4px] flex flex-col gap-4 min-h-[220px]"
         >
-          <div class="w-[20%] flex justify-center items-center">
-            <div class="!w-[70px] !h-[70px]">
-              <lucide-icon
-                class="text-white"
-                name="car"
-                [size]="70"
-              ></lucide-icon>
+          <div class="flex items-center gap-4">
+            <div class="w-[20%] flex justify-center h-full">
+              <div class="w-[70px] h-[70px]">
+                <lucide-icon
+                  class="text-white"
+                  name="flower"
+                  [size]="70"
+                ></lucide-icon>
+              </div>
             </div>
-          </div>
-
-          <div class="flex-1">
-            <h2 class="!text-xl font-bold !font-playfair text-white">
-              Decoración de Autos
-            </h2>
-            <p class="!text-base font-bold text-white">
-              Adornamos vehículos con elegantes arreglos florales para bodas,
-              aniversarios y ocasiones especiales, creando un detalle
-              inolvidable para tu llegada.
-            </p>
+            <div class="flex-1">
+              <h2 class="!text-xl font-bold !font-playfair text-white">
+                Arreglos y Ramos Personalizados
+              </h2>
+              <p class="text-base font-sans text-white">
+                Diseños florales únicos que expresan emociones y estilo para
+                cada evento.
+              </p>
+              <ul class="list-disc list-inside text-white text-sm font-sans">
+                <li
+                  class="flex items-center gap-2 before:content-['•'] before:text-white"
+                >
+                  Creatividad a medida
+                </li>
+                <li
+                  class="flex items-center gap-2 before:content-['•'] before:text-white"
+                >
+                  Calidad y frescura garantizada
+                </li>
+                <li
+                  class="flex items-center gap-2 before:content-['•'] before:text-white"
+                >
+                  Obra de arte floral
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
+        <!-- Envío a domicilio el mismo día -->
         <div
-          class="px-4 flex-1 w-full backdrop-blur-md shadow-sm transition-shadow hover:shadow-lg bg-[#588157]/80 text-white py-2 rounded-[4px] hover:bg-[#588157]/80 flex items-center justify-center gap-4 min-h-[178px]"
+          class="px-4 flex-1 w-full backdrop-blur-md shadow-sm transition-shadow hover:shadow-lg bg-[#588157]/80 text-white py-4 rounded-[4px] flex flex-col gap-4 min-h-[220px]"
         >
-          <div class="w-[20%] flex justify-center items-center">
-            <div class="!w-[70px] !h-[70px]">
-              <lucide-icon
-                class="text-white"
-                name="flower"
-                [size]="70"
-              ></lucide-icon>
+          <div class="flex items-center gap-4">
+            <div class="w-[20%] flex justify-center h-full">
+              <div class="w-[70px] h-[70px]">
+                <lucide-icon
+                  class="text-white"
+                  name="truck"
+                  [size]="70"
+                ></lucide-icon>
+              </div>
             </div>
-          </div>
-
-          <div class="flex-1">
-            <h2 class="!text-xl font-bold !font-playfair text-white">
-              Arreglos Personalizados
-            </h2>
-            <p class="!text-base font-bold text-white">
-              Diseñamos creaciones florales únicas según tus preferencias,
-              ocasión y presupuesto. Cada arreglo cuenta una historia y
-              transmite emociones específicas.
-            </p>
+            <div class="flex-1">
+              <h2 class="!text-xl font-bold !font-playfair text-white">
+                Envío a domicilio el mismo día
+              </h2>
+              <p class="text-base font-sans text-white">
+                Servicio rápido y confiable para que tus flores lleguen
+                perfectas.
+              </p>
+              <ul class="list-disc list-inside text-white text-sm font-sans">
+                <li
+                  class="flex items-center gap-2 before:content-['•'] before:text-white"
+                >
+                  Entrega el mismo día
+                </li>
+                <li
+                  class="flex items-center gap-2 before:content-['•'] before:text-white"
+                >
+                  Frescura garantizada
+                </li>
+                <li
+                  class="flex items-center gap-2 before:content-['•'] before:text-white"
+                >
+                  Atención puntual
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
       </div>

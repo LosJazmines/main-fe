@@ -20,6 +20,7 @@ import { CircleFilterComponent } from '../../../@shared/components/circle-filter
 import { ProductsService } from '../../../@apis/products.service';
 import { LucideModule } from '@shared/lucide/lucide.module';
 import { filter_home } from '@apis/data/filter';
+import { RouterModule } from '@angular/router';
 // register Swiper custom elements
 register();
 @Component({
@@ -29,6 +30,7 @@ register();
     CommonModule,
     CardItemComponent,
     LucideModule,
+    RouterModule,
     CarrouselSwiperComponent,
     CircleFilterComponent,
   ],
@@ -47,7 +49,6 @@ export default class HomeComponent implements OnInit {
     'Verano',
     'Otoño',
     'Invierno',
-    'Colección Especial',
     'Novedades',
   ];
   utlImgs = '../../../../assets/img/categorias/';

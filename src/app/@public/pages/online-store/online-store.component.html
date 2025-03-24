@@ -80,7 +80,7 @@
 
           <!-- Contador de Items -->
           <div class="hidden lg:block text-sm font-medium">
-            <span>{{ filteredItems.length }} Items disponibles</span>
+            <span>{{ products().length }} Items disponibles</span>
           </div>
         </div>
         <!-- <h2 class="text-4xl uppercase font-bold text-gray-800">
@@ -89,16 +89,28 @@
         <div
           class="grid justify-items-center grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 h-full"
         >
-          <app-card-item
-            *ngFor="let product of filteredProducts"
+          <!-- <app-card-item
+            *ngFor="let product of this.products()"
             [name]="product.name"
             [description]="product.description"
             [price]="product.price"
-            [image]="product.image"
+            [image]="product.images"
             [category]="product.category"
             [isNew]="product.isNew"
             [isActiveBg]="true"
+          ></app-card-item> -->
+
+          @for(product of products(); track $index){
+          <app-card-item
+            [name]="product.name"
+            [description]="product.description"
+            [price]="product.price"
+            [image]="product.images[0]"
+            [category]="product.category"
+            [isNew]="product.isNew"
+            [product]="product"
           ></app-card-item>
+          }
         </div>
       </div>
     </div>

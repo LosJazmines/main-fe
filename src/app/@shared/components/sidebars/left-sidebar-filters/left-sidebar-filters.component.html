@@ -1,10 +1,28 @@
-<div class="disable-selection min-w-[290px] overflow-hidden">
-  <div class="h-screen w-full bg-black/10 text-black flex flex-col p-4">
-    <div class="icon-container">
-      <div></div>
+<div class="disable-selection min-w-[290px] overflow-hidden relative">
+  <div class="w-full bg-black/10 text-[#3a5a40] flex flex-col">
+    <div
+      class="w-[290px] flex items-center justify-start fixed top-2 z-20 transition-all duration-0 ease-in-out text-[#3a5a40] to-black toolbar backdrop-blur-lg px-4 py-2"
+      [ngClass]="{
+        '!text-white': scrolled,
+      }"
+    >
+      <button
+        mat-icon-button
+        aria-label="menu"
+        #menuButton
+        tabindex="-1"
+        (mousedown)="$event.preventDefault()"
+        (click)="closeLeftDrawer($event)"
+      >
+        <lucide-icon name="x"></lucide-icon>
+      </button>
+      <app-logo></app-logo>
     </div>
-    <div class="mt-5">
-      <p class="">hola</p>
+
+    <div class="flex flex-col space-y-2 mt-[65px] px-4 py-2">
+      <app-shop-filters></app-shop-filters>
     </div>
+
+    <!-- Import Lucide icons as needed in your component -->
   </div>
 </div>

@@ -76,7 +76,10 @@
           placeholder="Min"
           class="w-20 p-1 rounded-[4px]"
         />
-        <span class="text-white font-bold">→</span>
+        <lucide-icon
+          name="arrow-left-right"
+          class="text-white"
+        ></lucide-icon>
         <input
           type="number"
           [(ngModel)]="filters.customPrice.max"
@@ -84,6 +87,10 @@
           placeholder="Max"
           class="w-20 p-1 rounded-[4px]"
         />
+
+        <div class="w-12 h12 flex items-center justify-center">
+          <lucide-icon name="chevron-right" class="text-white"></lucide-icon>
+        </div>
       </div>
     </div>
   </div>
