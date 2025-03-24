@@ -20,13 +20,16 @@ import {
 } from '../../store/selectors/user.selector';
 import { toggleRightSidebar } from '../sidebars/right-sidebar/store/actions/right-sidebar.actions';
 import { AuthComponent } from '@public-pages/forms/auth/auth.component';
+import { LogoComponent } from '../logo/logo.component';
+import { Animations } from '@shared/animations';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [RouterModule, MaterialModule, LucideModule, CommonModule],
+  imports: [RouterModule, MaterialModule, LucideModule, CommonModule, LogoComponent],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss',
+  animations: [Animations],
 })
 export class HeaderComponent implements OnInit, OnDestroy {
   currentUser = signal<any>('');

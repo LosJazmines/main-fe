@@ -1,8 +1,7 @@
-<!-- <app-splash-screen></app-splash-screen> -->
-
 <mat-drawer-container class="h-full" [hasBackdrop]="true">
   @if (isLeftFilterSidebarOpen$ | async) {
   <mat-drawer
+    class="bg-[#4d7c0f]/20 overflow-y-auto max-h-full"
     mode="over"
     position="start"
     [opened]="isLeftFilterSidebarOpen$ | async"
@@ -12,6 +11,7 @@
   </mat-drawer>
   } @if (isLeftSidebarOpen$ | async) {
   <mat-drawer
+    class="bg-[#4d7c0f]/20 overflow-y-auto max-h-full"
     mode="over"
     position="start"
     [opened]="isLeftSidebarOpen$ | async"
@@ -30,8 +30,15 @@
     <app-right-sidebar></app-right-sidebar>
   </mat-drawer>
 
-  <!-- class="h-full bg-gradient-to-br from-[#4d7c0f] via-[#2d4c0f] to-black " -->
-  <mat-drawer-content class="!overflow-hidden">
+  <mat-drawer-content
+    [ngClass]="{
+      'max-h-screen':
+        (isLeftFilterSidebarOpen$ | async) ||
+        (isLeftSidebarOpen$ | async) ||
+        (isRightSidebarOpen$ | async)
+    }"
+    class="!overflow-hidden"
+  >
     <router-outlet></router-outlet>
   </mat-drawer-content>
 </mat-drawer-container>

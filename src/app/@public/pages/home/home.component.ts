@@ -1,11 +1,14 @@
-import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { CommonModule, DOCUMENT, isPlatformBrowser } from '@angular/common';
 import {
   Component,
   CUSTOM_ELEMENTS_SCHEMA,
+  ElementRef,
+  HostListener,
   Inject,
   OnInit,
   PLATFORM_ID,
   signal,
+  ViewChild,
 } from '@angular/core';
 import { CardItemComponent } from '../../../@shared/components/card-item/card-item.component';
 
@@ -16,6 +19,7 @@ import { CarrouselSwiperComponent } from '../../../@shared/components/carrousel-
 import { CircleFilterComponent } from '../../../@shared/components/circle-filter/circle-filter.component';
 import { ProductsService } from '../../../@apis/products.service';
 import { LucideModule } from '@shared/lucide/lucide.module';
+import { filter_home } from '@apis/data/filter';
 // register Swiper custom elements
 register();
 @Component({
@@ -34,6 +38,8 @@ register();
   animations: [Animations],
 })
 export default class HomeComponent implements OnInit {
+  @ViewChild('scrollContainer') scrollContainer!: ElementRef;
+
 
   // Lista de posibles colecciones
   coleccionesTipos: string[] = [
@@ -46,36 +52,8 @@ export default class HomeComponent implements OnInit {
   ];
   utlImgs = '../../../../assets/img/categorias/';
 
-  filters = [
-    {
-      categoryName: 'Ramos',
-      iconPath:
-        './../../../../assets/img/categoria/imgc16_Ramo de 50 rosas.webp',
-    },
-    {
-      categoryName: 'Novia',
-      iconPath:
-        './../../../../assets/img/categoria/imgc10_Ramo novia de rosas.webp',
-    },
-    {
-      categoryName: 'Oso de Peluche',
-      iconPath:
-        './../../../../assets/img/categoria/imgp2680_gigante n3 (1).webp',
-    },
-    {
-      categoryName: 'Combos',
-      iconPath:
-        './../../../../assets/img/categoria/imgc13_COMBO VARIADO CON BAILEYS Y ROCHER.webp',
-    },
-    {
-      categoryName: 'Planetas',
-      iconPath: './../../../../assets/img/categoria/imgp2385_cica.webp',
-    },
-    {
-      categoryName: 'Regalos Especiales',
-      iconPath: './../../../../assets/img/categoria/imgc72_Ramo grande.webp',
-    },
-  ];
+  // Filtros cargados desde el archivo JSON
+  filters: Array<{ categoryName: string; iconPath: string }> = filter_home;
   // Variable para almacenar la temporada actual
   temporada: string;
 
@@ -83,7 +61,8 @@ export default class HomeComponent implements OnInit {
 
   constructor(
     private _productsService: ProductsService,
-    @Inject(PLATFORM_ID) private platformId: Object
+    @Inject(PLATFORM_ID) private platformId: Object,
+    @Inject(DOCUMENT) private document: Document
   ) {
     this.isBrowser = isPlatformBrowser(this.platformId);
     this.temporada = this.obtenerTemporada();
@@ -96,48 +75,32 @@ export default class HomeComponent implements OnInit {
       Math.floor(Math.random() * this.coleccionesTipos.length)
       ];
 
-    // this.getProducts();
+    this.getProducts();
   }
 
-  // products = [
-  //   {
-  //     id: 1,
-  //     name: 'Oso de Peluche',
-  //     description: 'Suave y adorable oso de peluche.',
-  //     price: 29.99,
-  //     image: './../../../../assets/img/casamientos/ramos-principales/02.jpg',
-  //     category: 'osos',
-  //     isNew: false,
-  //   },
-  //   {
-  //     id: 2,
-  //     name: 'Arreglo de Tulipanes',
-  //     description: 'Hermoso arreglo de tulipanes frescos.',
-  //     price: 45.99,
-  //     image: './../../../../assets/img/casamientos/Boutonniere/01.jpg',
-  //     category: 'flores',
-  //     isNew: false,
-  //   },
-  //   {
-  //     id: 4,
-  //     name: 'Bouquet de Novia',
-  //     description: 'Bouquet especial para bodas.',
-  //     price: 89.99,
-  //     image: './../../../../assets/img/casamientos/centros-mesa-novia/01.jpg',
-  //     category: 'novia',
-  //     isNew: true,
-  //   },
-  //   {
-  //     id: 5,
-  //     name: 'Osito con Rosas',
-  //     description: 'Un oso decorado con rosas artificiales.',
-  //     price: 69.99,
-  //     image: './../../../../assets/img/casamientos/ramos-de-novias/01.jpg',
-  //     category: 'osos',
-  //     isNew: true,
-  //   },
-  //   // Más productos
-  // ];
+  ngAfterViewInit() {
+    this.updateShadows();
+  }
+
+
+  updateShadows(): void {
+    if (!this.isBrowser) return;
+
+    const scrollEl = this.scrollContainer.nativeElement;
+    const leftShadow = this.document.getElementById('leftShadow');
+    const rightShadow = this.document.getElementById('rightShadow');
+
+    if (!leftShadow || !rightShadow) return;
+
+    leftShadow.classList.toggle('hidden', scrollEl.scrollLeft <= 0);
+    rightShadow.classList.toggle('hidden', scrollEl.scrollLeft + scrollEl.clientWidth >= scrollEl.scrollWidth);
+  }
+
+  @HostListener('window:scroll', ['$event'])
+  onScroll() {
+    this.updateShadows();
+  }
+
 
   imgHeader: any[] = [
     {

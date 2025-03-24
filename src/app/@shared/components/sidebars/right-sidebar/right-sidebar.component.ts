@@ -15,6 +15,7 @@ import { selectIsRightSidebarOpen } from './store/selectors/right-sidebar.select
 import * as userActions from '../../../../@shared/store/actions/user.actions';
 import { isNullableType } from 'graphql';
 import { TokenService } from '../../../../@core/services/token.service';
+import { Animations } from '@shared/animations';
 
 @Component({
   selector: 'app-right-sidebar',
@@ -22,6 +23,7 @@ import { TokenService } from '../../../../@core/services/token.service';
   imports: [CommonModule, RouterModule, MaterialModule, LucideModule],
   templateUrl: './right-sidebar.component.html',
   styleUrls: ['./right-sidebar.component.scss'],
+  animations: [Animations],
 })
 export class RightSidebarComponent implements OnInit, OnDestroy {
   currentUser = signal<any>('');

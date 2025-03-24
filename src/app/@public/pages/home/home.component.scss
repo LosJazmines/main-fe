@@ -1,5 +1,13 @@
 // @use "./../../../@shared/scss/variables.scss" as v;
 // @use "./../../../@shared/scss/mixins.scss" as mixins;
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
 
 // .online-store-container {
 //   width: calc(100% - 2rem);

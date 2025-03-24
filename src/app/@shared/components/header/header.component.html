@@ -1,5 +1,5 @@
 <header
-  class=" top-0 left-0 w-full transition-all duration-0 ease-in-out z-50 text-[#3a5a40] to-black toolbar backdrop-blur-md"
+  class="top-0 left-0 w-full transition-all duration-0 ease-in-out z-50 text-[#3a5a40] to-black toolbar backdrop-blur-md"
   [ngClass]="{
     'fixed bg-white/80 backdrop-blur-md shadow-md': scrolled,
     'bg-transparent  shadow-none': !scrolled
@@ -14,12 +14,13 @@
           (click)="openLeftDrawer()"
           class="text-white"
         >
-          <mat-icon>menu</mat-icon>
+          <lucide-icon name="align-left"></lucide-icon>
         </button>
       </div>
-      <div class="min-w-[150px] min-h-[36px] mr-4">
+      <!-- <div class="min-w-[150px] min-h-[36px] mr-4">
         <p class="text-start font-playfair text-2xl">Los Jazmines</p>
-      </div>
+      </div> -->
+      <app-logo></app-logo>
       <div class="hidden md:flex justify-start items-center">
         <div class="link-container">
           <div class="">

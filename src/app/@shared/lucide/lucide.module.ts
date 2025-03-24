@@ -113,7 +113,8 @@ import {
   Facebook,
   Leaf,
   Fuel,
-  ListFilter
+  ListFilter,
+  AlignLeft
 } from 'lucide-angular';
 
 export const LUCIDE_MODULES = [
@@ -230,7 +231,8 @@ export const LUCIDE_MODULES = [
     Facebook,
     Leaf,
     Fuel,
-    ListFilter 
+    ListFilter,
+    AlignLeft
   }),
 ];
 
