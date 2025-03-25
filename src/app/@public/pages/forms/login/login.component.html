@@ -1,5 +1,5 @@
 <div
-  class="w-full h-full flex flex-col items-center justify-center bg-primary rounded-[4px] px-8 py-4 z-20"
+  class="w-full h-full min-h-[452px] flex flex-col items-center justify-center bg-primary rounded-[4px] px-8 py-4 z-20"
 >
   <h1 class="title !text-xl !font-playfair !mb-[24px] text-white">
     Iniciar Sesión
@@ -125,12 +125,12 @@
             <div  *ngIf="(_loandingService._loading$ | async)" class="loading"></div>
           </button> -->
       <div class="w-full">
-        <asl-google-signin-button
+        <!-- <asl-google-signin-button
           class="google-signin-btn"
           type="standard"
           size='medium'
           >google</asl-google-signin-button
-        >
+        > -->
         <!-- <button
           class="w-full bg-white text-black border rounded py-2 px-4 flex items-center justify-center"
           (click)="handleGoogleLogin()"

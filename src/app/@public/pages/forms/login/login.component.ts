@@ -61,7 +61,7 @@ export default class LoginComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this._unsuscribeAll.unsubscribe();
+    // this._unsuscribeAll.unsubscribe();
   }
 
   private initGroupLogin() {

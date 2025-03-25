@@ -1,7 +1,9 @@
 <div [@slideInLeft] class="login-container">
-  <div class="login">
+  <div
+    class="login flex flex-col md:flex-row justify-center items-center md:min-w-[744px] md:h-[85%]"
+  >
     <div
-      class="left flex flex-col justify-center items-center bg-primary/50 backdrop-blur-md rounded-[4px] px-6 py-4"
+      class="hidden lg:block left md:flex flex-col justify-center items-center bg-primary/50 backdrop-blur-md rounded-[4px] md:px-6 py-4"
     >
       <div class="flex items-center gap-2 mb-4">
         <lucide-icon name="leaf" class="w-8 h-8 text-white"></lucide-icon>
@@ -49,21 +51,19 @@
 
     @if(view_type() === 'login'){
     <app-login
-      class="w-[60%] h-full z-20"
+      class="w-[350px] h-full min-h-[452px] z-20"
       (setViewType)="setViewType($event)"
     ></app-login>
     } @if( view_type() === 'checkout'){
     <app-checkout
-      class="w-[60%] h-full z-20"
+      class="w-[350px] h-full min-h-[452px] z-20"
       (setViewType)="setViewType($event)"
     ></app-checkout>
-
     } @if( view_type() === 'register'){
     <app-register
-      class="w-[60%] h-full z-20"
+      class="w-[350px] h-full min-h-[452px] z-20"
       (setViewType)="setViewType($event)"
     ></app-register>
-
     }
   </div>
 </div>

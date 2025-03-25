@@ -1,9 +1,9 @@
-<div class="flex flex-col gap-4">
+<div class="flex flex-col gap-4 font-sans">
   <!-- Radio buttons para seleccionar método de entrega -->
   <div
-    class="container mx-auto max-w-4xl p-2 bg-white w-full shadow rounded-md"
+    class="container mx-auto max-w-4xl p-4 bg-white w-full shadow rounded-[4px]"
   >
-    <h2 class="text-2xl font-semibold mb-4">Método de Entrega</h2>
+    <h2 class="text-2xl font-semibold mb-4 text-gray-800">Método de Entrega</h2>
     <div class="flex gap-4">
       <label class="flex items-center gap-2 cursor-pointer">
         <input
@@ -15,11 +15,26 @@
           (click)="seleccionarSucursal($event)"
         />
         <div
-          class="flex items-center p-4 border rounded-md shadow cursor-pointer"
-          [class.bg-blue-100]="metodoEntrega === 'domicilio'"
+          class="flex items-center p-4 border rounded-[4px] shadow cursor-pointer transition-colors duration-200"
+          [ngClass]="{
+            'bg-[#3a5a40]/65 text-white': metodoEntrega === 'domicilio'
+          }"
         >
-          <lucide-icon name="truck" [size]="24"></lucide-icon>
-          <span class="ml-2 font-semibold">Envío a Domicilio</span>
+          <lucide-icon
+            name="truck"
+            [size]="24"
+            class="text-gray-700"
+            [ngClass]="{
+              ' !text-white': metodoEntrega === 'domicilio'
+            }"
+          ></lucide-icon>
+          <span
+            class="ml-2 font-semibold text-gray-800"
+            [ngClass]="{
+              ' !text-white': metodoEntrega === 'domicilio'
+            }"
+            >Envío a Domicilio</span
+          >
         </div>
       </label>
 
@@ -33,11 +48,26 @@
           (click)="seleccionarSucursal($event)"
         />
         <div
-          class="flex items-center p-4 border rounded-md shadow cursor-pointer"
-          [class.bg-blue-100]="metodoEntrega === 'sucursal'"
+          class="flex items-center p-4 border rounded-[4px] shadow cursor-pointer transition-colors duration-200"
+          [ngClass]="{
+            '!bg-[#3a5a40]/65 !text-white': metodoEntrega === 'sucursal'
+          }"
         >
-          <lucide-icon name="store" [size]="24"></lucide-icon>
-          <span class="ml-2 font-semibold">Retiro en Sucursal</span>
+          <lucide-icon
+            name="store"
+            [size]="24"
+            class="text-gray-700"
+            [ngClass]="{
+              '!text-white': metodoEntrega === 'sucursal'
+            }"
+          ></lucide-icon>
+          <span
+            class="ml-2 font-semibold text-gray-800"
+            [ngClass]="{
+              ' !text-white': metodoEntrega === 'sucursal'
+            }"
+            >Retiro en Sucursal</span
+          >
         </div>
       </label>
     </div>
@@ -46,28 +76,36 @@
   <!-- Card de Retiro en Sucursal -->
   <div
     *ngIf="metodoEntrega === 'sucursal'"
-    class="container mx-auto max-w-4xl p-2 bg-white w-full shadow rounded-md"
+    class="container mx-auto max-w-4xl p-4 bg-white w-full shadow rounded-[4px]"
   >
-    <div class="flex items-center gap-4">
-      <lucide-icon name="store" [size]="24"></lucide-icon>
-      <h2 class="text-2xl font-semibold mb-4">Retiro en Sucursal</h2>
+    <div class="flex items-center gap-4 mb-4">
+      <lucide-icon name="store" [size]="24" class="text-gray-700"></lucide-icon>
+      <h2 class="text-2xl font-semibold text-gray-800">Retiro en Sucursal</h2>
     </div>
     <div class="flex items-center gap-4 p-2">
-      <lucide-icon name="info" [size]="16"></lucide-icon>
-      <p class="font-semibold text-base">
+      <lucide-icon name="info" [size]="16" class="text-gray-600"></lucide-icon>
+      <p class="text-base font-medium text-gray-700">
         Debes acercarte a nuestra sucursal para retirar tu pedido.
       </p>
     </div>
     <div class="flex items-center gap-4 p-2">
-      <lucide-icon name="map-pin-house" [size]="16"></lucide-icon>
-      <p class="font-semibold text-base">
+      <lucide-icon
+        name="map-pin-house"
+        [size]="16"
+        class="text-gray-600"
+      ></lucide-icon>
+      <p class="text-base font-medium text-gray-700">
         Dirección: Avenida España 995, Tandil, Buenos Aires.
       </p>
     </div>
     <div class="flex items-center gap-4 p-2">
-      <lucide-icon name="calendar-clock" [size]="16"></lucide-icon>
-      <p class="font-semibold text-base">
-        Horario de atención: Lunes a Sabado, 9:00 AM - 18:00 PM.
+      <lucide-icon
+        name="calendar-clock"
+        [size]="16"
+        class="text-gray-600"
+      ></lucide-icon>
+      <p class="text-base font-medium text-gray-700">
+        Horario de atención: Lunes a Sábado, 9:00 AM - 18:00 PM.
       </p>
     </div>
 
@@ -81,32 +119,46 @@
   </div>
 
   <!-- Card de Envío a Domicilio -->
-  <!-- Card de Envío a Domicilio -->
   <div
     *ngIf="metodoEntrega === 'domicilio'"
-    class="container mx-auto max-w-4xl p-2 bg-white w-full shadow rounded-md"
+    class="container mx-auto max-w-4xl p-4 bg-white w-full shadow rounded-[4px]"
   >
-    <h2 class="text-2xl font-semibold mb-4">Datos del Destinatario</h2>
+    <h2 class="text-2xl font-semibold mb-4 text-gray-800">
+      Datos del Destinatario
+    </h2>
 
     <!-- Campo de Código Postal -->
     <div class="mb-4 w-full">
-      <label for="codigoPostal" class="block text-sm font-medium text-gray-700"
-        >Código Postal</label
+      <!-- Mensaje informativo -->
+      <p class="text-gray-600 mb-2">
+        Actualmente, solo realizamos envíos en la ciudad de Tandil (CP: 7000).
+        La entrega se efectúa el mismo día.
+      </p>
+      <label
+        for="codigoPostal"
+        class="block text-base font-medium text-gray-700"
       >
+        Código Postal
+      </label>
       <input
         id="codigoPostal"
         [formControl]="codigoPostal"
         type="text"
-        class="mt-1 p-2 w-full border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
+        class="p-2 w-full border border-gray-300 rounded-[4px] focus:outline-none focus:ring-2 focus:ring-[#A2E100]/20"
         placeholder="Ej: 7000"
         (input)="validarCodigoPostal()"
+        pattern="7000"
       />
+      <!-- Mensaje de error -->
+      <p *ngIf="codigoPostalInvalido" class="text-red-500 text-base">
+        El código postal ingresado no corresponde a Tandil (7000).
+      </p>
     </div>
 
-    <p *ngIf="codigoPostalInvalido" class="text-red-500 text-sm">
+    <p *ngIf="codigoPostalInvalido" class="text-red-500 text-base">
       Solo realizamos envíos dentro de Tandil (CP 7000).
     </p>
-    <p *ngIf="codigoPostalInvalido" class="text-red-500 text-sm">
+    <p *ngIf="codigoPostalInvalido" class="text-red-500 text-base">
       El código postal ingresado no está dentro del área permitida.
     </p>
 
@@ -116,44 +168,50 @@
       [formGroup]="destinatarioForm"
       (ngSubmit)="onSubmit()"
     >
-      <div class="flex gap-2 items-center">
-        <div class="mb-4 flex-1">
-          <label for="nombre" class="block text-sm font-medium text-gray-700"
-            >Nombre del destinatario</label
-          >
+      <div class="flex flex-col md:flex-row gap-4 items-center">
+        <div class="w-full md:mb-4 flex-1">
+          <label for="nombre" class="block text-base font-medium text-gray-700">
+            Nombre del destinatario
+          </label>
           <input
             id="nombre"
             formControlName="nombre"
             type="text"
-            class="mt-1 p-2 w-full border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
+            class="p-2 w-full border border-gray-300 rounded-[4px] focus:outline-none focus:ring-2 focus:ring-[#A2E100]/20"
             placeholder="Nombre completo"
           />
         </div>
 
-        <div class="mb-4 flex-1">
-          <label for="telefono" class="block text-sm font-medium text-gray-700"
-            >Teléfono destinatario</label
+        <div class="w-full mb-4 flex-1">
+          <label
+            for="telefono"
+            class="block text-base font-medium text-gray-700"
           >
+            Teléfono destinatario
+          </label>
           <input
             id="telefonoMovil"
             formControlName="telefonoMovil"
             type="tel"
-            class="mt-1 p-2 w-full border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
+            class="p-2 w-full border border-gray-300 rounded-[4px] focus:outline-none focus:ring-2 focus:ring-[#A2E100]/20"
             placeholder="+549 11 12345678"
           />
         </div>
       </div>
 
       <div class="mb-4">
-        <label for="direccion" class="block text-sm font-medium text-gray-700"
-          >Dirección completa de entrega</label
+        <label
+          for="direccion"
+          class="block text-base font-medium text-gray-700"
         >
+          Dirección completa de entrega
+        </label>
         <div class="flex gap-2 items-center">
           <input
             id="direccion"
             formControlName="direccion"
             type="text"
-            class="mt-1 p-2 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            class="p-2 w-full border border-gray-300 rounded-[4px] focus:outline-none focus:ring-2 focus:ring-[#A2E100]/20"
             placeholder="Ejemplo: Avenida España 995, Tandil"
             ngx-google-places-autocomplete
             (onAddressChange)="handleAddressChange($event)"
@@ -161,52 +219,13 @@
           />
           <button
             matRipple
-            class="mt-1 flex justify-center items-center min-h-[38px] min-w-[38px] border border-gray-300 bg-black text-white rounded hover:bg-gray-300"
+            class="mt-1 flex justify-center items-center min-h-[38px] min-w-[38px] border border-gray-300 bg-black text-white rounded hover:bg-gray-300 transition-colors"
             (click)="usarMiUbicacion()"
           >
             <lucide-icon name="map-pin-house" [size]="24"></lucide-icon>
           </button>
         </div>
       </div>
-
-      <!-- <div class="flex gap-2 items-center">
-        <div class="mb-4 w-full">
-          <label for="pais" class="block text-sm font-medium text-gray-700"
-            >País</label
-          >
-          <input
-            id="pais"
-            formControlName="pais"
-            type="text"
-            class="mt-1 p-2 w-full border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
-            placeholder="Argentina"
-          />
-        </div>
-        <div class="mb-4 w-full">
-          <label for="estado" class="block text-sm font-medium text-gray-700"
-            >Provincia</label
-          >
-          <input
-            id="estado"
-            formControlName="estado"
-            type="text"
-            class="mt-1 p-2 w-full border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
-            placeholder="Buenos Aires"
-          />
-        </div>
-        <div class="mb-4 w-full">
-          <label for="ciudad" class="block text-sm font-medium text-gray-700"
-            >Ciudad</label
-          >
-          <input
-            id="ciudad"
-            formControlName="ciudad"
-            type="text"
-            class="mt-1 p-2 w-full border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
-            placeholder="Ciudad"
-          />
-        </div>
-      </div> -->
 
       <div
         class="w-full h-[120px] lg:h-auto rounded shadow-lg overflow-hidden mb-4"
@@ -217,13 +236,16 @@
       </div>
 
       <div class="mb-4">
-        <label for="comentarios" class="block text-sm font-medium text-gray-700"
-          >Comentarios</label
+        <label
+          for="comentarios"
+          class="block text-base font-medium text-gray-700"
         >
+          Comentarios
+        </label>
         <textarea
           id="comentarios"
           formControlName="comentarios"
-          class="mt-1 p-2 w-full border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
+          class="p-2 w-full border border-gray-300 rounded-[4px] focus:outline-none focus:ring-2 focus:ring-[#A2E100]/20"
           placeholder="Ejemplo: No funciona bien el timbre"
         ></textarea>
       </div>
@@ -232,13 +254,13 @@
         <button
           mat-button
           [routerLink]="['/card-order']"
-          class="bg-gray-300 px-4 py-2 rounded"
+          class="bg-gray-300 text-base text-white px-4 py-2 rounded-[4px] hover:bg-gray-400 transition-colors"
         >
           Volver
         </button>
         <button
           type="submit"
-          class="bg-blue-500 text-white px-4 py-2 rounded-md focus:ring-2 focus:ring-blue-500 hover:bg-blue-600"
+          class="bg-blue-500 text-white text-base px-4 py-2 rounded-[4px] focus:ring-2 focus:ring-blue-500 hover:bg-blue-600 transition-colors"
         >
           Siguiente
         </button>

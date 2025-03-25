@@ -22,7 +22,7 @@
           class="flex flex-col md:flex-row gap-2 justify-between md:items-center mb-6"
         >
           <!-- Filtro de Ordenación -->
-          <div class="flex justify-between items-center">
+          <div class="w-full flex justify-between items-center">
             <div class="block lg:hidden">
               <div class="">
                 <button
@@ -79,7 +79,7 @@
           </div>
 
           <!-- Contador de Items -->
-          <div class="hidden lg:block text-sm font-medium">
+          <div class="min-w-[150px] hidden lg:block text-sm font-medium">
             <span>{{ products().length }} Items disponibles</span>
           </div>
         </div>
@@ -87,7 +87,7 @@
           Colecciones de {{ temporada }}
         </h2> -->
         <div
-          class="grid justify-items-center grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 h-full"
+          class="grid justify-items-center grid-cols-1 md:grid-cols-2  xl:grid-cols-3 gap-4 h-full"
         >
           <!-- <app-card-item
             *ngFor="let product of this.products()"

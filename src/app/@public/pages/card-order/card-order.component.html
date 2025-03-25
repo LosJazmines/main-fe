@@ -1,11 +1,15 @@
-<div class="max-w-[1200px] mx-auto py-4 min-h-[calc(100vh-305px)]">
+<div class="max-w-[1200px] mx-auto py-4 min-h-[calc(100vh-325px)] lg:min-h-[calc(100vh-305px)]">
   <div class="custom-height flex">
     <!-- <example-custom-stepper>
       <cdk-step> <p>This is any content of "Step 1"</p> </cdk-step>
       <cdk-step> <p>This is any content of "Step 2"</p> </cdk-step>
     </example-custom-stepper> -->
-    <div class="w-full h-full flex-1 flex justify-center items-start gap-4">
-      <div class="min-h-[360px] w-[300px] flex-1 rounded overflow-hidden">
+    <div
+      class="w-full h-full flex-1 flex flex-col lg:flex-row justify-center items-start gap-4 px-4"
+    >
+      <div
+        class="lg:min-h-[360px] w-full lg:w-[300px] flex-1 rounded overflow-hidden"
+      >
         @if (shoppingCart().length !== 0) {
         <div class="border-b border-black/10 px-4 pt-4 bg-white rounded-t">
           <h2 class="text-2xl font-bold text-gray-800">Productos</h2>
@@ -49,7 +53,7 @@
         }
       </div>
 
-      <app-purchase-summary (continuarCompra)="procesarCompra()">
+      <app-purchase-summary class="w-full lg:w-auto" (continuarCompra)="procesarCompra()">
       </app-purchase-summary>
     </div>
   </div>
