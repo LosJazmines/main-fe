@@ -56,7 +56,6 @@ export class RightSidebarComponent implements OnInit, OnDestroy {
       .subscribe((currentUser) => {
         if (currentUser) {
           this.currentUser.set(currentUser);
-
           this.isAdmin$ = this.store.select(selectIsAdmin);
         }
       });
