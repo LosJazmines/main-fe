@@ -122,13 +122,13 @@
       <div class="cursor-pointer group" (click)="openRightDrawer()">
         <!-- Avatar y nombre de usuario -->
         <div
-          class="flex items-center gap-2 p-2 rounded-lg transition-all duration-300"
+          class="flex items-center gap-2 rounded-lg transition-all duration-300"
         >
           <span class="text-lg font-medium group-hover:shadow-text">{{
             currentUser()?.username
           }}</span>
           <div
-            class="w-10 h-10 bg-black bg-opacity-80 rounded-full flex items-center justify-center text-white font-bold group-hover:shadow-lg hover:bg-opacity-100"
+            class="w-10 h-10 bg-[#3a5a40]/80 rounded-full flex items-center justify-center text-white font-bold group-hover:shadow-lg hover:bg-opacity-100"
           >
             <!-- Avatar (sin foto, solo un fondo gris con las iniciales) -->
             <span>{{ currentUser()?.username | slice : 0 : 1 }}</span>
