@@ -1,17 +1,27 @@
-<div class="disable-selection min-w-[290px]  overflow-hidden">
-  <div class="h-screen w-full bg-black/10 text-black flex flex-col p-4">
-    <div class="mb-2 text-center">
-      <!-- <button mat-icon-button aria-label="menu" (click)="openLeftDrawer()">
-          <mat-icon>menu</mat-icon>
-        </button> -->
-      <h1 class="text-2xl font-bold">Los Jazmines</h1>
+<div class="disable-selection min-w-[290px] overflow-hidden">
+  <div
+    class="h-screen w-full bg-black/10 text-[#3a5a40] flex flex-col px-4 py-2"
+  >
+    <div class="mb-2 flex items-center justify-start">
+      <button
+        mat-icon-button
+        aria-label="menu"
+        #menuButton
+        tabindex="-1"
+        (mousedown)="$event.preventDefault()"
+        (click)="closeLeftDrawer($event)"
+      >
+        <lucide-icon name="x"></lucide-icon>
+      </button>
+      <app-logo></app-logo>
     </div>
 
     <div class="flex flex-col space-y-2">
       <button
         [routerLink]="['/home']"
         routerLinkActive="bg-black/15"
-        class="flex items-center px-4 py-2 rounded hover:bg-black/15"
+        class="flex items-center px-4 py-2 rounded-[4px] hover:bg-[#588157]/15"
+        (click)="closeLeftDrawer($event)"
       >
         <lucide-icon name="home" class="w-5 h-5 mr-3"></lucide-icon>
         <span>Inicio</span>
@@ -20,29 +30,30 @@
       <button
         [routerLink]="['/online-store']"
         routerLinkActive="bg-black/15"
-        class="flex items-center px-4 py-2 rounded hover:bg-black/15"
+        class="flex items-center px-4 py-2 rounded-[4px] hover:bg-[#588157]/15"
+        (click)="closeLeftDrawer($event)"
       >
-        <lucide-icon name="shopping-cart" class="w-5 h-5 mr-3"></lucide-icon>
+        <lucide-icon name="store" class="w-5 h-5 mr-3"></lucide-icon>
         <span>Tienda</span>
       </button>
 
-      <button
+      <!-- <button
         [routerLink]="['/about']"
         routerLinkActive="bg-black/15"
         class="flex items-center px-4 py-2 rounded hover:bg-black/15"
       >
         <lucide-icon name="info" class="w-5 h-5 mr-3"></lucide-icon>
         <span>Acerca de</span>
-      </button>
+      </button> -->
 
-      <button
+      <!-- <button
         [routerLink]="['/contact']"
         routerLinkActive="bg-black/15"
         class="flex items-center px-4 py-2 rounded hover:bg-black/15"
       >
         <lucide-icon name="mail" class="w-5 h-5 mr-3"></lucide-icon>
         <span>Contacto</span>
-      </button>
+      </button> -->
     </div>
   </div>
 

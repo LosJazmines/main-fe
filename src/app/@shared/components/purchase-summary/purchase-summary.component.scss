@@ -1,0 +1,33 @@
+.mercado-pago-btn {
+  background-color: #009ee3;
+  color: white;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.mercado-pago-btn:hover {
+  background-color: #008cba;
+}
+
+.mercado-pago-btn:active {
+  background-color: #007bb5;
+}
+
+.mercado-pago-btn .icon {
+  width: 24px;
+  height: 24px;
+  margin-right: 10px;
+}
+.mercado-pago-img {
+  width: 32px;
+  height: 32px;
+  margin-right: 1rem;
+}

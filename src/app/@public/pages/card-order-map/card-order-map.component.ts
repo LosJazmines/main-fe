@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { MaterialModule } from '../../../@shared/material/material.module';
 import { LucideModule } from '../../../@shared/lucide/lucide.module';
@@ -11,6 +11,8 @@ import {
   Validators,
 } from '@angular/forms';
 import { Address } from 'ngx-google-places-autocomplete/objects/address';
+import { FormAddRecipientInformationComponent } from '../../../@shared/components/form-add-recipient-information/form-add-recipient-information.component';
+import { PurchaseSummaryComponent } from '../../../@shared/components/purchase-summary/purchase-summary.component';
 
 @Component({
   selector: 'app-card-order-map',
@@ -22,11 +24,15 @@ import { Address } from 'ngx-google-places-autocomplete/objects/address';
     CommonModule,
     GoogleMapsModule,
     ReactiveFormsModule,
+    FormAddRecipientInformationComponent,
+    PurchaseSummaryComponent,
   ],
   templateUrl: './card-order-map.component.html',
   styleUrl: './card-order-map.component.scss',
 })
 export class CardOrderMapComponent {
+  isDisabledMp = signal<boolean>(true);
+
   center = { lat: -37.320437, lng: -59.139153 };
   zoom = 15;
   destinatarioForm: FormGroup;
@@ -52,6 +58,7 @@ export class CardOrderMapComponent {
       ciudad: ['', Validators.required],
       comentarios: [''],
     });
+
   }
 
   handleAddressChange(address: any) {
@@ -72,6 +79,17 @@ export class CardOrderMapComponent {
       comp.types.includes(type)
     );
     return component ? component.long_name : '';
+  }
+
+  procesarCompra() {
+    console.log('Compra en proceso...');
+    this._router.navigate(['/card-order-check-payments']);
+
+    // Lógica adicional como redirigir a la página de pago
+  }
+
+  recibirFormulario(formValue: any) {
+    console.log('Formulario cargado:', formValue);
   }
 
   onSubmit() {

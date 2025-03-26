@@ -27,8 +27,9 @@
     <div class="flex flex-col space-y-2">
       <button
         [routerLink]="['/perfile']"
+        (click)="this.closeRightDrawer()"
         routerLinkActive="bg-black/15"
-        class="flex items-center px-4 py-2 rounded hover:bg-black/15"
+        class="flex items-center px-4 py-2 rounded-[4px] hover:bg-[#588157]/15"
       >
         <lucide-icon
           name="circle-user-round"
@@ -49,7 +50,7 @@
       <button
         (click)="goToadmin()"
         routerLinkActive="bg-black/15"
-        class="flex items-center px-4 py-2 rounded hover:bg-black/15"
+        class="flex items-center px-4 py-2 rounded-[4px] hover:bg-[#588157]/15"
       >
         <lucide-icon name="shield" class="w-5 h-5 mr-3"></lucide-icon>
         <span>Admin</span></button
@@ -57,7 +58,7 @@
 
       <button
         routerLinkActive="bg-black/15"
-        class="flex items-center px-4 py-2 rounded hover:bg-black/15"
+        class="flex items-center px-4 py-2 rounded-[4px] hover:bg-[#588157]/15"
         (click)="logout()"
       >
         <lucide-icon name="log-out" class="w-5 h-5 mr-3"></lucide-icon>

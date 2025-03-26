@@ -1,20 +1,21 @@
 <nav class="bg-transparent py-3 px-4 rounded">
     <ol class="flex items-center space-x-2 text-sm text-gray-600">
-        <!-- Breadcrumbs estáticos -->
+      <ng-container *ngFor="let breadcrumb of breadcrumbs; let last = last">
         <li>
-            <a href="/" class="text-gray-500 hover:underline">Home</a>
+          <ng-container *ngIf="!last; else lastBreadcrumb">
+            <a [routerLink]="breadcrumb.url" class="text-gray-500 hover:underline">
+              {{ breadcrumb.label }}
+            </a>
+          </ng-container>
+          <ng-template #lastBreadcrumb>
+            <span class="font-medium text-gray-900">{{ breadcrumb.label }}</span>
+          </ng-template>
         </li>
-        <li>
-            <span class="text-gray-400">/</span>
+        <li *ngIf="!last">
+          <span class="text-gray-400">/</span>
         </li>
-        <li>
-            <a href="/celulares" class="text-gray-500 hover:underline">Celulares</a>
-        </li>
-        <li>
-            <span class="text-gray-400">/</span>
-        </li>
-        <li class="font-medium text-gray-900">
-            Accesorios
-        </li>
+      </ng-container>
     </ol>
-</nav>
+    <div *ngIf="filter" class="mt-2">Filtro: {{ filter }}</div>
+  </nav>
+  

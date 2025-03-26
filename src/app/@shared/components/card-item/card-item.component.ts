@@ -22,13 +22,14 @@ export class CardItemComponent {
   @Input() category!: string;
   @Input() isNew: boolean = false;
   @Input() product!: any;
+  @Input() isActiveBg: boolean = false;
 
   @Output() categorySelected = new EventEmitter<string>();
 
-  constructor(private store: Store<AppState>) {}
+  constructor(private store: Store<AppState>) { }
 
   addToCart(product: any) {
-    console.log({ product });
+    console.log({ product: this.product });
 
     console.log('Agregado al carrito');
     this.store.dispatch(

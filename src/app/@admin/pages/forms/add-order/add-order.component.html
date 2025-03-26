@@ -1,0 +1,51 @@
+<div class="max-w-3xl mx-auto p-2 bg-white shadow-lg rounded-lg">
+  <div class="pt-2">
+    <h1 class="text-2xl font-bold mb-4 text-center">Crear Orden</h1>
+  </div>
+
+  <mat-horizontal-stepper
+    [selectedIndex]="currentStep"
+    labelPosition="bottom"
+    class="h-full"
+  >
+    <!-- Step 1: User Form -->
+    <mat-step class="flex flex-col justify-between">
+      <app-order-step1
+        (stepCompleted)="onStep1Completed($event)"
+      ></app-order-step1>
+    </mat-step>
+
+    <!-- Step 2: Product Selection Form -->
+    <mat-step>
+      <app-order-step2
+        (stepBack)="goBack()"
+        (stepCompleted)="onStep2Completed($event)"
+      ></app-order-step2>
+    </mat-step>
+
+    <!-- Step 3: Shipping Data -->
+    <mat-step>
+      <app-order-step3
+        (stepBack)="goBack()"
+        (stepCompleted)="onStep3Completed($event)"
+      ></app-order-step3>
+    </mat-step>
+
+    <!-- Step 4: Payment Method -->
+    <mat-step>
+      <app-order-step4
+        (stepBack)="goBack()"
+        (stepCompleted)="onStep4Completed($event)"
+      ></app-order-step4>
+    </mat-step>
+
+    <!-- Final Step -->
+    <mat-step>
+      <app-order-step5
+        [order]="orderData()"
+        (stepBack)="goBack()"
+        (confirm)="onStep5Completed($event)"
+      ></app-order-step5>
+    </mat-step>
+  </mat-horizontal-stepper>
+</div>

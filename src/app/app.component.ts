@@ -12,11 +12,11 @@ import { toggleLeftSidebar } from './@shared/components/sidebars/left-sidebar/st
 
 import { toggleRightSidebar } from './@shared/components/sidebars/right-sidebar/store/actions/right-sidebar.actions';
 import { LeftSidebarFiltersComponent } from './@shared/components/sidebars/left-sidebar-filters/left-sidebar-filters.component';
-import { selectIsLeftSidebarAdminOpen } from './@shared/components/sidebars/left-sidebar-filters/store/selectors/left-sidebar-admin.selectors';
-import { toggleLeftSidebarAdmin } from './@shared/components/sidebars/left-sidebar-filters/store/actions/left-sidebar-admin.actions';
 import { AuthService } from './@apis/auth.service';
 import { TokenService } from './@core/services/token.service';
 import * as userActions from './@shared/store/actions/user.actions';
+import { toggleLeftSidebarFilters } from '@shared/components/sidebars/left-sidebar-filters/store/actions/left-sidebar-filters.actions';
+import { selectIsLeftSidebarFiltersOpen } from '@shared/components/sidebars/left-sidebar-filters/store/selectors/left-sidebar-filters.selectors';
 
 @Component({
   selector: 'app-root',
@@ -38,7 +38,7 @@ export class AppComponent implements OnInit {
   isLeftDrawerOpen$!: Observable<boolean>;
   isRightSidebarOpen$!: Observable<boolean>;
   isLeftSidebarOpen$!: Observable<boolean>;
-  isLeftAdminSidebarOpen$!: Observable<boolean>;
+  isLeftFilterSidebarOpen$!: Observable<boolean>;
 
   constructor(
     private store: Store,
@@ -51,8 +51,8 @@ export class AppComponent implements OnInit {
     // New Store Sidebar
     this.isRightSidebarOpen$ = this.store.select(selectIsRightSidebarOpen);
     this.isLeftSidebarOpen$ = this.store.select(selectIsLeftSidebarOpen);
-    this.isLeftAdminSidebarOpen$ = this.store.select(
-      selectIsLeftSidebarAdminOpen
+    this.isLeftFilterSidebarOpen$ = this.store.select(
+      selectIsLeftSidebarFiltersOpen
     );
 
     // Puedes cambiar el idioma según las preferencias del usuario
@@ -104,9 +104,9 @@ export class AppComponent implements OnInit {
     );
   }
 
-  closeLeftDrawerAdmin() {
+  closeLeftDrawerFilters() {
     this.store.dispatch(
-      toggleLeftSidebarAdmin({ isOpen: !this.isLeftAdminSidebarOpen$ })
+      toggleLeftSidebarFilters({ isOpen: !this.isLeftFilterSidebarOpen$ })
     );
   }
 

@@ -16,13 +16,40 @@
   </swiper-slide>
 </swiper-container> -->
 
-<swiper-container
+<!-- <swiper-container
   *ngIf="isBrowser"
   style="--swiper-navigation-color: #fff; --swiper-pagination-color: #fff"
   navigation="true"
   pagination="true"
   pagination-clickable="true"
   effect="coverflow"
+  grab-cursor="true"
+  centered-slides="true"
+  slides-per-view="auto"
+  coverflow-effect-rotate="10"
+  coverflow-effect-stretch="0"
+  coverflow-effect-depth="200"
+  coverflow-effect-modifier="3"
+  coverflow-effect-slide-shadows="true"
+  autoplay-delay="5000"
+  autoplay-disable-on-interaction="false"
+  space-between="10"
+  loop="true"
+>
+  @for (img of imgHeader; track $index) {
+  <swiper-slide>
+    <img class="swiper-slide__img" [src]="img.img_url" alt="" srcset="" />
+  </swiper-slide>
+  }
+</swiper-container> -->
+
+<swiper-container
+  *ngIf="isBrowser"
+  style="--swiper-navigation-color: #fff; --swiper-pagination-color: #fff"
+  navigation="false"
+  pagination="true"
+  pagination-clickable="true"
+  effect="fade"
   grab-cursor="true"
   centered-slides="true"
   slides-per-view="auto"

@@ -1,0 +1,154 @@
+<div class="container mx-auto max-w-4xl p-2 bg-white">
+  <h2 class="text-2xl font-semibold mb-4">Paso 3: Datos del Destinatario</h2>
+  <form [formGroup]="destinatarioForm" (ngSubmit)="onSubmit()">
+    <div class="flex gap-2 items-center">
+      <div class="mb-4 flex-1">
+        <label for="nombre" class="block text-sm font-medium text-gray-700"
+          >Nombre del destinatario</label
+        >
+        <input
+          id="nombre"
+          formControlName="nombre"
+          type="text"
+          class="mt-1 p-2 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          placeholder="Nombre completo"
+        />
+      </div>
+
+      <div class="mb-4 flex-1">
+        <label for="telefono" class="block text-sm font-medium text-gray-700"
+          >Teléfono 3 destinatario</label
+        >
+        <input
+          id="telefonoMovil"
+          formControlName="telefonoMovil"
+          type="tel"
+          class="mt-1 p-2 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          placeholder="+549 11 12345678"
+        />
+      </div>
+
+      <!-- <div class="mb-4">
+        <label
+          for="telefonoMovil"
+          class="block text-sm font-medium text-gray-700"
+          >Teléfono móvil del destinatario</label
+        >
+        <input
+          id="telefonoMovil"
+          formControlName="telefonoMovil"
+          type="tel"
+          class="mt-1 p-2 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          placeholder="+549 11 12345678"
+        />
+      </div> -->
+    </div>
+
+    <div class="mb-4">
+      <label for="direccion" class="block text-sm font-medium text-gray-700"
+        >Dirección completa de entrega</label
+      >
+
+      <div class="flex gap-2 items-center">
+        <input
+          id="direccion"
+          formControlName="direccion"
+          type="text"
+          class="mt-1 p-2 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          placeholder="Dirección"
+          ngx-google-places-autocomplete
+          (onAddressChange)="handleAddressChange($event)"
+          (input)="onAddressInput()"
+        />
+
+        <!-- Botón para obtener ubicación actual -->
+
+        <button
+          matRipple
+          class="mt-1 flex justify-center items-center min-h-[38px] min-w-[38px] border border-solid border-black/10 cursor-pointer bg-black text-white rounded hover:bg-gray-300"
+          (click)="usarMiUbicacion()"
+        >
+          <lucide-icon name="map-pin-house" [size]="24"></lucide-icon>
+        </button>
+      </div>
+    </div>
+
+    <div class="flex gap-2 items-center">
+      <div class="mb-4 w-full">
+        <label for="pais" class="block text-sm font-medium text-gray-700"
+          >País de entrega</label
+        >
+        <input
+          id="pais"
+          formControlName="pais"
+          type="text"
+          class="mt-1 p-2 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          placeholder="Argentina"
+        />
+      </div>
+
+      <div class="mb-4 w-full">
+        <label for="estado" class="block text-sm font-medium text-gray-700"
+          >Estado / Provincia</label
+        >
+        <input
+          id="estado"
+          formControlName="estado"
+          type="text"
+          class="mt-1 p-2 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          placeholder="Buenos Aires"
+        />
+      </div>
+
+      <div class="mb-4 w-full">
+        <label for="ciudad" class="block text-sm font-medium text-gray-700"
+          >Ciudad / Barrio / Localidad</label
+        >
+        <input
+          id="ciudad"
+          formControlName="ciudad"
+          type="text"
+          class="mt-1 p-2 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          placeholder="Ciudad"
+        />
+      </div>
+    </div>
+
+    <div
+      class="w-full h-[120px] lg:h-auto rounded shadow-lg overflow-hidden mb-4"
+    >
+      <google-map [center]="center" [zoom]="zoom" width="100%" height="120px">
+        <map-marker [position]="center"></map-marker>
+      </google-map>
+    </div>
+
+    <div class="mb-4">
+      <label for="comentarios" class="block text-sm font-medium text-gray-700"
+        >Comentarios / Observaciones sobre el domicilio de entrega</label
+      >
+      <textarea
+        id="comentarios"
+        formControlName="comentarios"
+        class="mt-1 p-2 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        placeholder="Por ejemplo 'No funciona bien el timbre'"
+      ></textarea>
+    </div>
+
+    <div class="flex justify-between items-center gap-4">
+      <button
+        mat-button
+        *ngIf="true"
+        (click)="stepBack.emit()"
+        class="bg-gray-300 px-4 py-2 rounded"
+      >
+        Volver
+      </button>
+      <button
+        type="submit"
+        class="bg-blue-500 text-white px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-blue-600"
+      >
+        Siguiente
+      </button>
+    </div>
+  </form>
+</div>

@@ -1,82 +1,338 @@
-<div class="online-store-container">
-  <div class="online-store">
-    <div class="right">
-      <div class="header">
-        <div [@zoomIn] [@zoomOut] class="carrousel">
-          <app-carrousel-swiper [images]="imgHeader"></app-carrousel-swiper>
-        </div>
+<div class="w-screen">
+  <div
+    [@zoomIn]
+    [@zoomOut]
+    class="w-full h-full flex justify-center items-center"
+  >
+    <div class="w-full h-full max-w-[1200px]">
+      <app-carrousel-swiper [images]="imgHeader"></app-carrousel-swiper>
+    </div>
+  </div>
+</div>
+<div class="w-full flex justify-center items-center min-h-[280px]">
+  <div class="w-full h-full max-w-[1200px] mt-4">
+    <h2
+      class="!text-2xl md:!text-3xl font-bold !font-playfair text-[#588157] text-center"
+    >
+      Detalles Inolvidables
+    </h2>
+    <div class="relative">
+      <!-- Contenedor de filtros con scroll horizontal -->
+      <div
+        class="mx-4 md:mx-0 filters flex items-center gap-6 my-8 overflow-x-auto snap-x snap-mandatory scrollbar-hide lg:overflow-visible lg:justify-center"
+        #scrollContainer
+        (scroll)="onScroll()"
+      >
+        @for (filter of filters; track $index) {
+        <app-circle-filter
+          [categoryName]="filter.categoryName"
+          [iconPath]="filter.iconPath"
+          (categorySelected)="onCategorySelected($event)"
+          class="snap-center flex-shrink-0"
+        >
+        </app-circle-filter>
+        }
       </div>
-      <div class="body">
-        <div class="left">
-          <div class="filters flex justify-center items-center gap-6">
-            @for (filter of filters; track $index) {
-            <app-circle-filter
-              [categoryName]="filter.categoryName"
-              [iconPath]="filter.iconPath"
-              (categorySelected)="onCategorySelected($event)"
-            >
-            </app-circle-filter>
-            }
+
+      <!-- Gradiente izquierdo (visible si hay scroll a la izquierda) -->
+      <div
+        id="leftShadow"
+        class="absolute top-0 left-0 h-full w-16 pointer-events-none bg-gradient-to-r from-[#588157]/30 to-transparent md:hidden"
+      ></div>
+
+      <!-- Gradiente derecho (visible si hay scroll a la derecha) -->
+      <div
+        id="rightShadow"
+        class="absolute top-0 right-0 h-full w-16 pointer-events-none bg-gradient-to-l from-[#588157]/30 to-transparent md:hidden"
+      ></div>
+    </div>
+
+    <!-- Sombras laterales para indicar más contenido -->
+    <div
+      class="absolute top-0 left-0 w-12 h-full bg-gradient-to-r from-[#588157]/30 to-transparent pointer-events-none hidden lg:hidden"
+      id="leftShadow"
+    ></div>
+    <div
+      class="absolute top-0 right-0 w-12 h-full bg-gradient-to-l from-[#588157]/30 to-transparent pointer-events-none hidden lg:hidden"
+      id="rightShadow"
+    ></div>
+  </div>
+</div>
+
+<div class="w-full flex justify-center items-center bg-[#588157] my-4">
+  <div class="w-full h-full bg-[#588157] max-w-[1200px]">
+    <div class="w-full py-8">
+      <h2
+        class="text-center !text-2xl md:!text-3xl font-bold !font-playfair text-white"
+      >
+        Coleccion {{ temporada }}
+      </h2>
+      <div class="relative">
+        <div
+          #scrollContainer
+          (scroll)="onScroll()"
+          class="mx-4 md:mx-0 filters flex items-center gap-6 my-8 overflow-x-auto snap-x snap-mandatory scrollbar-hide"
+        >
+          @for(product of products(); track $index){
+          <app-card-item
+            [name]="product.name"
+            [description]="product.description"
+            [price]="product.price"
+            [image]="product.images[0]"
+            [category]="product.category"
+            [isNew]="product.isNew"
+            [product]="product"
+            [ngClass]="{ 'pl-6': $index === 0 }"
+          ></app-card-item>
+          }
+        </div>
+
+        <!-- Gradiente izquierdo (visible si hay scroll a la izquierda) -->
+        <div
+          id="leftShadow"
+          class="absolute top-0 left-0 h-full w-16 pointer-events-none bg-gradient-to-r from-white/30 to-transparent md:hidden"
+        ></div>
+
+        <!-- Gradiente derecho (visible si hay scroll a la derecha) -->
+        <div
+          id="rightShadow"
+          class="absolute top-0 right-0 h-full w-16 pointer-events-none bg-gradient-to-l from-white/30 to-transparent md:hidden"
+        ></div>
+      </div>
+      <!-- Sombras laterales para indicar más contenido -->
+      <div
+        class="absolute top-0 left-0 w-12 h-full bg-gradient-to-r from-white/30 to-transparent pointer-events-none hidden lg:hidden"
+        id="leftShadow"
+      ></div>
+      <div
+        class="absolute top-0 right-0 w-12 h-full bg-gradient-to-l from-white/30 to-transparent pointer-events-none hidden lg:hidden"
+        id="rightShadow"
+      ></div>
+
+      <div class="w-full flex justify-end items-center px-4 xl:px-0">
+        <button
+          [routerLink]="['/online-store']"
+          routerLinkActive="router-link-active"
+          class="w-[150px] bg-white/10 text-white py-2 rounded-[4px] hover:bg-black/10 flex items-center justify-center gap-4"
+        >
+          <span>Ir a ver mas</span>
+          <lucide-icon [size]="16" name="chevron-right"></lucide-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="w-full flex justify-center items-center bg-transparent my-4 py-4">
+  <div class="w-full h-full max-w-[1200px]">
+    <div class="w-full">
+      <h2
+        class="!text-2xl md:!text-3xl font-bold !font-playfair text-[#588157] text-center"
+      >
+        Servicios Especiales
+      </h2>
+      <p class="!text-base md:!text-xl text-[#588157] text-center">
+        Experiencias florales únicas para cada momento
+      </p>
+      <div
+        class="w-full h-full flex flex-col md:grid md:grid-cols-2 gap-4 overflow-hidden px-4 xl:px-0 pb-4 mt-8 md:mb-[60px]"
+      >
+        <!-- Decoración de Espacios (Salones e Iglesias) -->
+        <div
+          class="px-4 flex-1 w-full backdrop-blur-md shadow-sm transition-shadow hover:shadow-lg bg-[#588157]/80 text-white py-4 rounded-[4px] flex flex-col gap-4 min-h-[220px]"
+        >
+          <div class="flex items-center gap-4">
+            <div class="w-[20%] flex justify-center h-full">
+              <div class="w-[70px] h-[70px]">
+                <lucide-icon
+                  class="text-white"
+                  name="home"
+                  [size]="70"
+                ></lucide-icon>
+              </div>
+            </div>
+            <div class="flex-1">
+              <h2 class="!text-xl font-bold !font-playfair text-white">
+                Decoración de Espacios
+              </h2>
+              <p class="text-base font-sans text-white">
+                Transformamos salones, iglesias y cualquier ambiente en
+                escenarios inolvidables.
+              </p>
+              <ul class="list-disc list-inside text-white text-sm font-sans">
+                <li
+                  class="flex items-center gap-2 before:content-['•'] before:text-white"
+                >
+                  Ambientes personalizados
+                </li>
+                <li
+                  class="flex items-center gap-2 before:content-['•'] before:text-white"
+                >
+                  Detalles que cautivan
+                </li>
+                <li
+                  class="flex items-center gap-2 before:content-['•'] before:text-white"
+                >
+                  Respeto por cada contexto
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
+        <!-- Decoración de Autos -->
+        <div
+          class="px-4 flex-1 w-full backdrop-blur-md shadow-sm transition-shadow hover:shadow-lg bg-[#588157]/80 text-white py-4 rounded-[4px] flex flex-col gap-4 min-h-[220px]"
+        >
+          <div class="flex items-center gap-4">
+            <div class="w-[20%] flex justify-center h-full">
+              <div class="w-[70px] h-[70px]">
+                <lucide-icon
+                  class="text-white"
+                  name="car"
+                  [size]="70"
+                ></lucide-icon>
+              </div>
+            </div>
+            <div class="flex-1">
+              <h2 class="!text-xl font-bold !font-playfair text-white">
+                Decoración de Autos
+              </h2>
+              <p class="text-base font-sans text-white">
+                Resalta en tu gran día con un toque floral que marca la
+                diferencia.
+              </p>
+              <ul class="list-disc list-inside text-white text-sm font-sans">
+                <li
+                  class="flex items-center gap-2 before:content-['•'] before:text-white"
+                >
+                  Diseño exclusivo para vehículos
+                </li>
+                <li
+                  class="flex items-center gap-2 before:content-['•'] before:text-white"
+                >
+                  Toque elegante y sofisticado
+                </li>
+                <li
+                  class="flex items-center gap-2 before:content-['•'] before:text-white"
+                >
+                  Detalles memorables
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <!-- Arreglos y Ramos Personalizados -->
+        <div
+          class="px-4 flex-1 w-full backdrop-blur-md shadow-sm transition-shadow hover:shadow-lg bg-[#588157]/80 text-white py-4 rounded-[4px] flex flex-col gap-4 min-h-[220px]"
+        >
+          <div class="flex items-center gap-4">
+            <div class="w-[20%] flex justify-center h-full">
+              <div class="w-[70px] h-[70px]">
+                <lucide-icon
+                  class="text-white"
+                  name="flower"
+                  [size]="70"
+                ></lucide-icon>
+              </div>
+            </div>
+            <div class="flex-1">
+              <h2 class="!text-xl font-bold !font-playfair text-white">
+                Arreglos y Ramos Personalizados
+              </h2>
+              <p class="text-base font-sans text-white">
+                Diseños florales únicos que expresan emociones y estilo para
+                cada evento.
+              </p>
+              <ul class="list-disc list-inside text-white text-sm font-sans">
+                <li
+                  class="flex items-center gap-2 before:content-['•'] before:text-white"
+                >
+                  Creatividad a medida
+                </li>
+                <li
+                  class="flex items-center gap-2 before:content-['•'] before:text-white"
+                >
+                  Calidad y frescura garantizada
+                </li>
+                <li
+                  class="flex items-center gap-2 before:content-['•'] before:text-white"
+                >
+                  Obra de arte floral
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <!-- Envío a domicilio el mismo día -->
+        <div
+          class="px-4 flex-1 w-full backdrop-blur-md shadow-sm transition-shadow hover:shadow-lg bg-[#588157]/80 text-white py-4 rounded-[4px] flex flex-col gap-4 min-h-[220px]"
+        >
+          <div class="flex items-center gap-4">
+            <div class="w-[20%] flex justify-center h-full">
+              <div class="w-[70px] h-[70px]">
+                <lucide-icon
+                  class="text-white"
+                  name="truck"
+                  [size]="70"
+                ></lucide-icon>
+              </div>
+            </div>
+            <div class="flex-1">
+              <h2 class="!text-xl font-bold !font-playfair text-white">
+                Envío a domicilio el mismo día
+              </h2>
+              <p class="text-base font-sans text-white">
+                Servicio rápido y confiable para que tus flores lleguen
+                perfectas.
+              </p>
+              <ul class="list-disc list-inside text-white text-sm font-sans">
+                <li
+                  class="flex items-center gap-2 before:content-['•'] before:text-white"
+                >
+                  Entrega el mismo día
+                </li>
+                <li
+                  class="flex items-center gap-2 before:content-['•'] before:text-white"
+                >
+                  Frescura garantizada
+                </li>
+                <li
+                  class="flex items-center gap-2 before:content-['•'] before:text-white"
+                >
+                  Atención puntual
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- <div class="online-store-container">
+  <div class="online-store">
+    <div class="right">
+      <div class="body">
+        <div class="left"></div>
       </div>
       <div class="w-full">
         <h2 class="text-4xl uppercase font-bold text-gray-800">
           Colecciones de {{ temporada }}
         </h2>
-        <div
-          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 h-full"
-        >
+        <div class="w-full h-full flex items-center gap-4 overflow-auto">
           <app-card-item
-            *ngFor="let product of filteredProducts"
+            *ngFor="let product of products()"
             [name]="product.name"
             [description]="product.description"
             [price]="product.price"
-            [image]="product.image"
+            [image]="product.images[0]"
             [category]="product.category"
             [isNew]="product.isNew"
             [product]="product"
           ></app-card-item>
         </div>
       </div>
-
-      <div class="w-full">
-        <h2 class="text-4xl uppercase font-bold text-gray-800">
-          Colecciones de {{ temporada }}
-        </h2>
-        <div
-          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 h-full"
-        >
-          <app-card-item
-            *ngFor="let product of filteredProducts"
-            [name]="product.name"
-            [description]="product.description"
-            [price]="product.price"
-            [image]="product.image"
-            [category]="product.category"
-            [isNew]="product.isNew"
-          ></app-card-item>
-        </div>
-      </div>
-
-      <div class="w-full">
-        <h2 class="text-4xl uppercase font-bold text-gray-800">
-          Colecciones de {{ temporada }}
-        </h2>
-        <div
-          class="grid items-center justify-center grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4"
-        >
-          <app-card-item
-            *ngFor="let product of products"
-            [name]="product.name"
-            [description]="product.description"
-            [price]="product.price"
-            [image]="product.image"
-            [category]="product.category"
-            [isNew]="product.isNew"
-          ></app-card-item>
-        </div>
-      </div>
     </div>
   </div>
-</div>
+</div> -->

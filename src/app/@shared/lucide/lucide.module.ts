@@ -59,6 +59,7 @@ import {
   EyeOff,
   AlarmClock,
   AlarmClockOff,
+  AlarmClockCheck,
   Coins,
   ArrowRightLeft,
   CircleUserRound,
@@ -102,6 +103,18 @@ import {
   Box,
   Package,
   Save,
+  Timer,
+  Printer,
+  MapPinHouse,
+  Store,
+  Flower,
+  Church,
+  Car,
+  Facebook,
+  Leaf,
+  Fuel,
+  ListFilter,
+  AlignLeft
 } from 'lucide-angular';
 
 export const LUCIDE_MODULES = [
@@ -116,6 +129,7 @@ export const LUCIDE_MODULES = [
     Shield,
     MapPin,
     Mail,
+    AlarmClockCheck,
     CreditCard,
     Banknote,
     BadgeDollarSign,
@@ -207,6 +221,18 @@ export const LUCIDE_MODULES = [
     Box,
     Package,
     Save,
+    Printer,
+    Timer,
+    MapPinHouse,
+    Store,
+    Flower,
+    Church,
+    Car,
+    Facebook,
+    Leaf,
+    Fuel,
+    ListFilter,
+    AlignLeft
   }),
 ];
 
@@ -214,4 +240,4 @@ export const LUCIDE_MODULES = [
   imports: [LUCIDE_MODULES],
   exports: [LUCIDE_MODULES],
 })
-export class LucideModule {}
+export class LucideModule { }

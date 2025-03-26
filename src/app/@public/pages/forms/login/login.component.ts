@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Inject, OnDestroy, OnInit, Output, PLATFORM_ID, signal, ViewChild } from '@angular/core';
 import { MaterialModule } from '../../../../@shared/material/material.module';
 import { DIALOG_DATA, Dialog, DialogRef } from '@angular/cdk/dialog';
 import {
@@ -8,7 +8,7 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import RegisterComponent from '../register/register.component';
 import { MatDialog } from '@angular/material/dialog';
 import { RouterModule } from '@angular/router';
@@ -19,33 +19,49 @@ import { Store } from '@ngrx/store';
 import { TokenService } from '../../../../@core/services/token.service';
 import * as userActions from '../../../../@shared/store/actions/user.actions';
 import { MessageService } from '../../../../@core/services/snackbar.service';
+import { LucideModule } from '@shared/lucide/lucide.module';
+import CheckoutComponent from '../checkout/checkout.component';
+import { GoogleSigninButtonModule, SocialAuthService } from '@abacritt/angularx-social-login';
+import { Subscription } from 'rxjs';
+declare const google: any; // o usa window.google
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, RouterModule, MaterialModule, ReactiveFormsModule],
+  imports: [CommonModule, RouterModule, MaterialModule, ReactiveFormsModule, LucideModule, GoogleSigninButtonModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
   animations: [Animations],
 })
-export default class LoginComponent implements OnInit {
+export default class LoginComponent implements OnInit, OnDestroy {
+  @ViewChild('googleBtnWrapper') googleBtnWrapper!: ElementRef;
+
   loginGroup!: FormGroup;
   hide = true;
   formTouched = false;
 
+  @Output() setViewType = new EventEmitter<any>();
+  private _unsuscribeAll!: Subscription;
+
   constructor(
     private _fb: FormBuilder,
     public dialogRef: DialogRef<string>,
-    private _dialog: Dialog,
-    @Inject(DIALOG_DATA) public data: any,
+    // private _dialog: Dialog,
+    // @Inject(DIALOG_DATA) public data: any,
+    private socialAuthService: SocialAuthService,
+    @Inject(PLATFORM_ID) private platformId: Object,
     private _authService: AuthService,
     private store: Store,
     private _tokenService: TokenService,
     private _messageService: MessageService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.initGroupLogin();
+  }
+
+  ngOnDestroy(): void {
+    // this._unsuscribeAll.unsubscribe();
   }
 
   private initGroupLogin() {
@@ -55,34 +71,43 @@ export default class LoginComponent implements OnInit {
     });
   }
 
-  // register() {
-  //   this.dialogRef.close();
-  //   this._dialog.open(RegisterComponent, { disableClose: true });
-  // }
+  googleSubscribe() {
+    this._unsuscribeAll = this.socialAuthService.authState.subscribe((user) => {
+      const payload = {
+        email: user.email.toLowerCase(),
+        provider: 'google',
+        token: user.idToken,
+      };
 
-  openDialogRegister(): void {
-    this.dialogRef.close();
-    const dialogRef = this._dialog.open<string>(RegisterComponent, {
-      width: '250px',
-      data: { name: 'hola', animal: 'hola' },
-    });
+      this._unsuscribeAll = this._authService
+        .login(payload)
+        .subscribe((response: any) => {
+          console.log('response', response);
+          
+          const { user, ...res } = response.results;
 
-    dialogRef.closed.subscribe((result) => {
-      console.log('The dialog was closed');
+          if (isPlatformBrowser(this.platformId)) {
+            localStorage.setItem('user', JSON.stringify(res));
+          }
+
+
+          this.store.dispatch(
+            userActions.setCurrentUser({ currentUser: user })
+          );
+
+          if (isPlatformBrowser(this.platformId)) {
+            const redirectUrl = localStorage.getItem('redirectUrl');
+
+            // if (redirectUrl) {
+            //   localStorage.removeItem('redirectUrl');
+            //   this.router.navigateByUrl(redirectUrl);
+            // }
+          }
+          this.dialogRef.close();
+        });
     });
   }
 
-  openDialogChangePasswor(): void {
-    this.dialogRef.close();
-    const dialogRef = this._dialog.open<string>(ChangePasswordComponent, {
-      width: '250px',
-      data: { name: 'hola', animal: 'hola' },
-    });
-
-    dialogRef.closed.subscribe((result) => {
-      console.log('The dialog was closed');
-    });
-  }
 
   submitEvent() {
     this.loginUser();
@@ -121,5 +146,9 @@ export default class LoginComponent implements OnInit {
     } else {
       console.log('Formulario no válido');
     }
+  }
+
+  emitViewType(view: string) {
+    this.setViewType.emit(view);
   }
 }

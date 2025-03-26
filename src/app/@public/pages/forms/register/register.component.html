@@ -1,9 +1,187 @@
-<div class="register-container">
+<div
+  class="z-2 w-full h-full min-h-[452px] flex flex-col justify-center items-center shadow-lg bg-primary rounded-[4px] px-8 py-4 relative"
+>
+  <a
+    (click)="emitViewType('login')"
+    class="text-white/80 hover:text-[#A2E100]/20 text-base font-semibold absolute top-4 left-4 cursor-pointer"
+  >
+    <span class="flex items-center space-x-1">
+      <lucide-icon [name]="'arrow-left'" class="w-4 h-4 mb-1"></lucide-icon>
+      <span>Volver</span>
+    </span>
+  </a>
+  <h1 class="title !text-xl !font-playfair !mb-[24px] text-white">Crear cuenta</h1>
+
+  <form
+    class="flex flex-col gap-2 w-full"
+    [formGroup]="registerGroup"
+    (submit)="submitEvent()"
+  >
+    <!-- <mat-form-field class="form-field" appearance="outline">
+          <mat-label class="form-label">Email</mat-label>
+          <input
+            class="form-input"
+            matInput
+            formControlName="email"
+            placeholder="Email"
+            required
+          />
+          <mat-error
+            class="form-error"
+            *ngIf="loginGroup.get('email')?.hasError('email')"
+            >Formato invalido.</mat-error
+          >
+        </mat-form-field> -->
+
+    <div class="flex-1 w-full">
+      <label for="email" class="block text-sm font-medium text-white/80"
+        >Nombre</label
+      >
+      <input
+        id="name"
+        formControlName="username"
+        type="text"
+        class="mt-1 p-2 w-full border border-gray-300 rounded-[4px] focus:outline-none focus:ring-2 focus:ring-[#A2E100]/20"
+        placeholder="Ingresar tu nombre"
+      />
+    </div>
+
+    <div class="flex-1 w-full">
+      <label for="email" class="block text-sm font-medium text-white/80"
+        >Email</label
+      >
+      <input
+        id="email"
+        formControlName="email"
+        type="email"
+        class="mt-1 p-2 w-full border border-gray-300 rounded-[4px] focus:outline-none focus:ring-2 focus:ring-[#A2E100]/20"
+        placeholder="Ingresar tu correo electrónico"
+      />
+    </div>
+
+    <!-- <mat-form-field class="form-field" appearance="outline">
+          <mat-label class="form-label">Password</mat-label>
+          <input
+            class="form-input"
+            matInput
+            placeholder="Password"
+            [type]="hide ? 'password' : 'text'"
+            formControlName="password"
+            required
+            onkeydown="enterSubmit($event)"
+          />
+          <mat-icon matSuffix (click)="hide = !hide">{{
+            hide ? "visibility_off" : "visibility"
+          }}</mat-icon>
+        </mat-form-field> -->
+
+    <div class="mb-2 flex-1 relative w-full">
+      <label for="password" class="block text-sm font-medium text-white/80"
+        >Contraseña</label
+      >
+      <div class="mt-1 relative">
+        <input
+          id="password"
+          formControlName="password"
+          [type]="!hide ? 'text' : 'password'"
+          class="p-2 w-full border border-gray-300 rounded-[4px] focus:outline-none focus:ring-2 focus:ring-[#A2E100]/20"
+          placeholder="Contraseña"
+        />
+        <button
+          type="button"
+          class="absolute inset-y-0 right-2 flex items-center text-primary"
+          (click)="hide = !hide"
+        >
+          @if (!hide) {
+          <lucide-icon name="eye" class="h-5 w-5"></lucide-icon>
+          } @else {
+          <lucide-icon name="eye-off" class="h-5 w-5"></lucide-icon>
+          }
+        </button>
+      </div>
+    </div>
+    <!-- 
+      <div class="w-full text-center">
+
+
+        <div class="w-full flex items-center justify-center">
+          <p class="text-sm text-white mt-4 cursor-pointer w-full text-start">
+            Has olvidado tu contraseña?
+            <span
+              (click)="openDialogChangePasswor()"
+              class="hover:text-[#A2E100]/50 text-sm"
+              >Recuperar contraseña.</span
+            >
+          </p>
+        </div>
+      </div> -->
+
+    <!-- <div class="w-full mt-2">
+      <p
+        class="text-sm text-white/80 mt-4 cursor-pointer w-full text-start"
+      >
+        Te enviaremos un código de verificación para restablecer tu
+        contraseña.
+      </p>
+    </div> -->
+
+    <div class="flex flex-col gap-2 w-full">
+      <button
+        (click)="submitEvent()"
+        type="submit"
+        class="px-4 py-2 bg-[#3a5a40]/80 text-white rounded-[4px] shadow hover:bg-[#A2E100]/20 focus:outline-none transition"
+      >
+        <span class="tracking-widest">Crear</span>
+      </button>
+      <!-- <button
+            class="login-button login-button--submit"
+            (click)="submitEvent()"
+            type="submit"
+            mat-flat-button
+          >
+            <span>Ingresar</span>
+            <div  *ngIf="(_loandingService._loading$ | async)" class="loading"></div>
+          </button> -->
+    </div>
+  </form>
+
+  <!-- <div class="w-full flex items-center justify-center mt-8">
+    <p class="text-sm text-white mt-4 cursor-pointer w-full text-start">
+      No tienes una cuenta? <br />
+      <span class="hover:text-[#A2E100]/50 text-sm">Crear cuenta.</span>
+    </p>
+  </div> -->
+  <div class="w-full flex items-center justify-center mt-8">
+    <p class="text-sm text-white mt-4 cursor-pointer w-full text-start">
+      Has olvidado tu contraseña? <br />
+      <span
+        (click)="emitViewType('checkout')"
+        class="hover:text-[#A2E100]/50 text-sm"
+        >Recuperar contraseña.</span
+      >
+    </p>
+  </div>
+
+  <!-- <button
+            (click)="submitEvent()"
+            class="w-100"
+            mat-raised-button
+            color="primary"
+            [disabled]="_loandingService._loading$ | async"
+          >
+            <span *ngIf="!(_loandingService._loading$ | async)">Ingresar</span>
+            <div
+              *ngIf="_loandingService._loading$ | async"
+              class="loading"
+            ></div>
+          </button> -->
+</div>
+<!-- <div class="register-container">
   <div class="register">
     <div class="left">INFO</div>
 
-    <div [@slideInRight] [@slideOutRight] class="right">
-      <h1 class="title">Register</h1>
+    <div class="right">
+      <h1 class="title">Crear cuenta</h1>
 
       <form
         class="register-form"
@@ -65,7 +243,7 @@
             mat-button
           >
             <span>close</span>
-            <!-- <div  *ngIf="(_loandingService._loading$ | async)" class="loading"></div> -->
+            <div  *ngIf="(_loandingService._loading$ | async)" class="loading"></div>
           </button>
 
           <button
@@ -74,12 +252,12 @@
             mat-flat-button
           >
             <span>registrar</span>
-            <!-- <div  *ngIf="(_loandingService._loading$ | async)" class="loading"></div> -->
+            <div  *ngIf="(_loandingService._loading$ | async)" class="loading"></div>
           </button>
         </div>
       </form>
 
-      <!-- <button
+      <button
             (click)="submitEvent()"
             class="w-100"
             mat-raised-button
@@ -91,7 +269,7 @@
               *ngIf="_loandingService._loading$ | async"
               class="loading"
             ></div>
-          </button> -->
+          </button>
     </div>
   </div>
-</div>
+</div> -->

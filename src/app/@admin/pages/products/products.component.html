@@ -91,7 +91,28 @@
       </div>
     </div>
   </div> -->
+  <div class="flex justify-end items-center mb-5">
+    <!-- Filtro de Ordenación -->
+    <!-- <div class="flex items-center space-x-4">
+      <label for="orderBy" class="text-sm font-medium">Ordenar por:</label>
+      <select
+        id="orderBy"
+        [(ngModel)]="selectedOrder"
+        (change)="applyFilter()"
+        class="border p-2 rounded-md text-sm"
+      >
+        <option value="ascendente">Ascendente</option>
+        <option value="descendente">Descendente</option>
+        <option value="mayorValor">Mayor Valor</option>
+        <option value="menorValor">Menor Valor</option>
+      </select>
+    </div> -->
 
+    <!-- Contador de Items -->
+    <div class="text-sm font-medium">
+      <span>{{ productsOne().length }} Items disponibles</span>
+    </div>
+  </div>
   <!-- Tabla de Productos -->
   <div class="bg-white shadow rounded-lg p-6">
     <app-products-table [products]="this.productsOne()"></app-products-table>

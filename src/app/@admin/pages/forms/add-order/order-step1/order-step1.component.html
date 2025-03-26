@@ -1,0 +1,110 @@
+<div class="max-w-4xl mx-auto p-2 bg-white">
+  <h2 class="text-2xl font-semibold mb-4">Paso 1: Datos del Usuario</h2>
+  <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+    <div class="mb-4">
+      <label for="email" class="block text-sm font-medium text-gray-700"
+        >Correo Electrónico</label
+      >
+
+      <div class="flex items-center gap-2">
+        <div class="flex-1">
+          <input
+            id="email"
+            formControlName="email"
+            type="email"
+            class="mt-1 p-2 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="Ingrese su correo"
+            [ngClass]="{
+              'border-red-500':
+                userForm.get('email')?.invalid && userForm.get('email')?.touched
+            }"
+          />
+          <div
+            *ngIf="
+              userForm.get('email')?.invalid && userForm.get('email')?.touched
+            "
+            class="text-sm text-red-500"
+          >
+            El correo es obligatorio y debe ser válido.
+          </div>
+        </div>
+        <div class="flex items-center gap-2">
+          <button
+            (click)="searchUserByEmail()"
+            [type]="'button'"
+            [ngClass]="{
+              'mb-5':
+                userForm.get('email')?.invalid && userForm.get('email')?.touched
+            }"
+            class="mt-1 flex justify-center items-center min-h-[38px] min-w-[38px] border border-solid border-black/10 cursor-pointer bg-white text-black rounded hover:bg-gray-300"
+          >
+            <lucide-icon name="search" [size]="24"></lucide-icon>
+          </button>
+          <button
+            [disabled]="userFound()"
+            (click)="saveUser()"
+            [type]="'button'"
+            [ngClass]="{
+              'mb-5':
+                userForm.get('email')?.invalid && userForm.get('email')?.touched
+            }"
+            class="mt-1 flex justify-center items-center min-h-[38px] min-w-[38px] border border-solid border-black/10 cursor-pointer bg-black text-white rounded hover:bg-gray-300"
+          >
+            <lucide-icon name="save" [size]="24"></lucide-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="mb-4">
+      <label for="name" class="block text-sm font-medium text-gray-700"
+        >Nombre</label
+      >
+      <input
+        id="name"
+        formControlName="name"
+        type="text"
+        class="mt-1 p-2 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        placeholder="Ingrese su nombre"
+      />
+    </div>
+
+    <div class="mb-4">
+      <label for="phone" class="block text-sm font-medium text-gray-700"
+        >Teléfono</label
+      >
+      <input
+        id="phone"
+        formControlName="phone"
+        type="text"
+        class="mt-1 p-2 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        placeholder="Ingrese su teléfono"
+      />
+    </div>
+
+    <div *ngIf="loading" class="text-center mt-4">
+      <div class="w-[142px] flex items-center justify-center">
+        <app-loader [size]="'20px'"></app-loader>
+      </div>
+    </div>
+
+    <div *ngIf="userFound()" class="text-green-500 mt-4">
+      Usuario encontrado y cargado exitosamente.
+    </div>
+
+    <div *ngIf="!userFound() && !loading" class="text-red-500 mt-4">
+      No se encontró el usuario. guardar email para continuar.
+    </div>
+
+    <div class="flex justify-end">
+      <button
+        type="submit"
+        [disabled]="!userFound()"
+        (click)="onSubmit()"
+        class="bg-blue-500 text-white px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-blue-600"
+      >
+        Siguiente
+      </button>
+    </div>
+  </form>
+</div>

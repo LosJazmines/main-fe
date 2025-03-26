@@ -1,16 +1,16 @@
-<div [@slideInLeft] class="login-container">
-  <div class="login">
-    <div class="left">INFO</div>
+<div
+  class="w-full h-full min-h-[452px] flex flex-col items-center justify-center bg-primary rounded-[4px] px-8 py-4 z-20"
+>
+  <h1 class="title !text-xl !font-playfair !mb-[24px] text-white">
+    Iniciar Sesión
+  </h1>
 
-    <div [@slideOutLeft] class="right">
-      <h1 class="title">Iniciar Sesión</h1>
-
-      <form
-        class="login-form"
-        [formGroup]="loginGroup"
-        (submit)="submitEvent()"
-      >
-        <mat-form-field class="form-field" appearance="outline">
+  <form
+    class="login-form w-full"
+    [formGroup]="loginGroup"
+    (submit)="submitEvent()"
+  >
+    <!-- <mat-form-field class="form-field" appearance="outline">
           <mat-label class="form-label">Email</mat-label>
           <input
             class="form-input"
@@ -24,9 +24,22 @@
             *ngIf="loginGroup.get('email')?.hasError('email')"
             >Formato invalido.</mat-error
           >
-        </mat-form-field>
+        </mat-form-field> -->
 
-        <mat-form-field class="form-field" appearance="outline">
+    <div class="flex-1 w-full mb-2">
+      <label for="email" class="block text-sm font-medium text-white/80"
+        >Email</label
+      >
+      <input
+        id="email"
+        formControlName="email"
+        type="email"
+        class="mt-1 p-2 w-full border border-gray-300 rounded-[4px] focus:outline-none focus:ring-2 focus:ring-[#A2E100]/20"
+        placeholder="Email"
+      />
+    </div>
+
+    <!-- <mat-form-field class="form-field" appearance="outline">
           <mat-label class="form-label">Password</mat-label>
           <input
             class="form-input"
@@ -40,56 +53,106 @@
           <mat-icon matSuffix (click)="hide = !hide">{{
             hide ? "visibility_off" : "visibility"
           }}</mat-icon>
-        </mat-form-field>
+        </mat-form-field> -->
 
-        <div class="change-password">
-          <button
-            class="login-button login-button--change-password"
+    <div class="mb-2 flex-1 relative w-full">
+      <label for="password" class="block text-sm font-medium text-white/80"
+        >Contraseña</label
+      >
+      <div class="mt-1 relative">
+        <input
+          id="password"
+          formControlName="password"
+          [type]="!hide ? 'text' : 'password'"
+          class="p-2 w-full border border-gray-300 rounded-[4px] focus:outline-none focus:ring-2 focus:ring-[#A2E100]/20"
+          placeholder="Contraseña"
+        />
+        <button
+          type="button"
+          class="absolute inset-y-0 right-2 flex items-center text-primary"
+          (click)="hide = !hide"
+        >
+          @if (!hide) {
+          <lucide-icon name="eye" class="h-5 w-5"></lucide-icon>
+          } @else {
+          <lucide-icon name="eye-off" class="h-5 w-5"></lucide-icon>
+          }
+        </button>
+      </div>
+    </div>
+
+    <div class="w-full text-center">
+      <!-- <button
             type="button"
-            mat-button
+            class="text-sm text-center text-white hover:underline focus:outline-none"
             (click)="openDialogChangePasswor()"
-            mat-button
           >
-            ¿Has olvidado tu correo electrónico?
-          </button>
-        </div>
+            <p class="no-account">
+              Has olvidado tu contraseña?
+              <span (click)="openDialogChangePasswor()"
+                >Recuperar contraseña.</span
+              >
+            </p>
+          </button> -->
 
-        <div class="login-buttons">
-          <button
-            class="login-button login-button--register"
-            (click)="openDialogRegister()"
-            type="button"
-            mat-button
+      <div class="w-full flex items-center justify-center mt-2 py-2">
+        <p class="text-sm text-white mt-4 cursor-pointer w-full text-start">
+          Has olvidado tu contraseña? <br />
+          <span
+            (click)="emitViewType('checkout')"
+            class="hover:text-[#A2E100]/50 text-sm"
+            >Recuperar contraseña.</span
           >
-            <span>Crear cuenta</span>
-            <!-- <div  *ngIf="(_loandingService._loading$ | async)" class="loading"></div> -->
-          </button>
+        </p>
+      </div>
+    </div>
 
-          <button
+    <div class="flex flex-col gap-2 w-full">
+      <button
+        (click)="submitEvent()"
+        type="submit"
+        class="px-4 py-2 bg-[#3a5a40]/80 text-white rounded-[4px] shadow hover:bg-[#A2E100]/20 focus:outline-none transition"
+      >
+        <span class="tracking-widest"> Ingresar</span>
+      </button>
+      <!-- <button
             class="login-button login-button--submit"
             (click)="submitEvent()"
             type="submit"
             mat-flat-button
           >
             <span>Ingresar</span>
-            <!-- <div  *ngIf="(_loandingService._loading$ | async)" class="loading"></div> -->
-          </button>
-        </div>
-      </form>
-
-      <!-- <button
-            (click)="submitEvent()"
-            class="w-100"
-            mat-raised-button
-            color="primary"
-            [disabled]="_loandingService._loading$ | async"
-          >
-            <span *ngIf="!(_loandingService._loading$ | async)">Ingresar</span>
-            <div
-              *ngIf="_loandingService._loading$ | async"
-              class="loading"
-            ></div>
+            <div  *ngIf="(_loandingService._loading$ | async)" class="loading"></div>
           </button> -->
+      <div class="w-full">
+        <!-- <asl-google-signin-button
+          class="google-signin-btn"
+          type="standard"
+          size='medium'
+          >google</asl-google-signin-button
+        > -->
+        <!-- <button
+          class="w-full bg-white text-black border rounded py-2 px-4 flex items-center justify-center"
+          (click)="handleGoogleLogin()"
+        >
+          <img src="google_logo.png" class="h-5 w-5 mr-2" />
+          <span>Acceder con Google</span>
+        </button> -->
+        <!-- @if (isInstagramBrowser) {
+        <div class="blocker" (click)="preventLoginInInstagram()"></div>
+        } -->
+      </div>
     </div>
+  </form>
+
+  <div class="w-full flex items-center justify-center mt-8">
+    <p class="text-sm text-white mt-4 cursor-pointer w-full text-start">
+      No tienes una cuenta? <br />
+      <span
+        (click)="emitViewType('register')"
+        class="hover:text-[#A2E100]/50 text-sm"
+        >Crear cuenta.</span
+      >
+    </p>
   </div>
 </div>

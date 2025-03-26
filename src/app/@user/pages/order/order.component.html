@@ -1,8 +1,12 @@
-<div class="max-w-[1200px] mx-auto">
-  <div class="p-8 custom-height flex flex-col gap-4">
-    <div class="w-full h-full flex justify-center items-start gap-4">
+<div
+  class="max-w-[1200px] mx-auto py-4 min-h-[calc(100vh-325px)] lg:min-h-[calc(100vh-305px)]"
+>
+  <div class="p-4 lg:p-8 custom-height flex flex-col gap-4">
+    <div
+      class="w-full h-full flex flex-col lg:flex-row justify-center items-start gap-4"
+    >
       <div
-        class="min-h-[360px] h-full w-[410px] rounded overflow-hidden flex flex-col gap-2 bg-white rounded shadow p-4"
+        class="w-full h-full lg:w-[410px] overflow-hidden flex flex-col gap-2 bg-white rounded-[4px] shadow p-4"
       >
         <div class="border-b border-black/10 w-full flex-1">
           <h2 class="text-2xl font-bold text-gray-800">Detalles</h2>
@@ -93,27 +97,33 @@
         </div>
       </div>
 
-      <div class="min-w-[360px] flex flex-col gap-4 flex-1 px-4 pb-4">
+      <div class="w-full flex flex-col gap-4 flex-1 lg:px-4 pb-4">
         <!-- Encabezado -->
         <div
           class="grid grid-cols-5 w-full items-center text-center gap-4 border-b border-black/10 py-2"
         >
-          <div class="w-[60px]"></div>
+          <div class="w-[60px] hidden lg:block"></div>
           <!-- Espacio para la imagen -->
-          <h2 class="text-lg font-semibold text-gray-800">Producto</h2>
-          <h2 class="text-lg font-semibold text-gray-800">Cantidad</h2>
-          <h2 class="text-lg font-semibold text-gray-800">Precio</h2>
-          <h2 class="text-lg font-semibold text-gray-800">Total</h2>
+          <h2 class="text-lg font-semibold text-gray-800">Productos</h2>
+          <h2 class="text-lg font-semibold text-gray-800 hidden lg:block">
+            Cantidad
+          </h2>
+          <h2 class="text-lg font-semibold text-gray-800 hidden lg:block">
+            Precio
+          </h2>
+          <h2 class="text-lg font-semibold text-gray-800 hidden lg:block">
+            Total
+          </h2>
         </div>
 
         <!-- Lista de productos -->
         <div class="w-full flex flex-col min-h-[288px] bg-black/1 gap-2">
           <div
-            class="grid grid-cols-5 w-full items-center gap-4 bg-black/5 rounded shadow p-2"
+            class="grid grid-cols-3 lg:grid-cols-5 w-full items-center gap-4 bg-[#3a5a40]/15 rounded-[4px] shadow p-2"
           >
             <!-- Columna 1: Imagen -->
             <div
-              class="w-[60px] h-[60px] rounded overflow-hidden shadow bg-black/20 flex-shrink-0"
+              class="w-[60px] h-[60px] rounded-[4px] overflow-hidden shadow bg-black/20 flex-shrink-0"
             >
               <img
                 src="ruta_de_la_imagen"
@@ -123,7 +133,7 @@
             </div>
 
             <!-- Columna 2: Nombre del producto -->
-            <div class="flex items-center gap-2">
+            <div class="flex items-center gap-2 col-span-2 lg:col-span-1">
               <lucide-icon
                 name="box"
                 class="w-4 h-4 text-gray-600"
@@ -152,7 +162,9 @@
             </div>
 
             <!-- Columna 5: Precio final total -->
-            <div class="flex items-center gap-2 justify-center">
+            <div
+              class="flex items-center gap-2 justify-center col-start-3 lg:col-auto"
+            >
               <lucide-icon
                 name="dollar-sign"
                 class="w-4 h-4 text-green-600"
@@ -160,13 +172,12 @@
               <p class="text-base font-extrabold text-green-600">100.00</p>
             </div>
           </div>
-
           <div
-            class="grid grid-cols-5 w-full items-center gap-4 bg-black/5 rounded shadow p-2"
+            class="grid grid-cols-3 lg:grid-cols-5 w-full items-center gap-4 bg-[#3a5a40]/15 rounded-[4px] shadow p-2"
           >
             <!-- Columna 1: Imagen -->
             <div
-              class="w-[60px] h-[60px] rounded overflow-hidden shadow bg-black/20 flex-shrink-0"
+              class="w-[60px] h-[60px] rounded-[4px] overflow-hidden shadow bg-black/20 flex-shrink-0"
             >
               <img
                 src="ruta_de_la_imagen"
@@ -176,7 +187,7 @@
             </div>
 
             <!-- Columna 2: Nombre del producto -->
-            <div class="flex items-center gap-2">
+            <div class="flex items-center gap-2 col-span-2 lg:col-span-1">
               <lucide-icon
                 name="box"
                 class="w-4 h-4 text-gray-600"
@@ -205,7 +216,9 @@
             </div>
 
             <!-- Columna 5: Precio final total -->
-            <div class="flex items-center gap-2 justify-center">
+            <div
+              class="flex items-center gap-2 justify-center col-start-3 lg:col-auto"
+            >
               <lucide-icon
                 name="dollar-sign"
                 class="w-4 h-4 text-green-600"
@@ -213,13 +226,12 @@
               <p class="text-base font-extrabold text-green-600">100.00</p>
             </div>
           </div>
-
           <div
-            class="grid grid-cols-5 w-full items-center gap-4 bg-black/5 rounded shadow p-2"
+            class="grid grid-cols-3 lg:grid-cols-5 w-full items-center gap-4 bg-[#3a5a40]/15 rounded-[4px] shadow p-2"
           >
             <!-- Columna 1: Imagen -->
             <div
-              class="w-[60px] h-[60px] rounded overflow-hidden shadow bg-black/20 flex-shrink-0"
+              class="w-[60px] h-[60px] rounded-[4px] overflow-hidden shadow bg-black/20 flex-shrink-0"
             >
               <img
                 src="ruta_de_la_imagen"
@@ -229,7 +241,7 @@
             </div>
 
             <!-- Columna 2: Nombre del producto -->
-            <div class="flex items-center gap-2">
+            <div class="flex items-center gap-2 col-span-2 lg:col-span-1">
               <lucide-icon
                 name="box"
                 class="w-4 h-4 text-gray-600"
@@ -254,11 +266,13 @@
                 name="dollar-sign"
                 class="w-4 h-4 text-gray-600"
               ></lucide-icon>
-              <p class="text-sm font-bold text-black">$50.00</p>
+              <p class="text-sm font-bold text-black">50.00</p>
             </div>
 
             <!-- Columna 5: Precio final total -->
-            <div class="flex items-center gap-2 justify-center">
+            <div
+              class="flex items-center gap-2 justify-center col-start-3 lg:col-auto"
+            >
               <lucide-icon
                 name="dollar-sign"
                 class="w-4 h-4 text-green-600"
@@ -268,10 +282,15 @@
           </div>
         </div>
         <div
-          class="flex items-center gap-2 text-gray-800 border-t border-black/10 pt-2"
+          class="flex flex-col justify-between items-center gap-2 text-gray-800 border-t border-black/10 pt-2"
         >
-          <lucide-icon name="truck" class="w-5 h-5 text-gray-700"></lucide-icon>
-          <p class="font-bold">Costo de envío:</p>
+          <div class="w-full flex items-center gap-2 opacity-75">
+            <lucide-icon
+              name="truck"
+              class="w-5 h-5 text-[#3a5a40]"
+            ></lucide-icon>
+            <p class="text-base  text-[#3a5a40] font-bold ">Costo de envío</p>
+          </div>
 
           <p
             *ngIf="envioTotal === 0"
@@ -286,12 +305,8 @@
 
           <p
             *ngIf="envioTotal > 0"
-            class="font-semibold flex items-center gap-1"
+            class="w-full font-semibold flex justify-between items-center gap-1"
           >
-            <lucide-icon
-              name="dollar-sign"
-              class="w-4 h-4 text-blue-600"
-            ></lucide-icon>
             Total del envío:
             <span class="text-blue-600">${{ envioTotal }}</span>
           </p>
@@ -301,7 +316,7 @@
           class="w-full flex justify-end items-center text-center gap-4 border-t border-black/10 py-2"
         >
           <div
-            class="max-w-[220px] flex items-center gap-3 justify-between p-2 bg-gray-100 rounded-lg shadow"
+            class="max-w-[220px] flex items-center gap-3 justify-between p-2 bg-gray-100 rounded-[4px]-lg shadow"
           >
             <p class="text-lg font-extrabold text-green-600">Total:</p>
 

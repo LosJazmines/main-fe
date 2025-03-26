@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { mpRoutes } from '@public-pages/mp/mp.routes';
 
 export const routes: Routes = [
   // @Rutas Public
@@ -175,6 +176,12 @@ export const routes: Routes = [
         title: 'Admin - Payments',
       },
     ],
+  },
+  
+  // @Rutar Mercado Pago
+  {
+    path: 'mp',
+    children: mpRoutes,
   },
 
   // @Rutas vacias y rutas comodín

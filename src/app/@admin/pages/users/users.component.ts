@@ -52,7 +52,7 @@ export default class UsersComponent implements OnInit {
     // public dialogRef: DialogRef<string>,
     // private _dialog: Dialog,
     // @Inject(DIALOG_DATA) public data: any,
-    private _usersService: UsersService,
+    // private _usersService: UsersService,
     private store: Store,
     private _tokenService: TokenService,
     private _messageService: MessageService

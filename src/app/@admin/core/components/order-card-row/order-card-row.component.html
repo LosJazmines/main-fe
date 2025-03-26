@@ -1,0 +1,237 @@
+<div
+  class="bg-white shadow-lg rounded-lg overflow-hidden border border-gray-200 p-2"
+>
+  <div class="flex justify-between items-center border-b border-gray-200 p-2">
+    <div class="flex items-center gap-4">
+      <div
+        class="flex items-center justify-center w-[45px] h-[45px] shadow-lg rounded-full bg-slate-400/30 p-2"
+      >
+        <lucide-icon [size]="24" name="package"></lucide-icon>
+      </div>
+
+      <div class="flex items-start flex-col">
+        <h2
+          class="text-lg font-bold text-black flex items-center justify-center gap-2"
+        >
+          Pedido
+          <div class="flex items-center justify-center gap-2">
+            <lucide-icon name="box" class="w-4 h-4 text-gray-600"></lucide-icon>
+            <p class="text-sm font-semibold text-gray-800">
+              #{{ order.orderNumber }}
+            </p>
+          </div>
+        </h2>
+
+        <div class="flex items-center justify-center gap-2">
+          <lucide-icon
+            name="alarm-clock"
+            class="w-4 h-4 text-gray-600"
+          ></lucide-icon>
+
+          <p class="text-sm text-gray-600">
+            {{ order.createdAt | date : "dd/MM/yyyy hh:mm a" }}
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex items-start flex-col gap-2">
+      <span
+        class="px-2 py-1 text-sm font-medium rounded"
+        [ngClass]="(order.status | orderStatus).colorClass"
+      >
+        {{ (order.status | orderStatus).translatedStatus }}
+      </span>
+
+      <div class="flex items-center justify-center gap-2">
+        <lucide-icon
+          name="AlarmClockCheck"
+          class="w-4 h-4 text-green-600"
+        ></lucide-icon>
+
+        <p class="text-sm text-green-600">
+          {{ order.updatedAt | date : "dd/MM/yyyy hh:mm a" }}
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="mt-2 flex gap-4">
+    <div class="flex flex-1 flex-col p-4 gap-2 border-b">
+      <div class="flex gap-2 items-center">
+        <h3 class="text-base font-bold text-black">Información del Cliente:</h3>
+      </div>
+      <div class="flex gap-2 items-center">
+        <lucide-icon [size]="16" name="user"></lucide-icon>
+        <p class="text-base">
+          {{ order.customer ? order.customer.username : "Sin Nombre" }}
+        </p>
+      </div>
+      <div class="flex gap-2 items-center">
+        <lucide-icon [size]="16" name="mail"></lucide-icon>
+        <p class="text-base">
+          {{ order.customer ? order.customer.email : "Sin Email" }}
+        </p>
+      </div>
+      <div class="flex gap-2 items-center">
+        <lucide-icon [size]="16" name="phone"></lucide-icon>
+        <p class="text-base">
+          {{ order.telefono ? order.telefono : "Sin Telefono" }}
+        </p>
+      </div>
+      <div class="flex gap-2 items-center">
+        <lucide-icon [size]="16" name="map-pin"></lucide-icon>
+        <p class="text-base">
+          {{ order.customer ? order.customer.direccion : "Sin Direccion" }}
+        </p>
+      </div>
+    </div>
+
+    <div class="flex flex-1 flex-col p-4 gap-2 border-b">
+      <div class="flex gap-2 items-center text-green-600">
+        <lucide-icon [size]="18" name="gift"></lucide-icon>
+        <h3 class="text-base font-bold">Información del Envío:</h3>
+      </div>
+      <div class="flex gap-2 items-center">
+        <lucide-icon [size]="16" name="user"></lucide-icon>
+        <p class="text-base">
+          {{
+            order.nombreDestinatario
+              ? order.nombreDestinatario
+              : "Sin nombre Destinatario"
+          }}
+        </p>
+      </div>
+      <div class="flex gap-2 items-center">
+        <lucide-icon [size]="16" name="timer"></lucide-icon>
+        <p class="text-base">
+          {{ (order.createdAt | date : "dd/MM/yyyy hh:mm a") ?? "Sin Fecha" }}
+        </p>
+      </div>
+      <div class="flex gap-2 items-center">
+        <lucide-icon [size]="16" name="info"></lucide-icon>
+        <p class="text-base">
+          {{ order.comentarios ? order.comentarios : "Sin Comentarios" }}
+        </p>
+      </div>
+      <div class="flex gap-2 items-center">
+        <lucide-icon [size]="16" name="mail"></lucide-icon>
+        <p class="text-base">juan&#64;eczample.com</p>
+      </div>
+      <div class="flex gap-2 items-center">
+        <lucide-icon [size]="16" name="phone"></lucide-icon>
+        <p class="text-base">
+          {{ order.telefonoMovil ? order.telefonoMovil : "Sin Telefono" }}
+        </p>
+      </div>
+      <div class="flex gap-2 items-center">
+        <lucide-icon [size]="16" name="map-pin"></lucide-icon>
+        <p class="text-base">
+          {{ order.direccion ? order.direccion : "Sin Direccion" }} -
+          {{ order.ciudad ? order.ciudad : "Sin ciudad" }} -
+          {{ order.estado ? order.estado : "Sin estado" }} -
+          {{ order.pais ? order.pais : "Sin pais" }}
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="">
+    @if(this.isOpen){
+    <div class="mt-4 flex gap-6">
+      <!-- Lista de productos -->
+      <div class="flex-1 p-4 bg-white">
+        <h4 class="text-sm font-semibold mb-2">Productos</h4>
+        <ul>
+          <li
+            *ngFor="let item of order.items"
+            class="flex items-center space-x-3 py-2 border-b last:border-none"
+          >
+            <img
+              [src]="item.product.images[0]"
+              alt="{{ item.product.name }}"
+              class="w-12 h-12 object-cover rounded-md"
+            />
+            <div>
+              <p class="text-sm font-medium">{{ item.product.name }}</p>
+              <p class="text-sm text-gray-500">
+                {{ item.quantity }} x ${{ item.price }}
+              </p>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Detalle de pago del cliente -->
+      <div class="flex-1 p-4 bg-white">
+        <h4 class="text-sm font-semibold mb-2">Detalle de Pago</h4>
+        <div class="text-sm text-gray-700 space-y-2">
+          <div class="flex justify-between">
+            <span>Subtotal:</span>
+            <span>${{ order.subtotal }}</span>
+          </div>
+          <div class="flex justify-between">
+            <span>Envío:</span>
+            <span>${{ order.costoEnvio }}</span>
+          </div>
+          <div class="flex justify-between">
+            <span>Impuestos:</span>
+            <span>${{ order.metodoEnvio }}</span>
+          </div>
+          <div
+            class="border-t pt-2 flex justify-between font-semibold text-black"
+          >
+            <span>Total:</span>
+            <span>${{ order.total.toFixed(2) }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    }
+
+    <div class="flex justify-end space-x-2 mt-4">
+      <button
+        class="flex items-center gap-2 px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600"
+        (click)="changeStatus('shipped')"
+      >
+        <lucide-icon name="truck" [size]="16"></lucide-icon>
+        Enviar
+      </button>
+
+      <button
+        class="flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+        (click)="changeStatus('completed')"
+      >
+        <lucide-icon name="circle-check" [size]="16"></lucide-icon>
+        Completar
+      </button>
+
+      <button
+        class="flex items-center gap-2 px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600"
+        (click)="changeStatus('cancelled')"
+      >
+        <lucide-icon name="x" [size]="16"></lucide-icon>
+        Cancelar
+      </button>
+
+      <button
+        class="flex items-center gap-2 px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600"
+        (click)="printReceipt(order)"
+      >
+        <lucide-icon name="printer" [size]="16"></lucide-icon>
+        Imprimir Ticket
+      </button>
+      <button
+        class="flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+        (click)="toggleOpen()"
+      >
+        <lucide-icon
+          [size]="16"
+          [name]="isOpen ? 'eye-off' : 'eye'"
+        ></lucide-icon>
+
+        {{ isOpen ? "Ocultar Detalles" : "Ver Detalles" }}
+      </button>
+    </div>
+  </div>
+</div>

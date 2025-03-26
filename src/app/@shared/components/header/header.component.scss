@@ -4,7 +4,7 @@
 .toolbar {
   width: 100%;
   height: 60px;
-  background-color: rgba(0, 0, 0, 0.1);
+  // background-color: rgba(0, 0, 0, 0.1);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -26,8 +26,7 @@
   justify-content: flex-start;
   align-items: center;
   text-align: center;
-  font-size: 1.2rem;
-  font-weight: bold;
+
   p {
     margin: 0;
   }
@@ -41,7 +40,7 @@
 
   .btn-header {
     background-color: transparent;
-    border-radius: v.$border-radius;
+    // border-radius: v.$border-radius;
   }
 }
 
@@ -59,9 +58,7 @@
     .btn-login {
       color: v.$font-principal;
       background-color: v.$background-primary;
-      border-radius: v.$border-radius;
+      // border-radius: v.$border-radius;
     }
   }
 }
-
-

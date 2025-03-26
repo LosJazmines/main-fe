@@ -1,4 +1,6 @@
 import { Routes } from '@angular/router';
+// import { mpRoutes } from './mp/mp.routes';
+// import { mpRoutes } from './mp/mp.routes';
 
 export const PUBLIC_ROUTES: Routes = [
   {

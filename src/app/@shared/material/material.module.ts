@@ -39,7 +39,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatPaginatorModule } from '@angular/material/paginator';
 
-import {MatChipsModule} from '@angular/material/chips';
+import { MatChipsModule } from '@angular/material/chips';
 
 // Cdk
 import { CdkTableModule } from '@angular/cdk/table';
@@ -86,6 +86,8 @@ export const MATERIAL_MODULES = [
   CdkAccordionModule,
   MatBadgeModule,
   MatSidenavModule,
+  MatSlideToggleModule,
+  MatDividerModule
 ];
 
 @NgModule({
@@ -109,4 +111,4 @@ export const MATERIAL_MODULES = [
     },
   ],
 })
-export class MaterialModule {}
+export class MaterialModule { }

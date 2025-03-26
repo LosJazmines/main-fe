@@ -1,11 +1,11 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 
-import { toggleLeftSidebarAdmin } from '../store/actions/left-sidebar-admin.actions';
 import { Animations } from '../../../../animations';
 import { MaterialModule } from '../../../../material/material.module';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { toggleLeftSidebarFilters } from '../store/actions/left-sidebar-filters.actions';
 
 @Component({
   selector: 'app-menu-admin',
@@ -28,6 +28,6 @@ export class MenuAdminComponent implements OnInit {
   ngOnInit() {}
 
   closeLeftDrawer() {
-    this.store.dispatch(toggleLeftSidebarAdmin({ isOpen: false }));
+    this.store.dispatch(toggleLeftSidebarFilters({ isOpen: false }));
   }
 }

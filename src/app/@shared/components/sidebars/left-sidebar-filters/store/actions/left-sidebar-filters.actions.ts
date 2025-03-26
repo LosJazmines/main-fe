@@ -1,7 +1,7 @@
 import { createAction, props } from '@ngrx/store';
 
 // Acción para abrir o cerrar el sidebar izquierdo
-export const toggleLeftSidebarAdmin = createAction(
-  '[Left Sidebar Admin] Toggle Left Sidebar Admin',
+export const toggleLeftSidebarFilters = createAction(
+  '[Left Sidebar Filters] Toggle Left Sidebar Filters',
   props<{ isOpen: boolean }>()
 );

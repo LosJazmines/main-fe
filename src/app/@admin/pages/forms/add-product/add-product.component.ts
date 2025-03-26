@@ -83,7 +83,7 @@ export class AddProductComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this._adminHeaderStore.updateHeaderTitle('Products - Product');
+    this._adminHeaderStore.updateHeaderTitle('Productos - Agregar Producto');
     this.initGroupLogin();
   }
 

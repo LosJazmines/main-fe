@@ -1,5 +1,11 @@
-<header class="toolbar">
-  <div class="content">
+<header
+  class="top-0 left-0 w-full transition-all duration-0 ease-in-out z-50 text-[#3a5a40] to-black toolbar backdrop-blur-md"
+  [ngClass]="{
+    'fixed bg-white/80 backdrop-blur-md shadow-md': scrolled,
+    'bg-transparent  shadow-none': !scrolled
+  }"
+>
+  <div class="content mx-4 xl:m-0">
     <div class="logo-container">
       <div class="flex md:hidden justify-end">
         <button
@@ -8,56 +14,59 @@
           (click)="openLeftDrawer()"
           class="text-white"
         >
-          <mat-icon>menu</mat-icon>
+          <lucide-icon name="align-left"></lucide-icon>
         </button>
       </div>
-      <p class="text-start">Los Jazmines</p>
-    </div>
-
-    <div class="hidden md:flex justify-center items-center">
-      <div class="link-container">
-        <div class="">
-          <button
-            [routerLink]="['/home']"
-            routerLinkActive="router-link-active"
-            class="btn-header"
-            mat-flat-button
-          >
-            Inicio
-          </button>
-        </div>
-        <div class="">
-          <button
-            [routerLink]="['/online-store']"
-            routerLinkActive="router-link-active"
-            class="btn-header"
-            mat-flat-button
-          >
-            Tienda
-          </button>
-        </div>
-        <!-- <div class="">
-          <button
-            [routerLink]="['/about']"
-            routerLinkActive="router-link-active"
-            class="btn-header"
-            mat-flat-button
-          >
-            Acerca de
-          </button>
-        </div> -->
-        <div class="">
-          <button
-            [routerLink]="['/contact']"
-            routerLinkActive="router-link-active"
-            class="btn-header"
-            mat-flat-button
-          >
-            Contacto
-          </button>
+      <!-- <div class="min-w-[150px] min-h-[36px] mr-4">
+        <p class="text-start font-playfair text-2xl">Los Jazmines</p>
+      </div> -->
+      <app-logo></app-logo>
+      <div class="hidden md:flex justify-start items-center">
+        <div class="link-container">
+          <div class="">
+            <button
+              [routerLink]="['/home']"
+              routerLinkActive="router-link-active"
+              class="btn-header"
+              mat-flat-button
+            >
+              Inicio
+            </button>
+          </div>
+          <div class="">
+            <button
+              [routerLink]="['/online-store']"
+              routerLinkActive="router-link-active"
+              class="btn-header"
+              mat-flat-button
+            >
+              Tienda
+            </button>
+          </div>
+          <!-- <div class="">
+            <button
+              [routerLink]="['/about']"
+              routerLinkActive="router-link-active"
+              class="btn-header"
+              mat-flat-button
+            >
+              Acerca de
+            </button>
+          </div> -->
+          <!-- <div class="">
+            <button
+              [routerLink]="['/contact']"
+              routerLinkActive="router-link-active"
+              class="btn-header"
+              mat-flat-button
+            >
+              Contacto
+            </button>
+          </div> -->
         </div>
       </div>
     </div>
+
     <div class="right-container">
       <button
         mat-icon-button
@@ -104,22 +113,22 @@
       <div>
         <button
           (click)="openDialogLogin()"
-          class="px-4 py-2 bg-black/80 text-white rounded shadow hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition"
+          class="px-4 py-2 bg-[#3a5a40]/80 text-white rounded-[4px] shadow hover:bg-[#3a5a40]/80 focus:outline-none transition"
         >
-          Ingresar
+          <span class="tracking-widest"> Ingresar</span>
         </button>
       </div>
       } @if(this.currentUser()?.username){
       <div class="cursor-pointer group" (click)="openRightDrawer()">
         <!-- Avatar y nombre de usuario -->
         <div
-          class="flex items-center gap-2 p-2 rounded-lg transition-all duration-300"
+          class="flex items-center gap-2 rounded-lg transition-all duration-300"
         >
           <span class="text-lg font-medium group-hover:shadow-text">{{
             currentUser()?.username
           }}</span>
           <div
-            class="w-10 h-10 bg-black bg-opacity-80 rounded-full flex items-center justify-center text-white font-bold group-hover:shadow-lg hover:bg-opacity-100"
+            class="w-10 h-10 bg-[#3a5a40]/80 rounded-full flex items-center justify-center text-white font-bold group-hover:shadow-lg hover:bg-opacity-100"
           >
             <!-- Avatar (sin foto, solo un fondo gris con las iniciales) -->
             <span>{{ currentUser()?.username | slice : 0 : 1 }}</span>
