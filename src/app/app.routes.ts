@@ -131,7 +131,7 @@ export const routes: Routes = [
   // @Rutas Admin
 
   {
-    path: 'admin',
+    path: 'a',
     loadComponent: () => import('./@admin/pages/admin.component'),
     title: 'Admin',
     children: [
@@ -158,7 +158,6 @@ export const routes: Routes = [
           import('./@admin/pages/products/products.component'),
         title: 'Admin - Products',
       },
-
       {
         path: 'products/:id',
         loadComponent: () => import('./@admin/pages/product/product.component'),
@@ -177,7 +176,7 @@ export const routes: Routes = [
       },
     ],
   },
-  
+
   // @Rutar Mercado Pago
   {
     path: 'mp',

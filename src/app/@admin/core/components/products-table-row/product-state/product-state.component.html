@@ -1,0 +1,90 @@
+<div class="w-full">
+  <label class="block text-sm font-medium text-gray-700 mb-1">
+    Estado del Producto
+  </label>
+  <mat-button-toggle-group
+    [value]="selectedState"
+    (change)="onStateChange($event.value)"
+    class="w-full flex flex-wrap md:flex-row flex-col gap-2 !shadow-none bg-transparent py-2"
+    appearance="legacy"
+  >
+    <!-- Botón Local -->
+    <mat-button-toggle
+      value="local"
+      class="flex items-center justify-between gap-2 rounded-[4px] transition-colors duration-200"
+      [ngClass]="{
+        '!bg-[#3a5a40]/65 !text-white shadow': selectedState === 'local',
+        'border border-gray-200 shadow-md': selectedState !== 'local'
+      }"
+    >
+      <mat-icon class="text-base">storefront</mat-icon>
+      <span class="px-2">Local</span>
+    </mat-button-toggle>
+
+    <!-- Botón Encrypted Web -->
+    <mat-button-toggle
+      value="encrypted_web"
+      class="flex items-center justify-between gap-2 rounded-[4px] transition-colors duration-200"
+      [ngClass]="{
+        '!bg-[#3a5a40]/65 !text-white shadow': selectedState === 'encrypted_web',
+        'border border-gray-200 shadow-md': selectedState !== 'encrypted_web'
+      }"
+    >
+      <mat-icon class="text-base">language</mat-icon>
+      <span class="px-2">Encrypted Web</span>
+    </mat-button-toggle>
+
+    <!-- Botón Local y Web -->
+    <mat-button-toggle
+      value="web_end_local"
+      class="flex items-center justify-between gap-2 rounded-[4px] transition-colors duration-200"
+      [ngClass]="{
+        '!bg-[#3a5a40]/65 !text-white shadow': selectedState === 'web_end_local',
+        'border border-gray-200 shadow-md': selectedState !== 'web_end_local'
+      }"
+    >
+      <mat-icon class="text-base">language</mat-icon>
+      <mat-icon class="text-base">storefront</mat-icon>
+      <span class="px-2">Local y Web</span>
+    </mat-button-toggle>
+
+    <!-- Botón Web -->
+    <mat-button-toggle
+      value="web"
+      class="flex items-center justify-between gap-2 rounded-[4px] transition-colors duration-200"
+      [ngClass]="{
+        '!bg-[#3a5a40]/65 !text-white shadow': selectedState === 'web',
+        'border border-gray-200 shadow-md': selectedState !== 'web'
+      }"
+    >
+      <mat-icon class="text-base">language</mat-icon>
+      <span class="px-2">Web</span>
+    </mat-button-toggle>
+
+    <!-- Botón Sin Stock -->
+    <mat-button-toggle
+      value="sin-stock"
+      class="flex items-center justify-between gap-2 rounded-[4px] transition-colors duration-200"
+      [ngClass]="{
+        '!bg-[#3a5a40]/65 !text-white shadow': selectedState === 'sin-stock',
+        'border border-gray-200 shadow-md': selectedState !== 'sin-stock'
+      }"
+    >
+      <mat-icon class="text-base">cancel</mat-icon>
+      <span class="px-2">Sin Stock</span>
+    </mat-button-toggle>
+
+    <!-- Botón Oculto -->
+    <mat-button-toggle
+      value="hidden"
+      class="flex items-center justify-between gap-2 rounded-[4px] transition-colors duration-200"
+      [ngClass]="{
+        '!bg-[#3a5a40]/65 !text-white shadow': selectedState === 'hidden',
+        'border border-gray-200 shadow-md': selectedState !== 'hidden'
+      }"
+    >
+      <mat-icon class="text-base">visibility_off</mat-icon>
+      <span class="px-2">Oculto</span>
+    </mat-button-toggle>
+  </mat-button-toggle-group>
+</div>

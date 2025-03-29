@@ -1,0 +1,50 @@
+<div class="w-full">
+  <label class="block text-sm font-medium text-gray-700 mb-1">
+    Tipo de Producto
+  </label>
+  <mat-button-toggle-group
+    [value]="selectedType"
+    (change)="onTypeChange($event.value)"
+    class="w-full flex flex-wrap md:flex-row flex-col gap-2 !shadow-none bg-transparent py-2"
+    appearance="legacy"
+  >
+    <!-- Botón Físico -->
+    <mat-button-toggle
+      value="fisico"
+      class="flex items-center justify-between gap-2 rounded-[4px] transition-colors duration-200"
+      [ngClass]="{
+        '!bg-[#3a5a40]/65 !text-white shadow': selectedType === 'fisico',
+        'border border-gray-200 shadow-md': selectedType !== 'fisico'
+      }"
+    >
+      <mat-icon class="text-base">inventory_2</mat-icon>
+      <span class="px-2">Físico</span>
+    </mat-button-toggle>
+
+    <!-- Botón Digital -->
+    <mat-button-toggle
+      value="digital"
+      class="flex items-center justify-between gap-2 rounded-[4px] transition-colors duration-200"
+      [ngClass]="{
+        '!bg-[#3a5a40]/65 !text-white shadow': selectedType === 'digital',
+        'border border-gray-200 shadow-md': selectedType !== 'digital'
+      }"
+    >
+      <mat-icon class="text-base">cloud_download</mat-icon>
+      <span class="px-2">Digital</span>
+    </mat-button-toggle>
+
+    <!-- Botón Servicio -->
+    <mat-button-toggle
+      value="servicio"
+      class="flex items-center justify-between gap-2 rounded-[4px] transition-colors duration-200"
+      [ngClass]="{
+        '!bg-[#3a5a40]/65 !text-white shadow': selectedType === 'servicio',
+        'border border-gray-200 shadow-md': selectedType !== 'servicio'
+      }"
+    >
+      <mat-icon class="text-base">support_agent</mat-icon>
+      <span class="px-2">Servicio</span>
+    </mat-button-toggle>
+  </mat-button-toggle-group>
+</div>

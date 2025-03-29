@@ -42,7 +42,6 @@ export class RightSidebarComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    3;
     this.getUser();
   }
 
@@ -57,12 +56,13 @@ export class RightSidebarComponent implements OnInit, OnDestroy {
         if (currentUser) {
           this.currentUser.set(currentUser);
           this.isAdmin$ = this.store.select(selectIsAdmin);
+          this.closeRightDrawer();
         }
       });
   }
 
   goToadmin() {
-    this.router.navigate(['/admin']);
+    this.router.navigate(['/a']);
     this.closeRightDrawer();
   }
 

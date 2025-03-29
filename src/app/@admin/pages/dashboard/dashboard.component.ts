@@ -7,11 +7,12 @@ import { Animations } from '../../../@shared/animations';
 import { MaterialModule } from '../../../@shared/material/material.module';
 import { LucideModule } from '../../../@shared/lucide/lucide.module';
 import { Router, RouterModule } from '@angular/router';
+import { MaintenancePlaceholderComponent } from '@shared/components/maintenance-placeholder/maintenance-placeholder.component';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, MaterialModule, LucideModule, RouterModule],
+  imports: [CommonModule, MaterialModule, LucideModule, RouterModule, MaintenancePlaceholderComponent],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
   animations: [Animations],

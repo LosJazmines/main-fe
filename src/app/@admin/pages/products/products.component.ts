@@ -12,6 +12,7 @@ import { Store } from '@ngrx/store';
 import { ProductsTableComponent } from '../../core/components/products-table/products-table.component';
 import { Dialog, DialogRef } from '@angular/cdk/dialog';
 import { AddProductComponent } from '../forms/add-product/add-product.component';
+import { SearchModernoReactiveModule } from '../../core/components/search-moderno-reactive/search-moderno-reactive.module';
 
 @Component({
   selector: 'app-products',
@@ -24,6 +25,7 @@ import { AddProductComponent } from '../forms/add-product/add-product.component'
     FormsModule,
     RouterModule,
     ProductsTableComponent,
+    SearchModernoReactiveModule
   ],
   templateUrl: './products.component.html',
   styleUrl: './products.component.scss',
@@ -85,7 +87,7 @@ export default class ProductsComponent implements OnInit {
     private store: Store,
     private _tokenService: TokenService,
     private _messageService: MessageService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this._adminHeaderStore.updateHeaderTitle('Productos');
@@ -172,6 +174,37 @@ export default class ProductsComponent implements OnInit {
       },
     });
   }
+
+  handleSearch(event: string): void {
+    // this.searchTerm = event.trim(); // Extrae el término del evento y elimina espacios innecesarios
+
+    // // Arma el objeto de filtros incluyendo solo los valores no vacíos
+    // const filters: { searchTerm?: string; creationDate?: string } = {};
+
+    // if (this.searchTerm) {
+    //   filters.searchTerm = this.searchTerm;
+    // }
+    // if (this.selectedDate) {
+    //   filters.creationDate = this.formatDate(this.selectedDate);
+    // }
+
+    // // Si no hay filtros, carga todas las órdenes
+    // if (!filters.searchTerm && !filters.creationDate) {
+    //   this.getOrdes();
+    //   return;
+    // }
+
+    // this._ordersService.searchOrders(filters).subscribe({
+    //   next: (orders: any) => {
+    //     console.log('Órdenes encontradas:', orders);
+    //     this.orders.set(orders);
+    //   },
+    //   error: (error: any) => {
+    //     console.error('Error al buscar órdenes:', error);
+    //   },
+    // });
+  }
+
 
   openDialogAddProduct(): void {
     const dialogRef = this._dialog.open<string>(AddProductComponent, {

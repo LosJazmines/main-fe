@@ -114,7 +114,9 @@ import {
   Leaf,
   Fuel,
   ListFilter,
-  AlignLeft
+  AlignLeft,
+  Archive,
+  ClipboardList
 } from 'lucide-angular';
 
 export const LUCIDE_MODULES = [
@@ -232,7 +234,9 @@ export const LUCIDE_MODULES = [
     Leaf,
     Fuel,
     ListFilter,
-    AlignLeft
+    AlignLeft,
+    Archive,
+    ClipboardList
   }),
 ];
 

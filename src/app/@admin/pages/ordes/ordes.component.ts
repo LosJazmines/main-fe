@@ -33,6 +33,11 @@ import { SearchModernoReactiveModule } from '../../core/components/search-modern
 export default class OrdesComponent implements OnInit {
   private _adminHeaderStore = inject(AdminHeaderStore);
   public readonly adminHeaderStore$ = this._adminHeaderStore.getHeaderTitle();
+  ordersData: any[] = [];
+  pendingCount = 0;
+  sentCount = 0;
+  completedCount = 0;
+  canceledCount = 0;
 
   selectedOrder: string = 'ascendente'; // Valor por defecto
 
@@ -41,6 +46,8 @@ export default class OrdesComponent implements OnInit {
   searchTerm: string = '';
   selectedDate: Date | null = null;
 
+  selectedFilter: string = 'pendiente';
+
   constructor(
     private _fb: FormBuilder,
     private _dialog: Dialog,
@@ -48,11 +55,39 @@ export default class OrdesComponent implements OnInit {
     private store: Store,
     private _tokenService: TokenService,
     private _messageService: MessageService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
+
+    this.ordersData = [
+      { id: '1', status: 'pendiente' },
+      { id: '2', status: 'enviado' },
+      { id: '3', status: 'completado' },
+      { id: '4', status: 'cancelado' },
+      { id: '5', status: 'pendiente' }
+    ];
+    this.actualizarContadores();
+
     this._adminHeaderStore.updateHeaderTitle('Pedidos');
     this.getOrdes();
+  }
+
+
+  actualizarContadores(): void {
+    this.pendingCount = this.ordersData.filter(o => o.status === 'pendiente').length;
+    this.sentCount = this.ordersData.filter(o => o.status === 'enviado').length;
+    this.completedCount = this.ordersData.filter(o => o.status === 'completado').length;
+    this.canceledCount = this.ordersData.filter(o => o.status === 'cancelado').length;
+  }
+
+  getOrdersByStatus(status: string): Order[] {
+    return status === 'todos'
+      ? this.ordersData
+      : this.ordersData.filter(order => order.status === status);
+  }
+
+  onFilterChange(value: string): void {
+    this.selectedFilter = value;
   }
 
   getOrdes() {

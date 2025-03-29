@@ -1,23 +1,32 @@
-<div class="search-container">
-  <div class="search">
+<div
+  class="w-full rounded-[4px] h-[38px] overflow-hidden z-[-1] border border-[rgba(23,23,23,0.1)]"
+>
+  <div
+    class="bg-[#3a5a40]/50 text-white rounded-[4px] w-full h-full leading-[40px] px-4 flex justify-center items-center z-[2]"
+  >
+    <!-- Si search.value === '' muestra el ícono de búsqueda -->
+    <mat-icon
+      class="w-[2.4rem] h-[2.4rem] mx-2 z-[1] text-[rgba(255,255,255,0.5)] flex justify-center items-center"
+    >
+      search
+    </mat-icon>
+
+    <!-- Input de búsqueda -->
     <input
-      class="search-input"
+      class="z-[99] w-full h-f px-2 text-base border-0 outline-none bg-transparent placeholder:text-white"
       placeholder="Buscar"
       [formControl]="search"
       #searchInput
     />
 
-    @if (search.value !== '') {
+    <!-- Si search.value !== '' muestra el botón de limpiar -->
     <button
       matRipple
-      class="btn-clear_search"
+      class="z-[99] w-[2.4rem] h-[2.4rem] flex justify-center items-center rounded-full border-0 bg-transparent text-white mx-2 focus:outline-none"
       type="button"
       (click)="onClearSearch()"
     >
       <mat-icon class="input-icon input-icon__clear">clear</mat-icon>
     </button>
-    } @else if (search.value === '') {
-    <mat-icon class="search-icon">search</mat-icon>
-    }
   </div>
 </div>

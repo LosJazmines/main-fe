@@ -16,46 +16,11 @@
       <app-logo></app-logo>
     </div>
 
-    <div class="flex flex-col space-y-2">
-      <button
-        [routerLink]="['/home']"
-        routerLinkActive="bg-black/15"
-        class="flex items-center px-4 py-2 rounded-[4px] hover:bg-[#588157]/15"
-        (click)="closeLeftDrawer($event)"
-      >
-        <lucide-icon name="home" class="w-5 h-5 mr-3"></lucide-icon>
-        <span>Inicio</span>
-      </button>
-
-      <button
-        [routerLink]="['/online-store']"
-        routerLinkActive="bg-black/15"
-        class="flex items-center px-4 py-2 rounded-[4px] hover:bg-[#588157]/15"
-        (click)="closeLeftDrawer($event)"
-      >
-        <lucide-icon name="store" class="w-5 h-5 mr-3"></lucide-icon>
-        <span>Tienda</span>
-      </button>
-
-      <!-- <button
-        [routerLink]="['/about']"
-        routerLinkActive="bg-black/15"
-        class="flex items-center px-4 py-2 rounded hover:bg-black/15"
-      >
-        <lucide-icon name="info" class="w-5 h-5 mr-3"></lucide-icon>
-        <span>Acerca de</span>
-      </button> -->
-
-      <!-- <button
-        [routerLink]="['/contact']"
-        routerLinkActive="bg-black/15"
-        class="flex items-center px-4 py-2 rounded hover:bg-black/15"
-      >
-        <lucide-icon name="mail" class="w-5 h-5 mr-3"></lucide-icon>
-        <span>Contacto</span>
-      </button> -->
-    </div>
+    <!-- Uso del componente menú -->
+    <app-menu
+      [items]="menuItems"
+      [userRole]="userRole"
+      [onItemClick]="closeLeftDrawer.bind(this)"
+    ></app-menu>
   </div>
-
-  <!-- Import Lucide icons as needed in your component -->
 </div>
