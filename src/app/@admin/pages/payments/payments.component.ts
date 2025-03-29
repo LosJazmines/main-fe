@@ -86,4 +86,8 @@ export default class PaymentsComponent implements OnInit {
       this.accounts.splice(index, 1);
     }
   }
+
+  openDialogAddProduct(): void {
+    console.log('Agregar nuevo producto');
+  }
 }

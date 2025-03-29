@@ -8,6 +8,7 @@ import { UsersService } from '../../../@apis/users.service';
 import { Store } from '@ngrx/store';
 import { TokenService } from '../../../@core/services/token.service';
 import { MessageService } from '../../../@core/services/snackbar.service';
+import { SearchModernoReactiveModule } from '../../core/components/search-moderno-reactive/search-moderno-reactive.module';
 
 @Component({
   selector: 'app-users',
@@ -18,6 +19,7 @@ import { MessageService } from '../../../@core/services/snackbar.service';
     LucideModule,
     ReactiveFormsModule,
     FormsModule,
+    SearchModernoReactiveModule
   ],
   templateUrl: './users.component.html',
   styleUrl: './users.component.scss',
@@ -56,8 +58,8 @@ export default class UsersComponent implements OnInit {
     private store: Store,
     private _tokenService: TokenService,
     private _messageService: MessageService
-  ) {}
-  
+  ) { }
+
   ngOnInit(): void {
     this._adminHeaderStore.updateHeaderTitle('Users');
   }
@@ -81,5 +83,51 @@ export default class UsersComponent implements OnInit {
     this.users = this.users.filter((u) => u !== user);
     this.applyFilters();
     console.log('Usuario eliminado:', user);
+  }
+
+  handleSearch(event: string): void {
+    // this.searchTerm = event.trim(); // Extrae el término del evento y elimina espacios innecesarios
+
+    // // Arma el objeto de filtros incluyendo solo los valores no vacíos
+    // const filters: { searchTerm?: string; creationDate?: string } = {};
+
+    // if (this.searchTerm) {
+    //   filters.searchTerm = this.searchTerm;
+    // }
+    // if (this.selectedDate) {
+    //   filters.creationDate = this.formatDate(this.selectedDate);
+    // }
+
+    // // Si no hay filtros, carga todas las órdenes
+    // if (!filters.searchTerm && !filters.creationDate) {
+    //   this.getOrdes();
+    //   return;
+    // }
+
+    // this._ordersService.searchOrders(filters).subscribe({
+    //   next: (orders: any) => {
+    //     console.log('Órdenes encontradas:', orders);
+    //     this.orders.set(orders);
+    //   },
+    //   error: (error: any) => {
+    //     console.error('Error al buscar órdenes:', error);
+    //   },
+    // });
+  }
+
+  openDialogAddProduct(): void {
+    // const dialogRef = this._dialog.open<string>(AddProductComponent, {
+    //   // width: '250px',
+    //   data: { name: 'hola', animal: 'hola' },
+    // });
+
+    // dialogRef.closed.subscribe((result: any) => {
+    //   console.log({ result });
+    //   if (result?.success) {
+    //     this.getProducts();
+    //   }
+
+    //   this._adminHeaderStore.updateHeaderTitle('Productos');
+    // });
   }
 }
