@@ -1,0 +1,83 @@
+<ng-container *ngIf="!editMode">
+  <div class="min-w-[360px] bg-white overflow-hidden">
+    <!-- Header con fondo -->
+    <div class="relative h-32 bg-gray-200">
+      <ng-container *ngIf="contact?.background; else defaultBackground">
+        <img
+          class="absolute inset-0 object-cover w-full h-full"
+          [src]="contact.background"
+          alt="Fondo del contacto"
+        />
+      </ng-container>
+      <ng-template #defaultBackground>
+        <!-- Fallback: fondo de color -->
+        <div class="absolute inset-0 bg-[#3a5a40]/20 backdrop-blur-md"></div>
+      </ng-template>
+      <!-- Botón de cierre -->
+      <div class="absolute top-2 right-2">
+        <!-- <button mat-icon-button [matTooltip]="'Cerrar'" (click)="closeDrawer()">
+            lucide-icon name="x-mark" [size]="24"></lucide-icon>
+
+        </button> -->
+        <button
+          mat-icon-button
+          aria-label="menu"
+          (click)="closeDrawer()"
+          class="!text-white"
+        >
+          <lucide-icon name="x"></lucide-icon>
+        </button>
+      </div>
+    </div>
+    <!-- Contenido principal -->
+    <div class="p-4">
+      <!-- Avatar centrado -->
+      <div class="flex justify-center -mt-12">
+        <div
+          class="w-24 h-24 rounded-full overflow-hidden border-4 border-white !z-10"
+        >
+          <ng-container *ngIf="contact?.avatar; else defaultAvatar">
+            <img
+              class="object-cover w-full h-full"
+              [src]="contact.avatar"
+              alt="Avatar del contacto"
+            />
+          </ng-container>
+          <ng-template #defaultAvatar>
+            <div
+              class="flex items-center justify-center bg-gray-300 text-gray-600 text-4xl uppercase"
+            >
+              {{ contact?.name ? contact.name.charAt(0) : "" }}
+            </div>
+          </ng-template>
+        </div>
+      </div>
+      <!-- Información básica -->
+      <div class="mt-4 text-center">
+        <h2 class="text-xl font-bold text-gray-800">{{ contact?.name }}</h2>
+        <p class="text-sm text-gray-500">{{ contact?.email }}</p>
+      </div>
+      <!-- Botones de acción -->
+      <div class="mt-4 flex flex-col justify-center gap-2 w-full">
+        <button
+          class="px-4 py-2 bg-blue-500/80 text-white rounded-[4px] hover:bg-blue-600 focus:outline-none"
+          (click)="editContact(contact)"
+        >
+          Editar
+        </button>
+        <button
+          class="px-4 py-2 bg-red-500/80 text-white rounded-[4px] hover:bg-red-600 focus:outline-none"
+          (click)="deleteContact(contact)"
+        >
+          Eliminar
+        </button>
+        <button
+          class="px-4 py-2 bg-yellow-500/80 text-white rounded-[4px] hover:bg-yellow-600 focus:outline-none"
+          (click)="blockContact(contact)"
+        >
+          Bloquear
+        </button>
+      </div>
+    </div>
+  </div>
+</ng-container>
