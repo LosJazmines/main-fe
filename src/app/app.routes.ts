@@ -182,7 +182,6 @@ export const routes: Routes = [
     path: 'mp',
     children: mpRoutes,
   },
-
   // @Rutas vacias y rutas comodín
   {
     path: '',
