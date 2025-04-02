@@ -11,18 +11,25 @@
         [inputPlaceholder]="'Buscar por Dirección o Nombre del destinatario'"
         (search)="handleSearch($event)"
         class="w-full lg:w-[400px]"
-      >
-      </app-search-moderno-reactive>
-      <button
-        (click)="createEmptyProduct()"
-        class="w-full lg:w-max px-4 py-2 bg-[#3a5a40]/80 text-white rounded-[4px] shadow hover:bg-[#3a5a40]/90 focus:outline-none transition flex items-center gap-2"
-      >
-        <lucide-icon name="plus" class="w-5 h-5"></lucide-icon>
-        Agregar Producto
-      </button>
+      ></app-search-moderno-reactive>
     </div>
   </div>
-
+  <div class="w-full flex justify-between items-center gap-4 mb-4">
+    <button
+      (click)="createEmptyProduct()"
+      class="w-full flex-1 lg:w-max px-4 py-2 bg-[#3a5a40]/80 text-white rounded-[4px] shadow hover:bg-[#3a5a40]/90 focus:outline-none transition flex items-center gap-2"
+    >
+      <lucide-icon name="plus" class="w-5 h-5"></lucide-icon>
+      Agregar Producto
+    </button>
+    <button
+      (click)="openDialogAddProduct()"
+      class="w-full lg:w-max flex-1 px-4 py-2 bg-[#3a5a40]/80 text-white rounded-[4px] shadow hover:bg-[#3a5a40]/90 focus:outline-none transition flex items-center gap-2"
+    >
+      <lucide-icon name="plus" class="w-5 h-5"></lucide-icon>
+      Agregar Producto oll
+    </button>
+  </div>
   <!-- Tabla de productos -->
   <div class="overflow-x-auto">
     <div class="grid">
@@ -63,7 +70,7 @@
                     class="flex items-center justify-center w-full h-full text-xs font-semibold uppercase"
                     *ngIf="!product.images"
                   >
-                    NO THUMB
+                    <p class="text-[#3a5a40]">NO IMAGEN</p>
                   </div>
                 </div>
               </div>
@@ -105,20 +112,16 @@
               <!-- Estado (Active) -->
               <div class="hidden lg:block">
                 <ng-container *ngIf="product.active; else notActive">
-                  <!-- Puedes activar o comentar los íconos según lo requieras -->
                   <lucide-icon
                     class="text-green-400 icon-size-5"
                     name="check"
                   ></lucide-icon>
-                  <!-- <mat-icon class="text-green-400 icon-size-5" [svgIcon]="'heroicons_solid:check'"></mat-icon> -->
                 </ng-container>
                 <ng-template #notActive>
                   <lucide-icon
                     class="text-red-400 icon-size-5"
                     name="x"
                   ></lucide-icon>
-
-                  <!-- <mat-icon class="text-gray-400 icon-size-5" [svgIcon]="'heroicons_solid:x-mark'"></mat-icon> -->
                 </ng-template>
               </div>
               <!-- Botón de detalles -->
@@ -136,9 +139,6 @@
                         : 'chevron-down'
                     "
                   ></lucide-icon>
-
-                  <!-- Puedes descomentar el ícono si lo requieres -->
-                  <!-- <mat-icon class="icon-size-5" [svgIcon]="selectedProduct?.id === product.id ? 'heroicons_solid:chevron-up' : 'heroicons_solid:chevron-down'"></mat-icon> -->
                 </button>
               </div>
             </div>
@@ -156,16 +156,6 @@
       </ng-container>
 
       <!-- Paginador -->
-      <!-- <mat-paginator
-        class="sm:absolute sm:inset-x-0 sm:bottom-0 border-b sm:border-t sm:border-b-0 z-10 bg-gray-50 dark:bg-transparent"
-        [ngClass]="{'pointer-events-none': isLoading}"
-        [length]="pagination.length"
-        [pageIndex]="pagination.page"
-        [pageSize]="pagination.size"
-        [pageSizeOptions]="[5, 10, 25, 100]"
-        [showFirstLastButtons]="true">
-      </mat-paginator> -->
-
       <!-- Template cuando no hay productos -->
       <ng-template #noProducts>
         <div
@@ -184,8 +174,11 @@
         <div class="flex flex-col sm:flex-row p-8">
           <!-- Imágenes y estado -->
           <div class="flex flex-col items-center sm:items-start mb-8 sm:mb-0">
-            <div class="flex flex-col items-center">
-              <div class="w-32 h-44 border rounded overflow-hidden">
+            <div class="flex flex-col items-center relative">
+              <!-- Contenedor de imagen con funcionalidad de subida -->
+              <div
+                class="w-32 h-44 border border-[#3a5a40]/50 rounded overflow-hidden"
+              >
                 <ng-container
                   *ngIf="
                     selectedProductForm.get('images')?.value?.length;
@@ -202,17 +195,52 @@
                   />
                 </ng-container>
                 <ng-template #noImage>
-                  <span class="flex items-center min-h-20 text-lg font-semibold"
-                    >NO IMAGE</span
+                  <div
+                    class="w-full h-full flex flex-col justify-center items-center"
                   >
+                    <lucide-icon
+                      name="image"
+                      class="w-6 h-6 mb-4 text-[#3a5a40]"
+                    ></lucide-icon>
+                    <p class="text-[#3a5a40] text-center">
+                      ¡Agrega una imagen para destacar tu producto!
+                    </p>
+                  </div>
                 </ng-template>
+                <!-- Input file oculto para subir imagen -->
+                <input
+                  matTooltip="clickear para Agregar Imagen"
+                  matTooltipClass="!text-[#3a5a40] !bg-[#3a5a40]/50"
+                  type="file"
+                  accept="image/*"
+                  (change)="onImageUpload($event)"
+                  class="absolute inset-0 opacity-0 cursor-pointer"
+                />
+                <div
+                  (click)="openImageEditor()"
+                  class="cursor-pointer absolute z-10 -top-2 -right-2 w-8 h-8 flex items-center justify-center bg-[#3a5a40]/50 hover:shadow-white hover:bg-[#3a5a40]/80 rounded-full"
+                >
+                  <lucide-icon
+                    name="pencil"
+                    class="w-4 h-4 text-white"
+                  ></lucide-icon>
+                </div>
               </div>
+
+              <!-- Controles para cambiar de imagen -->
               <div
-                class="flex items-center mt-2 whitespace-nowrap"
+                class="flex items-center mt-2 whitespace-nowrap z-10"
                 *ngIf="selectedProductForm.get('images')?.value?.length"
               >
-                <button type="button" class="p-2" (click)="cycleImages(false)">
-                  <!-- Icono opcional -->
+                <button
+                  type="button"
+                  class="w-8 h-8 flex items-center justify-center bg-[#3a5a40]/50 hover:shadow-white hover:bg-[#3a5a40]/80 rounded-full"
+                  (click)="cycleImages(false)"
+                >
+                  <lucide-icon
+                    name="chevron-left"
+                    class="w-4 h-4 text-white"
+                  ></lucide-icon>
                 </button>
                 <span class="font-sm mx-2">
                   {{
@@ -221,8 +249,15 @@
                   }}
                   of {{ selectedProductForm.get("images")?.value?.length || 0 }}
                 </span>
-                <button type="button" class="p-2" (click)="cycleImages(true)">
-                  <!-- Icono opcional -->
+                <button
+                  type="button"
+                  class="w-8 h-8 flex items-center justify-center bg-[#3a5a40]/50 hover:shadow-white hover:bg-[#3a5a40]/80 rounded-full"
+                  (click)="cycleImages(true)"
+                >
+                  <lucide-icon
+                    name="chevron-right"
+                    class="w-4 h-4 text-white"
+                  ></lucide-icon>
                 </button>
               </div>
             </div>
@@ -278,7 +313,7 @@
                   <label
                     for="barcode"
                     class="block text-sm font-medium text-gray-700"
-                    >código de barras</label
+                    >Código de barras</label
                   >
                   <input
                     id="barcode"
@@ -290,54 +325,53 @@
                 </div>
               </div>
               <div class="flex gap-4">
-                <div class="mb-4 flex-1">
+                <div class="mb-2 flex-1">
                   <label
                     for="category"
                     class="block text-sm font-medium text-gray-700"
-                    >Categoria</label
+                    >Categoría</label
                   >
-                  <select
-                    id="category"
-                    formControlName="category"
-                    class="p-2 w-full border border-gray-300 rounded-[4px] focus:outline-none focus:ring-2 focus:ring-[#A2E100]/20"
-                  >
-                    <ng-container *ngFor="let category of categories">
-                      <option [value]="category.id">{{ category.name }}</option>
-                    </ng-container>
-                  </select>
+                  <!-- Reemplazamos el select por nuestro custom-select -->
+                  <app-custom-select
+                    [options]="categoriesOptions"
+                    placeholder="agregar categoría"
+                    (selectionChange)="
+                      selectedProductForm.get('category')?.setValue($event.id)
+                    "
+                  ></app-custom-select>
                 </div>
-                <div class="mb-4 flex-1">
+              </div>
+              <div class="flex-1">
+                <div class="mb-2 flex-1">
                   <label
                     for="brand"
                     class="block text-sm font-medium text-gray-700"
                     >Marca</label
                   >
-                  <select
-                    id="brand"
-                    formControlName="brand"
-                    class="p-2 w-full border border-gray-300 rounded-[4px] focus:outline-none focus:ring-2 focus:ring-[#A2E100]/20"
-                  >
-                    <ng-container *ngFor="let brand of brands">
-                      <option [value]="brand.id">{{ brand.name }}</option>
-                    </ng-container>
-                  </select>
+                  <!-- Custom-select para marca -->
+                  <app-custom-select
+                    [options]="brandsOptions"
+                    placeholder="agregar marca"
+                    (selectionChange)="
+                      selectedProductForm.get('brand')?.setValue($event.id)
+                    "
+                  ></app-custom-select>
                 </div>
               </div>
-              <div class="mb-4 flex-1">
+              <div class="mb-2 flex-1">
                 <label
                   for="vendor"
                   class="block text-sm font-medium text-gray-700"
                   >Vendor</label
                 >
-                <select
-                  id="vendor"
-                  formControlName="vendor"
-                  class="p-2 w-full border border-gray-300 rounded-[4px] focus:outline-none focus:ring-2 focus:ring-[#A2E100]/20"
-                >
-                  <ng-container *ngFor="let vendor of vendors">
-                    <option [value]="vendor.id">{{ vendor.name }}</option>
-                  </ng-container>
-                </select>
+                <!-- Custom-select para vendor -->
+                <app-custom-select
+                  [options]="vendorsOptions"
+                  placeholder="agregar vendor"
+                  (selectionChange)="
+                    selectedProductForm.get('vendor')?.setValue($event.id)
+                  "
+                ></app-custom-select>
               </div>
               <div class="flex gap-4">
                 <div class="mb-4 flex-1">
@@ -358,7 +392,7 @@
                   <label
                     for="reserved"
                     class="block text-sm font-medium text-gray-700"
-                    >Compra Maxima</label
+                    >Compra Máxima</label
                   >
                   <input
                     id="reserved"
@@ -492,8 +526,8 @@
                 </div>
               </div>
               <div class="mb-4">
-                <label class="block text-sm font-medium text-gray-700"
-                  >Etiquetas</label
+                <label class="block text-sm font-medium text-gray-700">
+                  Etiquetas</label
                 >
                 <div class="rounded-[4px] border border-gray-300 shadow-sm">
                   <!-- Header de tags -->
@@ -586,18 +620,16 @@
             Delete
           </button>
           <div class="flex items-center">
-            <div class="flex items-center mr-4" *ngIf="flashMessage">
+            <!-- <div class="flex items-center mr-4" *ngIf="flashMessage">
               <ng-container *ngIf="flashMessage === 'success'">
-                <!-- Mensaje de éxito (opcional) -->
               </ng-container>
               <ng-container *ngIf="flashMessage === 'error'">
-                <!-- Mensaje de error (opcional) -->
               </ng-container>
-            </div>
+            </div> -->
             <button
               type="button"
               class="px-4 py-2 bg-[#3a5a40]/80 text-white rounded-[4px] shadow hover:bg-[#3a5a40]/80 focus:outline-none transition"
-              (click)="updateSelectedProduct()"
+              (click)="saveProduct()"
             >
               Actualizar
             </button>

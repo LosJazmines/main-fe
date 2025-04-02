@@ -16,6 +16,8 @@ import { SearchModernoReactiveModule } from '../../core/components/search-modern
 import { Animations } from '@shared/animations';
 import { Observable, of } from 'rxjs';
 import { MatPaginator } from '@angular/material/paginator';
+import { CustomSelectComponent } from '@shared/components/custom-select/custom-select.component';
+import { EditGalleryComponent } from '../../core/components/edit-gallery/edit-gallery.component';
 
 // Interfaz extendida para los productos (adaptada a la tabla de inventario)
 export interface InventoryProduct {
@@ -49,7 +51,9 @@ export interface InventoryProduct {
     ReactiveFormsModule,
     FormsModule,
     RouterModule,
-    SearchModernoReactiveModule
+    ProductsTableComponent,
+    SearchModernoReactiveModule,
+    CustomSelectComponent
   ],
   templateUrl: './products.component.html',
   styleUrls: ['./products.component.scss'],
@@ -65,6 +69,7 @@ export default class ProductsComponent implements OnInit {
   lowStock = 0;
 
   // Signal para manejar los productos de forma reactiva
+  // (En este ejemplo se usa para actualizar la lista reactiva, pero la lógica principal se basa en "products")
   productsOne = signal<InventoryProduct[]>([]);
 
   // Lista local de productos; se puede inicializar con datos por defecto
@@ -193,11 +198,45 @@ export default class ProductsComponent implements OnInit {
     this._adminHeaderStore.updateHeaderTitle('Productos');
     this.calculateStatistics();
     this.getProducts();
+    this.loadSelectOptions(); // Agregar esta línea para cargar las opciones de select
   }
 
   // Getter para exponer un observable de productos para el template
   get products$(): Observable<InventoryProduct[]> {
     return of(this.filteredProducts);
+  }
+
+  get categoriesOptions() {
+    return this.categories.map(category => ({ id: category.id, text: category.name }));
+  }
+
+  get brandsOptions() {
+    return this.brands.map(brand => ({ id: brand.id, text: brand.name }));
+  }
+
+  get vendorsOptions() {
+    return this.vendors.map(vendor => ({ id: vendor.id, text: vendor.name }));
+  }
+
+  loadSelectOptions(): void {
+    // Ejemplo con datos estáticos
+    this.categories = [
+      { id: 'cat1', name: 'Flores' },
+      { id: 'cat2', name: 'Plantas' },
+      { id: 'cat3', name: 'Macetas' }
+    ];
+
+    this.brands = [
+      { id: 'brand1', name: 'Marca A' },
+      { id: 'brand2', name: 'Marca B' },
+      { id: 'brand3', name: 'Marca C' }
+    ];
+
+    this.vendors = [
+      { id: 'vendor1', name: 'Proveedor X' },
+      { id: 'vendor2', name: 'Proveedor Y' },
+      { id: 'vendor3', name: 'Proveedor Z' }
+    ];
   }
 
   calculateStatistics(): void {
@@ -215,6 +254,24 @@ export default class ProductsComponent implements OnInit {
       return matchesCategory && matchesMinPrice && matchesMaxPrice;
     });
   }
+
+  onImageUpload(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files[0]) {
+      const file = input.files[0];
+      const reader = new FileReader();
+      reader.onload = () => {
+        const imageUrl = reader.result as string;
+        // Obtiene el array actual de imágenes o inicializa un array vacío
+        const images = this.selectedProductForm.get('images')?.value || [];
+        images.push(imageUrl);
+        // Actualiza el formulario con la nueva lista de imágenes y reinicia el índice actual
+        this.selectedProductForm.patchValue({ images, currentImageIndex: images.length - 1 });
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
 
   private getProducts(): void {
     this._productsService.getAllProducts().subscribe({
@@ -292,6 +349,14 @@ export default class ProductsComponent implements OnInit {
       }
       this._adminHeaderStore.updateHeaderTitle('Productos');
     });
+  }
+
+  openImageEditor(): void {
+    const dialogRef = this._dialog.open<string>(EditGalleryComponent, {
+      data: { name: 'hola', animal: 'hola' },
+    });
+
+    dialogRef.closed.subscribe((result: any) => { });
   }
 
   // Método para alternar la visualización de detalles del producto y llenar el formulario

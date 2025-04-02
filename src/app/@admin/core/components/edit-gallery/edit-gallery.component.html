@@ -1,0 +1,87 @@
+<div
+  class="min-w-[400px] min-h-[300px] w-full h-full flex flex-col rounded-[4px] bg-gray-100"
+>
+  <div class="relative w-full h-14 flex items-center justify-center p-4">
+    <h2 class="!text-xl md:!text-2xl !font-playfair text-[#3a5a40] !m-0">
+      Editar Galeria
+    </h2>
+    <div
+      (click)="closeImageEditor()"
+      class="cursor-pointer absolute z-10 top-2 right-2 w-8 h-8 flex items-center justify-center bg-[#3a5a40]/50 hover:shadow-white hover:bg-[#3a5a40]/80 rounded-full"
+    >
+      <lucide-icon name="x" class="w-4 h-4 text-white"></lucide-icon>
+    </div>
+  </div>
+
+  <div class="w-full h-full flex items-center justify-center p-4">
+    <div class="w-32 h-44 flex flex-col items-center relative">
+      <!-- Contenedor de imagen con funcionalidad de subida -->
+      <div class="w-32 h-44 border border-[#3a5a40]/50 rounded overflow-hidden">
+        <ng-container *ngIf="gallerys().length; else noImage">
+          <!-- <img
+            class="w-full h-full object-cover"
+            [src]="
+              selectedProductForm.get('images')?.value[
+                selectedProductForm.get('currentImageIndex')?.value
+              ]
+            "
+          /> -->
+        </ng-container>
+        <ng-template #noImage>
+          <div class="w-full h-full flex flex-col justify-center items-center">
+            <lucide-icon
+              name="image"
+              class="w-6 h-6 mb-4 text-[#3a5a40]"
+            ></lucide-icon>
+            <p class="text-[#3a5a40] text-center">
+              ¡Agrega una imagen para destacar tu producto!
+            </p>
+          </div>
+        </ng-template>
+        <!-- Input file oculto para subir imagen -->
+        <input
+          matTooltip="clickear para Agregar Imagen"
+          matTooltipClass="!text-[#3a5a40] !bg-[#3a5a40]/50"
+          type="file"
+          accept="image/*"
+          (change)="onImageUpload($event)"
+          class="absolute inset-0 opacity-0 cursor-pointer"
+        />
+        <div
+          (click)="openImageEditor()"
+          class="cursor-pointer absolute z-10 -top-2 -right-2 w-8 h-8 flex items-center justify-center bg-[#3a5a40]/50 hover:shadow-white hover:bg-[#3a5a40]/80 rounded-full"
+        >
+          <lucide-icon name="ellipsis-vertical" class="w-4 h-4 text-white"></lucide-icon>
+        </div>
+      </div>
+
+      <!-- Controles para cambiar de imagen -->
+      <!-- <div
+        class="flex items-center mt-2 whitespace-nowrap z-10"
+        *ngIf="gallerys().length"
+      >
+        <button
+          type="button"
+          class="w-8 h-8 flex items-center justify-center bg-[#3a5a40]/50 hover:shadow-white hover:bg-[#3a5a40]/80 rounded-full"
+          (click)="cycleImages(false)"
+        >
+          <lucide-icon
+            name="chevron-left"
+            class="w-4 h-4 text-white"
+          ></lucide-icon>
+        </button>
+
+        <button
+          type="button"
+          class="w-8 h-8 flex items-center justify-center bg-[#3a5a40]/50 hover:shadow-white hover:bg-[#3a5a40]/80 rounded-full"
+          (click)="cycleImages(true)"
+        >
+          <lucide-icon
+            name="chevron-right"
+            class="w-4 h-4 text-white"
+          ></lucide-icon>
+        </button>
+      </div> -->
+    </div>
+  </div>
+</div>
