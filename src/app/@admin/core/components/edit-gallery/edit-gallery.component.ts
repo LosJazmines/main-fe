@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component, Inject, OnInit, signal } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { Component, Inject, OnInit, Optional, signal } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MAT_DIALOG_DATA, MatDialogRef, MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { LucideModule } from '@shared/lucide/lucide.module';
 import { MaterialModule } from '@shared/material/material.module';
 
@@ -11,37 +11,43 @@ import { MaterialModule } from '@shared/material/material.module';
   imports: [
     CommonModule,
     MaterialModule,
+
     LucideModule,
     ReactiveFormsModule,
   ],
   templateUrl: './edit-gallery.component.html',
-  styleUrl: './edit-gallery.component.scss'
+  styleUrls: ['./edit-gallery.component.scss']
 })
 export class EditGalleryComponent implements OnInit {
 
   gallerys = signal<any[]>([]);
 
   constructor(
-    // private formBuilder: FormBuilder,
-    // private dialogRef: MatDialogRef<EditGalleryComponent>,
+
+    public dialogRef: MatDialogRef<EditGalleryComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    // public dialog: MatDialog,
+    // public dialogRef: MatDialogRef<EditGalleryComponent>,
     // @Inject(MAT_DIALOG_DATA) public data: any
   ) { }
-
 
   ngOnInit(): void {
     this.getGalleryImages();
   }
 
-
   getGalleryImages(): void {
-    // this.gallerys.set(this.data.gallerys);
+    console.log('Datos inyectados:');
+    console.log(this.data);
+    this.gallerys.set(this.data.product?.images);
+    // Puedes acceder a data.product.images si es necesario
   }
 
-  closeImageEditor() {
-    // this.showImageEditor = false;
+  closeImageEditor(): void {
+    // Si dialogRef existe, cierra el diálogo
+    if (this.dialogRef) {
+      this.dialogRef.close();
+    }
   }
-
-
 
   onImageUpload(event: Event): void {
     const input = event.target as HTMLInputElement;
@@ -51,19 +57,13 @@ export class EditGalleryComponent implements OnInit {
       reader.onload = () => {
         const imageUrl = reader.result as string;
         console.log(imageUrl);
-
-        // Obtiene el array actual de imágenes o inicializa un array vacío
-        // const images = this.selectedProductForm.get('images')?.value || [];
-        // images.push(imageUrl);
-        // // Actualiza el formulario con la nueva lista de imágenes y reinicia el índice actual
-        // this.selectedProductForm.patchValue({ images, currentImageIndex: images.length - 1 });
+        // Lógica para agregar la imagen al listado
       };
       reader.readAsDataURL(file);
     }
   }
 
   openImageEditor(): void {
-
+    // Lógica adicional para abrir el editor, si es necesario
   }
-
 }

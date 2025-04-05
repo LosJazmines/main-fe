@@ -1,5 +1,5 @@
 <div
-  class="min-w-[400px] min-h-[300px] w-full h-full flex flex-col rounded-[4px] bg-gray-100"
+  class="min-w-[400px] min-h-[320px] w-full h-full flex flex-col rounded-[4px] bg-gray-100 overflow-auto"
 >
   <div class="relative w-full h-14 flex items-center justify-center p-4">
     <h2 class="!text-xl md:!text-2xl !font-playfair text-[#3a5a40] !m-0">
@@ -13,20 +13,20 @@
     </div>
   </div>
 
-  <div class="w-full h-full flex items-center justify-center p-4">
-    <div class="w-32 h-44 flex flex-col items-center relative">
+  <div
+    class="w-full h-full flex flex-col md:flex-row items-center justify-center gap-2 px-8 pb-8 pt-4 overflow-auto"
+  >
+    @for (gallery of gallerys(); track $index) {
+    <div class="w-[192px] h-[341px] flex flex-col items-center relative">
       <!-- Contenedor de imagen con funcionalidad de subida -->
-      <div class="w-32 h-44 border border-[#3a5a40]/50 rounded overflow-hidden">
+
+      <div
+        class="w-[192px] h-[341px] border border-[#3a5a40]/50 rounded overflow-hidden"
+      >
         <ng-container *ngIf="gallerys().length; else noImage">
-          <!-- <img
-            class="w-full h-full object-cover"
-            [src]="
-              selectedProductForm.get('images')?.value[
-                selectedProductForm.get('currentImageIndex')?.value
-              ]
-            "
-          /> -->
+          <img class="w-full h-full object-cover" [src]="gallery.url" />
         </ng-container>
+
         <ng-template #noImage>
           <div class="w-full h-full flex flex-col justify-center items-center">
             <lucide-icon
@@ -48,40 +48,36 @@
           class="absolute inset-0 opacity-0 cursor-pointer"
         />
         <div
-          (click)="openImageEditor()"
-          class="cursor-pointer absolute z-10 -top-2 -right-2 w-8 h-8 flex items-center justify-center bg-[#3a5a40]/50 hover:shadow-white hover:bg-[#3a5a40]/80 rounded-full"
+          [matMenuTriggerFor]="menu"
+          class="cursor-pointer absolute z-10 top-2 right-2 w-8 h-8 flex items-center justify-center bg-[#3a5a40]/50 hover:shadow-white hover:bg-[#3a5a40]/80 rounded-full"
         >
-          <lucide-icon name="ellipsis-vertical" class="w-4 h-4 text-white"></lucide-icon>
+          <lucide-icon
+            name="ellipsis-vertical"
+            class="w-4 h-4 text-white"
+          ></lucide-icon>
         </div>
       </div>
-
-      <!-- Controles para cambiar de imagen -->
-      <!-- <div
-        class="flex items-center mt-2 whitespace-nowrap z-10"
-        *ngIf="gallerys().length"
-      >
-        <button
-          type="button"
-          class="w-8 h-8 flex items-center justify-center bg-[#3a5a40]/50 hover:shadow-white hover:bg-[#3a5a40]/80 rounded-full"
-          (click)="cycleImages(false)"
-        >
-          <lucide-icon
-            name="chevron-left"
-            class="w-4 h-4 text-white"
-          ></lucide-icon>
-        </button>
-
-        <button
-          type="button"
-          class="w-8 h-8 flex items-center justify-center bg-[#3a5a40]/50 hover:shadow-white hover:bg-[#3a5a40]/80 rounded-full"
-          (click)="cycleImages(true)"
-        >
-          <lucide-icon
-            name="chevron-right"
-            class="w-4 h-4 text-white"
-          ></lucide-icon>
-        </button>
-      </div> -->
     </div>
+    }
   </div>
 </div>
+
+<mat-menu
+  #menu="matMenu"
+  xPosition="before"
+  class="!bg-[#3a5a40]/90 !text-white mt-2"
+>
+  <button mat-menu-item>
+    <div class="flex gap-2 items-center !text-white">
+      <lucide-icon size="16" name="trash-2"></lucide-icon>
+      <span>Eliminar</span>
+    </div>
+  </button>
+
+  <button mat-menu-item>
+    <div class="flex gap-2 items-center !text-white">
+      <lucide-icon name="download" size="16"></lucide-icon>
+      <span>Descargar</span>
+    </div>
+  </button>
+</mat-menu>

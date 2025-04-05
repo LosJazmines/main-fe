@@ -12,24 +12,16 @@
         (search)="handleSearch($event)"
         class="w-full lg:w-[400px]"
       ></app-search-moderno-reactive>
+      <button
+        (click)="createEmptyProduct()"
+        class="w-full flex-1 lg:w-max px-4 py-2 bg-[#3a5a40]/80 text-white rounded-[4px] shadow hover:bg-[#3a5a40]/90 focus:outline-none transition flex items-center gap-2"
+      >
+        <lucide-icon name="plus" class="w-5 h-5"></lucide-icon>
+        Agregar Producto
+      </button>
     </div>
   </div>
-  <div class="w-full flex justify-between items-center gap-4 mb-4">
-    <button
-      (click)="createEmptyProduct()"
-      class="w-full flex-1 lg:w-max px-4 py-2 bg-[#3a5a40]/80 text-white rounded-[4px] shadow hover:bg-[#3a5a40]/90 focus:outline-none transition flex items-center gap-2"
-    >
-      <lucide-icon name="plus" class="w-5 h-5"></lucide-icon>
-      Agregar Producto
-    </button>
-    <button
-      (click)="openDialogAddProduct()"
-      class="w-full lg:w-max flex-1 px-4 py-2 bg-[#3a5a40]/80 text-white rounded-[4px] shadow hover:bg-[#3a5a40]/90 focus:outline-none transition flex items-center gap-2"
-    >
-      <lucide-icon name="plus" class="w-5 h-5"></lucide-icon>
-      Agregar Producto oll
-    </button>
-  </div>
+
   <!-- Tabla de productos -->
   <div class="overflow-x-auto">
     <div class="grid">
@@ -64,7 +56,7 @@
                     class="w-full h-full object-cover"
                     *ngIf="product.images"
                     [alt]="'Product thumbnail image'"
-                    [src]="product.images"
+                    [src]="product.images[0]?.url"
                   />
                   <div
                     class="flex items-center justify-center w-full h-full text-xs font-semibold uppercase"
@@ -169,7 +161,7 @@
 
   <!-- Plantilla de detalles del producto -->
   <ng-template #rowDetailsTemplate let-product>
-    <div class="shadow-lg overflow-hidden">
+    <div class="shadow-lg overflow-hidden mb-8">
       <form [formGroup]="selectedProductForm" class="flex flex-col w-full">
         <div class="flex flex-col sm:flex-row p-8">
           <!-- Imágenes y estado -->
@@ -190,7 +182,7 @@
                     [src]="
                       selectedProductForm.get('images')?.value[
                         selectedProductForm.get('currentImageIndex')?.value
-                      ]
+                      ].url
                     "
                   />
                 </ng-container>
@@ -213,11 +205,12 @@
                   matTooltipClass="!text-[#3a5a40] !bg-[#3a5a40]/50"
                   type="file"
                   accept="image/*"
+                  multiple
                   (change)="onImageUpload($event)"
                   class="absolute inset-0 opacity-0 cursor-pointer"
                 />
                 <div
-                  (click)="openImageEditor()"
+                  (click)="openImageEditor(product)"
                   class="cursor-pointer absolute z-10 -top-2 -right-2 w-8 h-8 flex items-center justify-center bg-[#3a5a40]/50 hover:shadow-white hover:bg-[#3a5a40]/80 rounded-full"
                 >
                   <lucide-icon
@@ -344,16 +337,16 @@
               <div class="flex-1">
                 <div class="mb-2 flex-1">
                   <label
-                    for="brand"
+                    for="type"
                     class="block text-sm font-medium text-gray-700"
-                    >Marca</label
+                    >Tipo</label
                   >
                   <!-- Custom-select para marca -->
                   <app-custom-select
-                    [options]="brandsOptions"
-                    placeholder="agregar marca"
+                    [options]="typesOptions"
+                    placeholder="agregar tipo"
                     (selectionChange)="
-                      selectedProductForm.get('brand')?.setValue($event.id)
+                      selectedProductForm.get('type')?.setValue($event.id)
                     "
                   ></app-custom-select>
                 </div>
@@ -390,32 +383,32 @@
                 </div>
                 <div class="mb-4 flex-1">
                   <label
-                    for="reserved"
+                    for="maxPurchasePerUser"
                     class="block text-sm font-medium text-gray-700"
                     >Compra Máxima</label
                   >
                   <input
-                    id="reserved"
+                    id="maxPurchasePerUser"
                     type="number"
-                    formControlName="reserved"
-                    placeholder="Reserved"
+                    formControlName="maxPurchasePerUser"
+                    placeholder="Compra Máxima "
                     class="p-2 w-full border border-gray-300 rounded-[4px] focus:outline-none focus:ring-2 focus:ring-[#A2E100]/20"
                   />
                 </div>
               </div>
               <div class="mb-4 flex-1">
                 <label
-                  for="reserved"
+                  for="description"
                   class="block text-sm font-medium text-gray-700"
-                  >Descripción</label
                 >
-                <input
-                  id="reserved"
-                  type="number"
-                  formControlName="reserved"
-                  placeholder="Reserved"
-                  class="p-2 w-full border border-gray-300 rounded-[4px] focus:outline-none focus:ring-2 focus:ring-[#A2E100]/20"
-                />
+                  Descripción
+                </label>
+                <textarea
+                  id="description"
+                  formControlName="description"
+                  placeholder="Descripción"
+                  class="p-2 w-full border border-gray-300 rounded-[4px] focus:outline-none focus:ring-2 focus:ring-[#A2E100]/20 resize-none h-32"
+                ></textarea>
               </div>
             </div>
 
@@ -525,12 +518,11 @@
                   >
                 </div>
               </div>
-              <div class="mb-4">
+              <!-- <div class="mb-4">
                 <label class="block text-sm font-medium text-gray-700">
                   Etiquetas</label
                 >
                 <div class="rounded-[4px] border border-gray-300 shadow-sm">
-                  <!-- Header de tags -->
                   <div class="flex items-center py-2 px-3">
                     <input
                       type="text"
@@ -546,10 +538,8 @@
                       class="ml-3 p-2"
                       (click)="toggleTagsEditMode()"
                     >
-                      <!-- Icono opcional -->
                     </button>
                   </div>
-                  <!-- Lista de tags -->
                   <div class="h-44 overflow-y-auto border-t border-gray-300">
                     <ng-container *ngIf="!tagsEditMode">
                       <ng-container
@@ -583,7 +573,6 @@
                               class="ml-2 p-2"
                               (click)="deleteTag(tag)"
                             >
-                              <!-- Icono opcional -->
                             </button>
                           </div>
                         </ng-container>
@@ -603,7 +592,7 @@
                     </div>
                   </div>
                 </div>
-              </div>
+              </div> -->
             </div>
           </div>
         </div>

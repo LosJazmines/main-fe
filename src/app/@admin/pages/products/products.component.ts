@@ -1,16 +1,14 @@
 import { Component, OnInit, ViewChild, inject, signal } from '@angular/core';
-import { AdminHeaderStore } from '../../../@core/store/admin-header.store';
+import { AdminHeaderStore } from '@core/store/admin-header.store';
 import { CommonModule } from '@angular/common';
-import { MaterialModule } from '../../../@shared/material/material.module';
-import { LucideModule } from '../../../@shared/lucide/lucide.module';
+import { MaterialModule } from '@shared/material/material.module';
+import { LucideModule } from '@shared/lucide/lucide.module';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { ProductsService } from '../../../@apis/products.service';
-import { TokenService } from '../../../@core/services/token.service';
-import { MessageService } from '../../../@core/services/snackbar.service';
+import { ProductsService } from '@apis/products.service';
+import { TokenService } from '@core/services/token.service';
+import { MessageService } from '@core/services/snackbar.service';
 import { Store } from '@ngrx/store';
-import { ProductsTableComponent } from '../../core/components/products-table/products-table.component';
-import { Dialog } from '@angular/cdk/dialog';
 import { AddProductComponent } from '../forms/add-product/add-product.component';
 import { SearchModernoReactiveModule } from '../../core/components/search-moderno-reactive/search-moderno-reactive.module';
 import { Animations } from '@shared/animations';
@@ -18,13 +16,16 @@ import { Observable, of } from 'rxjs';
 import { MatPaginator } from '@angular/material/paginator';
 import { CustomSelectComponent } from '@shared/components/custom-select/custom-select.component';
 import { EditGalleryComponent } from '../../core/components/edit-gallery/edit-gallery.component';
+import { MatDialog } from '@angular/material/dialog';
 
 // Interfaz extendida para los productos (adaptada a la tabla de inventario)
 export interface InventoryProduct {
   id: string;
   name: string;
   sku: string;
+  barcode?: string;
   category: string;
+  type: string;
   price: number;
   stock: number;
   sold?: number;
@@ -32,12 +33,12 @@ export interface InventoryProduct {
   active: boolean;
   // Propiedades opcionales para el formulario
   description?: string;
-  reserved?: number;
+  maxPurchasePerUser?: number;
   cost?: number;
   basePrice?: number;
   taxPercent?: number;
   weight?: number;
-  images?: string[];
+  images?: any[];
   tags?: string[];
 }
 
@@ -51,7 +52,6 @@ export interface InventoryProduct {
     ReactiveFormsModule,
     FormsModule,
     RouterModule,
-    ProductsTableComponent,
     SearchModernoReactiveModule,
     CustomSelectComponent
   ],
@@ -68,112 +68,44 @@ export default class ProductsComponent implements OnInit {
   outOfStock = 0;
   lowStock = 0;
 
-  // Signal para manejar los productos de forma reactiva
-  // (En este ejemplo se usa para actualizar la lista reactiva, pero la lógica principal se basa en "products")
   productsOne = signal<InventoryProduct[]>([]);
-
-  // Lista local de productos; se puede inicializar con datos por defecto
-  products: InventoryProduct[] = [
-    {
-      id: '101',
-      name: 'Rosa Roja',
-      category: 'Flores',
-      sku: '101',
-      price: 25,
-      stock: 15,
-      sold: 30,
-      active: true,
-      thumbnail: 'assets/images/rosa-roja.png',
-      images: [],
-      tags: []
-    },
-    {
-      id: '102',
-      name: 'Cactus Mini',
-      category: 'Plantas',
-      sku: '102',
-      price: 15,
-      stock: 2,
-      sold: 20,
-      active: true,
-      thumbnail: 'assets/images/cactus-mini.png',
-      images: [],
-      tags: []
-    },
-    {
-      id: '103',
-      name: 'Maceta de Cerámica',
-      category: 'Macetas',
-      sku: '103',
-      price: 50,
-      stock: 0,
-      sold: 15,
-      active: false,
-      thumbnail: 'assets/images/maceta.png',
-      images: [],
-      tags: []
-    },
-    {
-      id: '104',
-      name: 'Fertilizante Líquido',
-      category: 'Fertilizantes',
-      sku: '104',
-      price: 10,
-      stock: 7,
-      sold: 50,
-      active: true,
-      thumbnail: 'assets/images/fertilizante.png',
-      images: [],
-      tags: []
-    },
-  ];
-
+  products: InventoryProduct[] = [];
   filteredProducts = [...this.products];
   selectedCategory = '';
   minPrice = 0;
   maxPrice = 0;
 
-  // Propiedad para mensajes flash en el formulario
   flashMessage: 'success' | 'error' | null = null;
-
-  // Producto seleccionado para mostrar detalles / editar
   selectedProduct: InventoryProduct | null = null;
-
-  // Formulario para el producto seleccionado (detalle/edición)
   selectedProductForm: FormGroup;
 
-  // Propiedades para tags (dummy)
   filteredTags: any[] = [];
-  tagsEditMode: boolean = false;
-
-  // Arrays dummy para selects
+  tagsEditMode = false;
   categories: any[] = [];
-  brands: any[] = [];
+  types: any[] = [];
   vendors: any[] = [];
 
-  // Paginación
+  selectedFiles: File[] = [];
+  imagePreviews: string[] = [];
+
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   pagination = {
-    length: 0,  // total de productos (a actualizar)
+    length: 0,
     page: 0,
     size: 10
   };
 
-  // Flag para mostrar loader
-  isLoading: boolean = false;
-
-  // Bandera para identificar si se está creando un nuevo producto
-  isNewProduct: boolean = false;
+  isLoading = false;
+  isNewProduct = false;
 
   constructor(
     private _fb: FormBuilder,
-    private _dialog: Dialog,
+    private _dialog: MatDialog,
     private _productsService: ProductsService,
     private store: Store,
     private _tokenService: TokenService,
     private _messageService: MessageService
   ) {
-    // Inicializamos el formulario del producto seleccionado
     this.selectedProductForm = this._fb.group({
       name: [''],
       images: [[]],
@@ -182,10 +114,11 @@ export default class ProductsComponent implements OnInit {
       sku: [''],
       barcode: [''],
       category: [''],
-      brand: [''],
+      type: [''],
       vendor: [''],
       stock: [''],
-      reserved: [''],
+      maxPurchasePerUser: [''],
+      description: [''],
       cost: [''],
       basePrice: [''],
       taxPercent: [''],
@@ -198,10 +131,9 @@ export default class ProductsComponent implements OnInit {
     this._adminHeaderStore.updateHeaderTitle('Productos');
     this.calculateStatistics();
     this.getProducts();
-    this.loadSelectOptions(); // Agregar esta línea para cargar las opciones de select
+    this.loadSelectOptions();
   }
 
-  // Getter para exponer un observable de productos para el template
   get products$(): Observable<InventoryProduct[]> {
     return of(this.filteredProducts);
   }
@@ -210,8 +142,8 @@ export default class ProductsComponent implements OnInit {
     return this.categories.map(category => ({ id: category.id, text: category.name }));
   }
 
-  get brandsOptions() {
-    return this.brands.map(brand => ({ id: brand.id, text: brand.name }));
+  get typesOptions() {
+    return this.types.map(type => ({ id: type.id, text: type.name }));
   }
 
   get vendorsOptions() {
@@ -219,14 +151,13 @@ export default class ProductsComponent implements OnInit {
   }
 
   loadSelectOptions(): void {
-    // Ejemplo con datos estáticos
     this.categories = [
       { id: 'cat1', name: 'Flores' },
       { id: 'cat2', name: 'Plantas' },
       { id: 'cat3', name: 'Macetas' }
     ];
 
-    this.brands = [
+    this.types = [
       { id: 'brand1', name: 'Marca A' },
       { id: 'brand2', name: 'Marca B' },
       { id: 'brand3', name: 'Marca C' }
@@ -246,29 +177,23 @@ export default class ProductsComponent implements OnInit {
     this.lowStock = this.products.filter(product => product.stock > 0 && product.stock < 5).length;
   }
 
-  applyFilters(): void {
-    this.filteredProducts = this.products.filter((product) => {
-      const matchesCategory = this.selectedCategory ? product.category === this.selectedCategory : true;
-      const matchesMinPrice = this.minPrice ? product.price >= this.minPrice : true;
-      const matchesMaxPrice = this.maxPrice ? product.price <= this.maxPrice : true;
-      return matchesCategory && matchesMinPrice && matchesMaxPrice;
-    });
-  }
-
   onImageUpload(event: Event): void {
     const input = event.target as HTMLInputElement;
-    if (input.files && input.files[0]) {
-      const file = input.files[0];
-      const reader = new FileReader();
-      reader.onload = () => {
-        const imageUrl = reader.result as string;
-        // Obtiene el array actual de imágenes o inicializa un array vacío
-        const images = this.selectedProductForm.get('images')?.value || [];
-        images.push(imageUrl);
-        // Actualiza el formulario con la nueva lista de imágenes y reinicia el índice actual
-        this.selectedProductForm.patchValue({ images, currentImageIndex: images.length - 1 });
-      };
-      reader.readAsDataURL(file);
+    if (input.files) {
+      const files: File[] = Array.from(input.files);
+      files.forEach((file) => {
+        const reader = new FileReader();
+        reader.onload = () => {
+          // Aquí puedes actualizar un array para previews, por ejemplo:
+          this.imagePreviews.push(reader.result as string);
+        };
+        reader.readAsDataURL(file);
+        // Agrega el archivo al array de archivos seleccionados
+        this.selectedFiles.push(file);
+      });
+      // Actualiza el form control para que contenga el array de archivos
+      this.selectedProductForm.patchValue({ images: this.selectedFiles });
+      console.log('Imágenes seleccionadas:', this.selectedProductForm.get('images')?.value);
     }
   }
 
@@ -276,19 +201,19 @@ export default class ProductsComponent implements OnInit {
   private getProducts(): void {
     this._productsService.getAllProducts().subscribe({
       next: (response: any) => {
-        // Mapea la respuesta a la interfaz InventoryProduct y asigna valores por defecto
         this.products = response.map((p: any) => ({
           id: p.id.toString(),
           name: p.name,
-          sku: p.id.toString(), // o utiliza p.sku si está disponible
+          sku: p.id.toString(),
           category: p.category,
           price: p.price,
           stock: p.stock,
           sold: p.sold,
+          type: p.type,
           active: p.stock > 0,
           thumbnail: p.thumbnail || 'assets/default-thumbnail.png',
           description: p.description || '',
-          reserved: p.reserved || 0,
+          maxPurchasePerUser: p.maxPurchasePerUser || 0,
           cost: p.cost || p.price * 0.8,
           basePrice: p.basePrice || p.price,
           taxPercent: p.taxPercent || 0,
@@ -298,6 +223,9 @@ export default class ProductsComponent implements OnInit {
         }));
         this.filteredProducts = [...this.products];
         this.productsOne.set(this.products);
+
+        console.log('Productos obtenidos:', this.products);
+
         this.calculateStatistics();
       },
       error: (error) => {
@@ -312,9 +240,7 @@ export default class ProductsComponent implements OnInit {
 
   deleteProduct(product: InventoryProduct): void {
     this.products = this.products.filter(p => p.id !== product.id);
-    this.applyFilters();
     this.calculateStatistics();
-
     this._productsService.deleteProduct(product.id).subscribe({
       next: (response: any) => {
         this.products = this.products.filter(p => p.id !== product.id);
@@ -339,11 +265,10 @@ export default class ProductsComponent implements OnInit {
   }
 
   openDialogAddProduct(): void {
-    const dialogRef = this._dialog.open<string>(AddProductComponent, {
+    const dialogRef = this._dialog.open(AddProductComponent, {
       data: { name: 'hola', animal: 'hola' },
     });
-
-    dialogRef.closed.subscribe((result: any) => {
+    dialogRef.afterClosed().subscribe((result: any) => {
       if (result?.success) {
         this.getProducts();
       }
@@ -351,22 +276,21 @@ export default class ProductsComponent implements OnInit {
     });
   }
 
-  openImageEditor(): void {
-    const dialogRef = this._dialog.open<string>(EditGalleryComponent, {
-      data: { name: 'hola', animal: 'hola' },
+  openImageEditor(product: InventoryProduct): void {
+    const dialogRef = this._dialog.open(EditGalleryComponent, {
+      data: { product: product },
     });
-
-    dialogRef.closed.subscribe((result: any) => { });
+    dialogRef.afterClosed().subscribe((result: any) => {
+      // Maneja el resultado del diálogo si es necesario
+    });
   }
 
-  // Método para alternar la visualización de detalles del producto y llenar el formulario
   toggleDetails(productId: string): void {
     if (this.selectedProduct && this.selectedProduct.id === productId) {
       this.selectedProduct = null;
     } else {
       const product = this.products.find(p => p.id === productId) || null;
       this.selectedProduct = product;
-      // Si se selecciona un producto existente, llenamos el formulario
       if (product) {
         this.selectedProductForm.patchValue({
           name: product.name,
@@ -376,10 +300,11 @@ export default class ProductsComponent implements OnInit {
           sku: product.sku,
           barcode: '',
           category: product.category,
-          brand: '',
+          type: product.type,
           vendor: '',
           stock: product.stock,
-          reserved: product.reserved || 0,
+          maxPurchasePerUser: product.maxPurchasePerUser || 0,
+          description: product.description,
           cost: product.cost,
           basePrice: product.basePrice,
           taxPercent: product.taxPercent,
@@ -390,7 +315,6 @@ export default class ProductsComponent implements OnInit {
     }
   }
 
-  // Método para cambiar de imagen (simulado)
   cycleImages(forward: boolean = true): void {
     const images = this.selectedProductForm.get('images')?.value;
     if (images && images.length > 0) {
@@ -406,7 +330,6 @@ export default class ProductsComponent implements OnInit {
     }
   }
 
-  // Métodos para tags (simulados)
   createTag(tag: string): void {
     console.log('Creando tag:', tag);
   }
@@ -449,23 +372,18 @@ export default class ProductsComponent implements OnInit {
 
   onFilterTags(event: Event): void {
     // Ejemplo de filtrado de tags
-    // const input = (event.target as HTMLInputElement).value;
-    // this.filteredTags = this.tags.filter(tag =>
-    //   tag.title.toLowerCase().includes(input.toLowerCase())
-    // );
   }
 
   // =============================================
   // Funcionalidad para crear un producto vacío inline
   // =============================================
-
   createEmptyProduct(): void {
-    // Crear un producto vacío con valores por defecto
     const emptyProduct: InventoryProduct = {
-      id: '', // id vacío o con un identificador temporal, por ejemplo 'new'
+      id: '', // id vacío o temporal
       name: '',
       sku: '',
       category: '',
+      type: '',
       price: 0,
       stock: 0,
       sold: 0,
@@ -475,17 +393,11 @@ export default class ProductsComponent implements OnInit {
       tags: []
     };
 
-    // Marcar que se está creando un nuevo producto
     this.isNewProduct = true;
-
-    // Insertar el producto vacío en la lista
     this.products.unshift(emptyProduct);
     this.filteredProducts = [...this.products];
-
-    // Seleccionar el producto para mostrar el formulario
     this.selectedProduct = emptyProduct;
 
-    // Inicializar el formulario con valores por defecto
     this.selectedProductForm.patchValue({
       name: '',
       images: [],
@@ -494,10 +406,11 @@ export default class ProductsComponent implements OnInit {
       sku: '',
       barcode: '',
       category: '',
-      brand: '',
+      type: '',
       vendor: '',
       stock: 0,
-      reserved: 0,
+      maxPurchasePerUser: 0,
+      description: '',
       cost: 0,
       basePrice: 0,
       taxPercent: 0,
@@ -506,68 +419,77 @@ export default class ProductsComponent implements OnInit {
     });
   }
 
-  saveProduct(): void {
-    if (this.selectedProductForm.valid && this.selectedProduct) {
-      const productData = this.selectedProductForm.value;
-
-      if (this.isNewProduct) {
-        // Llamada al servicio para crear el producto en el backend
-        this._productsService.createProduct(productData).subscribe(
-          (savedProduct: any) => {
-            // Actualiza el producto en la lista con los datos retornados, por ejemplo, asignando el id generado
-            const index = this.products.findIndex(p => p === this.selectedProduct);
-            if (index > -1) {
-              this.products[index] = {
-                ...savedProduct,
-                thumbnail: savedProduct.thumbnail || 'assets/default-thumbnail.png'
-              };
-            }
-            this.selectedProduct = this.products[index];
-            this.isNewProduct = false;
-            this.flashMessage = 'success';
-            setTimeout(() => { this.flashMessage = null; }, 3000);
-          },
-          error => {
-            console.error('Error al guardar el producto:', error);
-            this.flashMessage = 'error';
-            setTimeout(() => { this.flashMessage = null; }, 3000);
-          }
-        );
-      } else {
-        // Actualización de un producto existente
-        // this._productsService.updateProduct(productData).subscribe(
-        //   (updatedProduct: any) => {
-        //     const index = this.products.findIndex(p => p.id === updatedProduct.id);
-        //     if (index > -1) {
-        //       this.products[index] = updatedProduct;
-        //     }
-        //     this.selectedProduct = updatedProduct;
-        //     this.flashMessage = 'success';
-        //     setTimeout(() => { this.flashMessage = null; }, 3000);
-        //   },
-        //   error => {
-        //     console.error('Error al actualizar el producto:', error);
-        //     this.flashMessage = 'error';
-        //     setTimeout(() => { this.flashMessage = null; }, 3000);
-        //   }
-        // );
-      }
+  private buildFormData(data: any, formData: FormData = new FormData(), parentKey: string = ''): FormData {
+    if (data && typeof data === 'object' && !(data instanceof Date) && !(data instanceof File)) {
+      Object.keys(data).forEach(key => {
+        this.buildFormData(data[key], formData, parentKey ? `${parentKey}[${key}]` : key);
+      });
+    } else {
+      const value = data == null ? '' : data;
+      formData.append(parentKey, value);
     }
+    return formData;
   }
+
+  saveProduct(): void {
+    // this.isLoading.set(true);
+
+    if (this.selectedProductForm.invalid) {
+      console.log('Formulario no válido', this.selectedProductForm.value);
+      // this.isLoading.set(false);
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('name', this.selectedProductForm.get('name')?.value);
+    formData.append('category', this.selectedProductForm.get('category')?.value);
+    formData.append('price', this.selectedProductForm.get('price')?.value);
+    formData.append('stock', this.selectedProductForm.get('stock')?.value);
+    formData.append('maxPurchasePerUser', this.selectedProductForm.get('maxPurchasePerUser')?.value);
+    formData.append('description', this.selectedProductForm.get('description')?.value);
+    formData.append('type', this.selectedProductForm.get('type')?.value);
+
+    // Adjuntar las imágenes seleccionadas al FormData
+    const images = this.selectedProductForm.get('images')?.value;
+    console.log('Imágenes seleccionadas2:', images);
+
+    images.forEach((file: File) => {
+      formData.append('files', file);
+    });
+
+    this._productsService.createProduct(formData).subscribe({
+      next: (response: any) => {
+        console.log('Producto creado:', response);
+        this._messageService.showInfo('Producto creado exitosamente', 'bottom right', 5000);
+        // Reiniciar archivos e imágenes
+        this.selectedFiles = [];
+        // Reiniciar el formulario
+        this.selectedProductForm.reset();
+        this.selectedProductForm.markAsPristine();
+        this.selectedProductForm.markAsUntouched();
+        // this.isLoading.set(false);
+
+        this.getProducts();
+      },
+      error: (error) => {
+        console.error('Error al crear producto:', error);
+        this._messageService.showError('Error al crear producto', 'bottom right', 5000);
+        // this.isLoading.set(false);
+      }
+    });
+  }
+
 
   cancelNewProduct(): void {
     if (this.isNewProduct && this.selectedProduct) {
-      // Eliminar el producto vacío de la lista
       this.products = this.products.filter(p => p !== this.selectedProduct);
       this.filteredProducts = [...this.products];
       this.selectedProduct = null;
       this.isNewProduct = false;
-      // Resetear el formulario
       this.selectedProductForm.reset();
     }
   }
 
-  // Método para actualizar el producto seleccionado (simulación)
   updateSelectedProduct(): void {
     if (this.selectedProduct) {
       console.log('Actualizando producto:', this.selectedProduct);
@@ -578,11 +500,9 @@ export default class ProductsComponent implements OnInit {
     }
   }
 
-  // Método para eliminar el producto seleccionado (simulación)
   deleteSelectedProduct(): void {
     if (this.selectedProduct) {
       console.log('Eliminando producto seleccionado:', this.selectedProduct);
-      // Aquí podrías llamar a un servicio para eliminarlo
       this.selectedProduct = null;
     }
   }

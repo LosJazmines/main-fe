@@ -18,6 +18,7 @@ import { LucideModule } from '../../../../@shared/lucide/lucide.module';
 import { RouterModule } from '@angular/router';
 import { Dialog, DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { LoaderComponent } from '../../../../@shared/components/loader/loader.component';
+import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-add-product',
@@ -72,7 +73,7 @@ export class AddProductComponent implements OnInit {
 
   constructor(
     private _fb: FormBuilder,
-    public dialogRef: DialogRef<{ success: boolean }>,
+    public dialogRef: MatDialogRef<AddProductComponent>,
     private _dialog: Dialog,
 
     @Inject(DIALOG_DATA) public data: any,
@@ -80,7 +81,7 @@ export class AddProductComponent implements OnInit {
     private store: Store,
     private _tokenService: TokenService,
     private _messageService: MessageService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this._adminHeaderStore.updateHeaderTitle('Productos - Agregar Producto');
