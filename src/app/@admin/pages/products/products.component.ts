@@ -17,30 +17,11 @@ import { MatPaginator } from '@angular/material/paginator';
 import { CustomSelectComponent } from '@shared/components/custom-select/custom-select.component';
 import { EditGalleryComponent } from '../../core/components/edit-gallery/edit-gallery.component';
 import { MatDialog } from '@angular/material/dialog';
+import { IProduct } from '@core/interfaces/product';
+import { CATEGORIES_DATA } from '@core/data/categories_data';
+import { TAGS_DATA } from '@core/data/tags_data';
+import { log } from 'console';
 
-// Interfaz extendida para los productos (adaptada a la tabla de inventario)
-export interface InventoryProduct {
-  id: string;
-  name: string;
-  sku: string;
-  barcode?: string;
-  category: string;
-  type: string;
-  price: number;
-  stock: number;
-  sold?: number;
-  thumbnail?: string;
-  active: boolean;
-  // Propiedades opcionales para el formulario
-  description?: string;
-  maxPurchasePerUser?: number;
-  cost?: number;
-  basePrice?: number;
-  taxPercent?: number;
-  weight?: number;
-  images?: any[];
-  tags?: string[];
-}
 
 @Component({
   selector: 'app-products',
@@ -68,24 +49,24 @@ export default class ProductsComponent implements OnInit {
   outOfStock = 0;
   lowStock = 0;
 
-  productsOne = signal<InventoryProduct[]>([]);
-  products: InventoryProduct[] = [];
+  productsOne = signal<IProduct[]>([]);
+  products: IProduct[] = [];
   filteredProducts = [...this.products];
   selectedCategory = '';
   minPrice = 0;
   maxPrice = 0;
 
   flashMessage: 'success' | 'error' | null = null;
-  selectedProduct: InventoryProduct | null = null;
+  selectedProduct: IProduct | null = null;
   selectedProductForm: FormGroup;
 
   filteredTags: any[] = [];
   tagsEditMode = false;
   categories: any[] = [];
-  types: any[] = [];
+  tags: any[] = [];
   vendors: any[] = [];
 
-  selectedFiles: File[] = [];
+  selectedFiles: { file: File; url: string }[] = [];
   imagePreviews: string[] = [];
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -123,7 +104,8 @@ export default class ProductsComponent implements OnInit {
       basePrice: [''],
       taxPercent: [''],
       price: [''],
-      weight: ['']
+      weight: [''],
+      tags: [[]]
     });
   }
 
@@ -134,7 +116,7 @@ export default class ProductsComponent implements OnInit {
     this.loadSelectOptions();
   }
 
-  get products$(): Observable<InventoryProduct[]> {
+  get products$(): Observable<IProduct[]> {
     return of(this.filteredProducts);
   }
 
@@ -142,8 +124,8 @@ export default class ProductsComponent implements OnInit {
     return this.categories.map(category => ({ id: category.id, text: category.name }));
   }
 
-  get typesOptions() {
-    return this.types.map(type => ({ id: type.id, text: type.name }));
+  get tagsOptions() {
+    return this.tags.map(tag => ({ id: tag.uuid, text: tag.name, ...tag }));
   }
 
   get vendorsOptions() {
@@ -151,23 +133,42 @@ export default class ProductsComponent implements OnInit {
   }
 
   loadSelectOptions(): void {
-    this.categories = [
-      { id: 'cat1', name: 'Flores' },
-      { id: 'cat2', name: 'Plantas' },
-      { id: 'cat3', name: 'Macetas' }
-    ];
-
-    this.types = [
-      { id: 'brand1', name: 'Marca A' },
-      { id: 'brand2', name: 'Marca B' },
-      { id: 'brand3', name: 'Marca C' }
-    ];
+    this.categories = CATEGORIES_DATA;
+    this.tags = TAGS_DATA;
 
     this.vendors = [
       { id: 'vendor1', name: 'Proveedor X' },
       { id: 'vendor2', name: 'Proveedor Y' },
       { id: 'vendor3', name: 'Proveedor Z' }
     ];
+  }
+  selectedTags: any[] = [];
+  showTagSelector = false; // Bandera para mostrar/ocultar el selector de tags
+
+
+  // Método para manejar el cambio de selección de tag
+  // Método para manejar el cambio de selección de tag
+  onTagSelectionChange(tag: any): void {
+    // Si el tag ya está en la lista, no lo agregamos de nuevo.
+    if (!this.selectedTags.find(t => t.uuid === tag.uuid)) {
+      this.selectedTags.push(tag);
+    }
+    console.log({ tag });
+
+    // Actualizamos el formulario con los objetos completos
+    console.log('Tags seleccionados:', this.selectedTags);
+    console.log('Formulario actualizado:', this.selectedProductForm.value);
+    this.selectedProductForm.patchValue({ tags: this.selectedTags });
+
+    // Cerramos el selector de tags (si está implementado para mostrarse/ocultarse)
+    this.showTagSelector = false;
+  }
+
+
+  // Si necesitas remover un tag de la lista:
+  removeTag(tag: any): void {
+    this.selectedTags = this.selectedTags.filter(t => t.uuid !== tag.uuid);
+    this.selectedProductForm.patchValue({ tags: this.selectedTags.map(t => t.uuid) });
   }
 
   calculateStatistics(): void {
@@ -178,51 +179,61 @@ export default class ProductsComponent implements OnInit {
   }
 
   onImageUpload(event: Event): void {
+    console.log('Evento de carga de imagen:', event);
+
     const input = event.target as HTMLInputElement;
     if (input.files) {
       const files: File[] = Array.from(input.files);
       files.forEach((file) => {
         const reader = new FileReader();
         reader.onload = () => {
-          // Aquí puedes actualizar un array para previews, por ejemplo:
+          // Crea un objeto que contenga tanto el File como la dataURL
+          const imageData = { file, url: reader.result as string };
+          // Actualiza el array de previews si lo necesitas
           this.imagePreviews.push(reader.result as string);
+          // Agrega el objeto al array de archivos seleccionados
+          this.selectedFiles.push({ file, url: reader.result as string });
+          // Actualiza el form control para que contenga el array de archivos
+          this.selectedProductForm.patchValue({ images: this.selectedFiles });
         };
         reader.readAsDataURL(file);
-        // Agrega el archivo al array de archivos seleccionados
-        this.selectedFiles.push(file);
       });
-      // Actualiza el form control para que contenga el array de archivos
-      this.selectedProductForm.patchValue({ images: this.selectedFiles });
-      console.log('Imágenes seleccionadas:', this.selectedProductForm.get('images')?.value);
     }
   }
+
 
 
   private getProducts(): void {
     this._productsService.getAllProducts().subscribe({
       next: (response: any) => {
-        this.products = response.map((p: any) => ({
-          id: p.id.toString(),
-          name: p.name,
-          sku: p.id.toString(),
-          category: p.category,
-          price: p.price,
-          stock: p.stock,
-          sold: p.sold,
-          type: p.type,
-          active: p.stock > 0,
-          thumbnail: p.thumbnail || 'assets/default-thumbnail.png',
-          description: p.description || '',
-          maxPurchasePerUser: p.maxPurchasePerUser || 0,
-          cost: p.cost || p.price * 0.8,
-          basePrice: p.basePrice || p.price,
-          taxPercent: p.taxPercent || 0,
-          weight: p.weight || 0,
-          images: p.images || [],
-          tags: p.tags || []
-        }));
+        this.products = response.map((p: any) => (
+          console.log('Productos p:', p?.tags),
+          {
+            id: p.id.toString(),
+            name: p.name,
+            sku: p.sku,
+            category: p.category,
+            price: p.price,
+            stock: p.stock,
+            sold: p.sold,
+            type: p.type,
+            active: p.active || false,
+            thumbnail: p.thumbnail || 'assets/default-thumbnail.png',
+            description: p.description || '',
+            maxPurchasePerUser: p.maxPurchasePerUser || 0,
+            cost: p.cost || p.price * 0.8,
+            basePrice: p.basePrice || p.price,
+            taxPercent: p.taxPercent || 0,
+            weight: p.weight || 0,
+            images: p.images || [],
+            tags: p?.tags || []
+          }));
         this.filteredProducts = [...this.products];
         this.productsOne.set(this.products);
+        console.log('Productos obtenidos selectedTags:', this.productsOne());
+        console.log('selectedTags:', this.selectedProductForm.get('tags')?.value);
+
+        //  = this.productsOne().map(product => product.tags).flat();
 
         console.log('Productos obtenidos:', this.products);
 
@@ -234,11 +245,11 @@ export default class ProductsComponent implements OnInit {
     });
   }
 
-  editProduct(product: InventoryProduct): void {
+  editProduct(product: IProduct): void {
     console.log('Editando producto:', product);
   }
 
-  deleteProduct(product: InventoryProduct): void {
+  deleteProduct(product: IProduct): void {
     this.products = this.products.filter(p => p.id !== product.id);
     this.calculateStatistics();
     this._productsService.deleteProduct(product.id).subscribe({
@@ -276,7 +287,7 @@ export default class ProductsComponent implements OnInit {
     });
   }
 
-  openImageEditor(product: InventoryProduct): void {
+  openImageEditor(product: IProduct): void {
     const dialogRef = this._dialog.open(EditGalleryComponent, {
       data: { product: product },
     });
@@ -308,6 +319,7 @@ export default class ProductsComponent implements OnInit {
           cost: product.cost,
           basePrice: product.basePrice,
           taxPercent: product.taxPercent,
+          tags: product.tags,
           price: product.price,
           weight: product.weight
         });
@@ -378,7 +390,7 @@ export default class ProductsComponent implements OnInit {
   // Funcionalidad para crear un producto vacío inline
   // =============================================
   createEmptyProduct(): void {
-    const emptyProduct: InventoryProduct = {
+    const emptyProduct: IProduct = {
       id: '', // id vacío o temporal
       name: '',
       sku: '',
@@ -387,7 +399,7 @@ export default class ProductsComponent implements OnInit {
       price: 0,
       stock: 0,
       sold: 0,
-      active: true,
+      active: false,
       thumbnail: '',
       images: [],
       tags: []
@@ -402,7 +414,7 @@ export default class ProductsComponent implements OnInit {
       name: '',
       images: [],
       currentImageIndex: 0,
-      active: true,
+      active: false,
       sku: '',
       barcode: '',
       category: '',
@@ -432,11 +444,8 @@ export default class ProductsComponent implements OnInit {
   }
 
   saveProduct(): void {
-    // this.isLoading.set(true);
-
     if (this.selectedProductForm.invalid) {
       console.log('Formulario no válido', this.selectedProductForm.value);
-      // this.isLoading.set(false);
       return;
     }
 
@@ -449,9 +458,14 @@ export default class ProductsComponent implements OnInit {
     formData.append('description', this.selectedProductForm.get('description')?.value);
     formData.append('type', this.selectedProductForm.get('type')?.value);
 
+    // Convertimos el array de tags a JSON antes de enviarlo
+    const tagsValue = this.selectedProductForm.get('tags')?.value;
+    formData.append('tags', JSON.stringify(tagsValue));
+
     // Adjuntar las imágenes seleccionadas al FormData
     const images = this.selectedProductForm.get('images')?.value;
     console.log('Imágenes seleccionadas2:', images);
+    console.log('tags:', tagsValue);
 
     images.forEach((file: File) => {
       formData.append('files', file);
@@ -467,17 +481,57 @@ export default class ProductsComponent implements OnInit {
         this.selectedProductForm.reset();
         this.selectedProductForm.markAsPristine();
         this.selectedProductForm.markAsUntouched();
-        // this.isLoading.set(false);
-
         this.getProducts();
       },
       error: (error) => {
         console.error('Error al crear producto:', error);
         this._messageService.showError('Error al crear producto', 'bottom right', 5000);
-        // this.isLoading.set(false);
       }
     });
   }
+
+  updateSelectedProduct(): void {
+    if (this.selectedProductForm.invalid || !this.selectedProduct) {
+      console.log('Formulario no válido o producto no seleccionado', this.selectedProductForm.value);
+      return;
+    }
+
+    const formData = new FormData();
+    // Incluimos el id del producto, si el backend lo requiere
+    formData.append('id', this.selectedProduct.id);
+    formData.append('name', this.selectedProductForm.get('name')?.value);
+    formData.append('category', this.selectedProductForm.get('category')?.value);
+    formData.append('price', this.selectedProductForm.get('price')?.value);
+    formData.append('stock', this.selectedProductForm.get('stock')?.value);
+    formData.append('maxPurchasePerUser', this.selectedProductForm.get('maxPurchasePerUser')?.value);
+    formData.append('description', this.selectedProductForm.get('description')?.value);
+    formData.append('type', this.selectedProductForm.get('type')?.value);
+
+    // Convertir el array de tags a JSON antes de enviarlo
+    const tagsValue = this.selectedProductForm.get('tags')?.value;
+    formData.append('tags', JSON.stringify(tagsValue));
+
+    // Adjuntar las imágenes actualizadas, si es necesario
+    const images = this.selectedProductForm.get('images')?.value;
+    images.forEach((file: File) => {
+      formData.append('files', file);
+    });
+
+    // Suponiendo que el servicio de productos tiene un método updateProduct()
+    this._productsService.updateProduct(this.selectedProduct.id, formData).subscribe({
+      next: (response: any) => {
+        console.log('Producto actualizado:', response);
+        this._messageService.showInfo('Producto actualizado exitosamente', 'bottom right', 5000);
+        // Reiniciar el formulario o actualizar la vista según convenga
+        this.getProducts();
+      },
+      error: (error) => {
+        console.error('Error al actualizar producto:', error);
+        this._messageService.showError('Error al actualizar producto', 'bottom right', 5000);
+      }
+    });
+  }
+
 
 
   cancelNewProduct(): void {
@@ -490,15 +544,15 @@ export default class ProductsComponent implements OnInit {
     }
   }
 
-  updateSelectedProduct(): void {
-    if (this.selectedProduct) {
-      console.log('Actualizando producto:', this.selectedProduct);
-      this.flashMessage = 'success';
-      setTimeout(() => {
-        this.flashMessage = null;
-      }, 3000);
-    }
-  }
+  // updateSelectedProduct(): void {
+  //   if (this.selectedProduct) {
+  //     console.log('Actualizando producto:', this.selectedProduct);
+  //     this.flashMessage = 'success';
+  //     setTimeout(() => {
+  //       this.flashMessage = null;
+  //     }, 3000);
+  //   }
+  // }
 
   deleteSelectedProduct(): void {
     if (this.selectedProduct) {
