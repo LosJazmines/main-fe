@@ -8,7 +8,7 @@ import { environment } from '../../environments/environment.dev';
 export class ProductsService {
   urlProducts: string = `${environment.api}/product`;
 
-  constructor(private _http: HttpClient) {}
+  constructor(private _http: HttpClient) { }
   // Método para obtener todos los productos
   getAllProducts() {
     const headers = new HttpHeaders({
@@ -57,13 +57,17 @@ export class ProductsService {
   // }
 
   // Método para actualizar un producto existente
+  // updateProduct(productId: string, productData: any) {
+  //   const headers = new HttpHeaders({
+  //     'Content-Type': 'application/json',
+  //   });
+  //   return this._http.put(`${this.urlProducts}/${productId}`, productData, {
+  //     headers: headers,
+  //   });
+  // }
+
   updateProduct(productId: string, productData: any) {
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-    });
-    return this._http.put(`${this.urlProducts}/${productId}`, productData, {
-      headers: headers,
-    });
+    return this._http.patch(`${this.urlProducts}/${productId}`, productData);
   }
 
   // Método mejorado para buscar productos con filtros dinámicos

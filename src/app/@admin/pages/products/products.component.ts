@@ -20,7 +20,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { IProduct } from '@core/interfaces/product';
 import { CATEGORIES_DATA } from '@core/data/categories_data';
 import { TAGS_DATA } from '@core/data/tags_data';
-import { log } from 'console';
+import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 
 
 @Component({
@@ -114,6 +114,30 @@ export default class ProductsComponent implements OnInit {
     this.calculateStatistics();
     this.getProducts();
     this.loadSelectOptions();
+
+    // Escuchar cambios en precio base y porcentaje de impuesto
+    this.selectedProductForm.get('basePrice')?.valueChanges.subscribe(() => {
+      this.calculatePrice();
+    });
+    this.selectedProductForm.get('taxPercent')?.valueChanges.subscribe(() => {
+      this.calculatePrice();
+    });
+  }
+
+
+  /**
+   * Función que calcula el precio final sumando el impuesto al precio base.
+   */
+  private calculatePrice(): void {
+    // Obtenemos y convertimos el precio base y el porcentaje de impuesto a números
+    const basePrice = parseFloat(this.selectedProductForm.get('basePrice')?.value) || 0;
+    const taxPercent = parseFloat(this.selectedProductForm.get('taxPercent')?.value) || 0;
+
+    // Calculamos el precio final: precio base + (precio base * impuesto / 100)
+    const finalPrice = basePrice + (basePrice * taxPercent / 100);
+
+    // Actualizamos el campo 'price', evitando emitir otro evento (para prevenir loops)
+    this.selectedProductForm.patchValue({ price: finalPrice.toFixed(2) }, { emitEvent: false });
   }
 
   get products$(): Observable<IProduct[]> {
@@ -145,31 +169,79 @@ export default class ProductsComponent implements OnInit {
   selectedTags: any[] = [];
   showTagSelector = false; // Bandera para mostrar/ocultar el selector de tags
 
-
-  // Método para manejar el cambio de selección de tag
-  // Método para manejar el cambio de selección de tag
   onTagSelectionChange(tag: any): void {
-    // Si el tag ya está en la lista, no lo agregamos de nuevo.
-    if (!this.selectedTags.find(t => t.uuid === tag.uuid)) {
+    // Obtenemos los tags que actualmente están en el formulario,
+    // en caso de que sea undefined inicializamos a un array vacío
+    const formTags = this.selectedProductForm.value.tags || [];
+
+    // Verificamos que el tag no esté en this.selectedTags ni en formTags.
+    const existsInSelectedTags = this.selectedTags.some(t => t.uuid === tag.uuid);
+    const existsInFormTags: boolean = formTags.some((t: { uuid: string }) => t.uuid === tag.uuid);
+
+    if (!existsInSelectedTags && !existsInFormTags) {
       this.selectedTags.push(tag);
     }
-    console.log({ tag });
 
-    // Actualizamos el formulario con los objetos completos
-    console.log('Tags seleccionados:', this.selectedTags);
-    console.log('Formulario actualizado:', this.selectedProductForm.value);
-    this.selectedProductForm.patchValue({ tags: this.selectedTags });
+
+    // Creamos una lista combinada de tags sin duplicados.
+    // Utilizamos un Map para asegurar que cada 'uuid' aparezca solo una vez.
+    const mergedTagsMap = new Map();
+
+    // Agregamos primero los tags del formulario (si existen).
+    formTags.forEach((t: any) => mergedTagsMap.set(t.uuid, t));
+
+    // Agregamos los tags de la selección local.
+    this.selectedTags.forEach((t: any) => mergedTagsMap.set(t.uuid, t));
+
+    // Convertimos el Map a un array
+    const mergedTags = Array.from(mergedTagsMap.values());
+
+    // Actualizamos el formulario con la lista combinada de tags sin duplicados.
+    this.selectedProductForm.patchValue({ tags: mergedTags });
 
     // Cerramos el selector de tags (si está implementado para mostrarse/ocultarse)
     this.showTagSelector = false;
   }
 
 
+  // Función para manejar el cambio en el mat-slide-toggle.
+  onToggleActive(event: MatSlideToggleChange): void {
+    const isActive = event.checked;
+    // Actualiza el control "active" del formulario
+    this.selectedProductForm.patchValue({ active: isActive });
+
+    // Aquí podrías realizar una llamada al backend para actualizar el producto,
+    // por ejemplo, si el producto ya existe:
+    /*
+    if (this.selectedProduct) {
+      this._productsService.updateProduct(this.selectedProduct.id, { active: isActive }).subscribe({
+        next: () => {
+          this._messageService.showInfo(`Producto ${ isActive ? 'activado' : 'desactivado' } correctamente`, 'bottom right', 5000);
+        },
+        error: (error) => {
+          console.error('Error actualizando el estado del producto:', error);
+          this._messageService.showError('Error al actualizar el estado del producto', 'bottom right', 5000);
+        }
+      });
+    }
+    */
+  }
   // Si necesitas remover un tag de la lista:
   removeTag(tag: any): void {
+    // Eliminar el tag del array local selectedTags
     this.selectedTags = this.selectedTags.filter(t => t.uuid !== tag.uuid);
-    this.selectedProductForm.patchValue({ tags: this.selectedTags.map(t => t.uuid) });
+
+    // Obtener los tags actuales del formulario (si es undefined se inicializa a [])
+    const formTags = this.selectedProductForm.value.tags || [];
+
+    // Filtrar para remover el tag seleccionado
+    const updatedFormTags = formTags.filter((t: any) => t.uuid !== tag.uuid);
+
+    // Actualizar el formulario con la nueva lista de tags
+    this.selectedProductForm.patchValue({ tags: updatedFormTags });
+
   }
+
 
   calculateStatistics(): void {
     this.totalProducts = this.products.length;
@@ -179,8 +251,6 @@ export default class ProductsComponent implements OnInit {
   }
 
   onImageUpload(event: Event): void {
-    console.log('Evento de carga de imagen:', event);
-
     const input = event.target as HTMLInputElement;
     if (input.files) {
       const files: File[] = Array.from(input.files);
@@ -207,7 +277,6 @@ export default class ProductsComponent implements OnInit {
     this._productsService.getAllProducts().subscribe({
       next: (response: any) => {
         this.products = response.map((p: any) => (
-          console.log('Productos p:', p?.tags),
           {
             id: p.id.toString(),
             name: p.name,
@@ -221,8 +290,8 @@ export default class ProductsComponent implements OnInit {
             thumbnail: p.thumbnail || 'assets/default-thumbnail.png',
             description: p.description || '',
             maxPurchasePerUser: p.maxPurchasePerUser || 0,
-            cost: p.cost || p.price * 0.8,
-            basePrice: p.basePrice || p.price,
+            cost: p.cost || 0,
+            basePrice: p.basePrice || 0,
             taxPercent: p.taxPercent || 0,
             weight: p.weight || 0,
             images: p.images || [],
@@ -230,12 +299,8 @@ export default class ProductsComponent implements OnInit {
           }));
         this.filteredProducts = [...this.products];
         this.productsOne.set(this.products);
-        console.log('Productos obtenidos selectedTags:', this.productsOne());
-        console.log('selectedTags:', this.selectedProductForm.get('tags')?.value);
 
         //  = this.productsOne().map(product => product.tags).flat();
-
-        console.log('Productos obtenidos:', this.products);
 
         this.calculateStatistics();
       },
@@ -245,9 +310,7 @@ export default class ProductsComponent implements OnInit {
     });
   }
 
-  editProduct(product: IProduct): void {
-    console.log('Editando producto:', product);
-  }
+
 
   deleteProduct(product: IProduct): void {
     this.products = this.products.filter(p => p.id !== product.id);
@@ -342,54 +405,46 @@ export default class ProductsComponent implements OnInit {
     }
   }
 
-  createTag(tag: string): void {
-    console.log('Creando tag:', tag);
-  }
+
 
   toggleTagsEditMode(): void {
     this.tagsEditMode = !this.tagsEditMode;
   }
 
-  updateTagTitle(tag: any, event: any): void {
-    console.log('Actualizando tag:', tag, event);
-  }
 
-  deleteTag(tag: any): void {
-    console.log('Eliminando tag:', tag);
-  }
 
-  toggleProductTag(tag: any, event: any): void {
-    console.log('Alternando tag en producto:', tag, event);
-  }
-
-  shouldShowCreateTagButton(inputValue: string): boolean {
-    return !!inputValue;
-  }
 
   // trackBy para optimizar el ngFor
   trackByFn(index: number, item: any): any {
     return item.id || index;
   }
 
-  filterTagsInputKeyDown(event: KeyboardEvent): void {
-    if (event.key === 'Enter') {
-      event.preventDefault();
-      const input = (event.target as HTMLInputElement).value.trim();
-      if (input) {
-        this.createTag(input);
-        (event.target as HTMLInputElement).value = '';
-      }
-    }
-  }
+  // filterTagsInputKeyDown(event: KeyboardEvent): void {
+  //   if (event.key === 'Enter') {
+  //     event.preventDefault();
+  //     const input = (event.target as HTMLInputElement).value.trim();
+  //     if (input) {
+  //       this.createTag(input);
+  //       (event.target as HTMLInputElement).value = '';
+  //     }
+  //   }
+  // }
 
-  onFilterTags(event: Event): void {
-    // Ejemplo de filtrado de tags
-  }
+  // onFilterTags(event: Event): void {
+  //   // Ejemplo de filtrado de tags
+  // }
 
   // =============================================
   // Funcionalidad para crear un producto vacío inline
   // =============================================
   createEmptyProduct(): void {
+    // Verificamos si ya existe un producto vacío en la lista (id vacío)
+    if (this.products.some(product => product.id === '')) {
+      this._messageService.showError('Ya tenes un producto pendiente de crear', 'top center', 5000, 'aceptar');
+      return; // Salir sin crear otro producto vacío
+    }
+
+    // Crear un producto vacío
     const emptyProduct: IProduct = {
       id: '', // id vacío o temporal
       name: '',
@@ -405,11 +460,13 @@ export default class ProductsComponent implements OnInit {
       tags: []
     };
 
+    // Se marca que se está creando un nuevo producto y se agrega al inicio de la lista
     this.isNewProduct = true;
     this.products.unshift(emptyProduct);
     this.filteredProducts = [...this.products];
     this.selectedProduct = emptyProduct;
 
+    // Se inicializa el formulario con valores vacíos
     this.selectedProductForm.patchValue({
       name: '',
       images: [],
@@ -430,6 +487,7 @@ export default class ProductsComponent implements OnInit {
       weight: 0
     });
   }
+
 
   private buildFormData(data: any, formData: FormData = new FormData(), parentKey: string = ''): FormData {
     if (data && typeof data === 'object' && !(data instanceof Date) && !(data instanceof File)) {
@@ -457,6 +515,9 @@ export default class ProductsComponent implements OnInit {
     formData.append('maxPurchasePerUser', this.selectedProductForm.get('maxPurchasePerUser')?.value);
     formData.append('description', this.selectedProductForm.get('description')?.value);
     formData.append('type', this.selectedProductForm.get('type')?.value);
+    formData.append('taxPercent', this.selectedProductForm.get('taxPercent')?.value);
+    formData.append('basePrice', this.selectedProductForm.get('basePrice')?.value);
+    formData.append('cost', this.selectedProductForm.get('cost')?.value);
 
     // Convertimos el array de tags a JSON antes de enviarlo
     const tagsValue = this.selectedProductForm.get('tags')?.value;
@@ -464,8 +525,7 @@ export default class ProductsComponent implements OnInit {
 
     // Adjuntar las imágenes seleccionadas al FormData
     const images = this.selectedProductForm.get('images')?.value;
-    console.log('Imágenes seleccionadas2:', images);
-    console.log('tags:', tagsValue);
+
 
     images.forEach((file: File) => {
       formData.append('files', file);
@@ -473,7 +533,6 @@ export default class ProductsComponent implements OnInit {
 
     this._productsService.createProduct(formData).subscribe({
       next: (response: any) => {
-        console.log('Producto creado:', response);
         this._messageService.showInfo('Producto creado exitosamente', 'bottom right', 5000);
         // Reiniciar archivos e imágenes
         this.selectedFiles = [];
@@ -484,7 +543,6 @@ export default class ProductsComponent implements OnInit {
         this.getProducts();
       },
       error: (error) => {
-        console.error('Error al crear producto:', error);
         this._messageService.showError('Error al crear producto', 'bottom right', 5000);
       }
     });
@@ -492,7 +550,7 @@ export default class ProductsComponent implements OnInit {
 
   updateSelectedProduct(): void {
     if (this.selectedProductForm.invalid || !this.selectedProduct) {
-      console.log('Formulario no válido o producto no seleccionado', this.selectedProductForm.value);
+      this._messageService.showError('Formulario no válido', 'bottom right', 5000);
       return;
     }
 
@@ -506,6 +564,10 @@ export default class ProductsComponent implements OnInit {
     formData.append('maxPurchasePerUser', this.selectedProductForm.get('maxPurchasePerUser')?.value);
     formData.append('description', this.selectedProductForm.get('description')?.value);
     formData.append('type', this.selectedProductForm.get('type')?.value);
+    formData.append('active', this.selectedProductForm.get('active')?.value);
+    formData.append('taxPercent', this.selectedProductForm.get('taxPercent')?.value);
+    formData.append('basePrice', this.selectedProductForm.get('basePrice')?.value);
+    formData.append('cost', this.selectedProductForm.get('cost')?.value);
 
     // Convertir el array de tags a JSON antes de enviarlo
     const tagsValue = this.selectedProductForm.get('tags')?.value;
@@ -520,13 +582,11 @@ export default class ProductsComponent implements OnInit {
     // Suponiendo que el servicio de productos tiene un método updateProduct()
     this._productsService.updateProduct(this.selectedProduct.id, formData).subscribe({
       next: (response: any) => {
-        console.log('Producto actualizado:', response);
         this._messageService.showInfo('Producto actualizado exitosamente', 'bottom right', 5000);
         // Reiniciar el formulario o actualizar la vista según convenga
         this.getProducts();
       },
       error: (error) => {
-        console.error('Error al actualizar producto:', error);
         this._messageService.showError('Error al actualizar producto', 'bottom right', 5000);
       }
     });
@@ -556,8 +616,16 @@ export default class ProductsComponent implements OnInit {
 
   deleteSelectedProduct(): void {
     if (this.selectedProduct) {
-      console.log('Eliminando producto seleccionado:', this.selectedProduct);
-      this.selectedProduct = null;
+      this._productsService.deleteProduct(this.selectedProduct?.id).subscribe({
+        next: (response: any) => {
+          this._messageService.showInfo('Producto eliminado correctamente', 'top center', 5000);
+          this.selectedProduct = null;
+          this.getProducts();
+        },
+        error: (error) => {
+          this._messageService.showError('Error al eliminado producto', 'bottom right', 5000);
+        }
+      });
     }
   }
 }

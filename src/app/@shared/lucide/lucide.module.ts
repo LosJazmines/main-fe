@@ -118,7 +118,9 @@ import {
   Archive,
   ClipboardList,
   ChevronLeft,
-  Download
+  Download,
+  ImagePlus,
+  ImageUp
 } from 'lucide-angular';
 
 export const LUCIDE_MODULES = [
@@ -240,7 +242,9 @@ export const LUCIDE_MODULES = [
     Archive,
     ClipboardList,
     ChevronLeft,
-    Download
+    Download,
+    ImagePlus,
+    ImageUp
   }),
 ];
 
