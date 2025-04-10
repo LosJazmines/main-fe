@@ -120,7 +120,8 @@ import {
   ChevronLeft,
   Download,
   ImagePlus,
-  ImageUp
+  ImageUp,
+  ListFilterPlus
 } from 'lucide-angular';
 
 export const LUCIDE_MODULES = [
@@ -244,7 +245,8 @@ export const LUCIDE_MODULES = [
     ChevronLeft,
     Download,
     ImagePlus,
-    ImageUp
+    ImageUp,
+    ListFilterPlus
   }),
 ];
 

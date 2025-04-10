@@ -6,21 +6,107 @@
     <h1 class="text-3xl mb-6 text-[#3a5a40] font-playfair text-start w-full">
       Productos
     </h1>
-    <div class="w-full flex flex-col lg:flex-row items-center gap-4">
-      <app-search-moderno-reactive
-        [inputPlaceholder]="'Buscar por Dirección o Nombre del destinatario'"
-        (search)="handleSearch($event)"
-        class="w-full lg:w-[400px]"
-      ></app-search-moderno-reactive>
+    <div
+      class="w-full flex flex-col lg:flex-row justify-end items-center gap-4"
+    >
       <button
         (click)="createEmptyProduct()"
-        class="w-full flex-1 lg:w-max px-4 py-2 bg-[#3a5a40]/80 text-white rounded-[4px] shadow hover:bg-[#3a5a40]/90 focus:outline-none transition flex items-center gap-2"
+        class="w-full max-w-[200px] flex-1 lg:w-max px-4 py-2 bg-[#3a5a40]/80 text-white rounded-[4px] shadow hover:bg-[#3a5a40]/90 focus:outline-none transition flex items-center justify-center gap-2"
       >
         <lucide-icon name="plus" class="w-5 h-5"></lucide-icon>
         Agregar Producto
       </button>
     </div>
   </div>
+  <div class="flex flex-col lg:flex-row items-center justify-end gap-4 mb-4">
+    <app-search-moderno-reactive
+      [inputPlaceholder]="'Buscar por Dirección o Nombre del destinatario'"
+      (search)="handleSearch($event)"
+      class="w-full lg:w-[400px]"
+    ></app-search-moderno-reactive>
+    <button
+      (click)="openFilterDialog()"
+      disabled
+      class="w-full max-w-[120px] flex-1 lg:w-max px-4 py-2 bg-[#3a5a40]/80 text-white rounded-[4px] shadow hover:bg-[#3a5a40]/90 disabled:opacity-30 disabled:cursor-not-allowed focus:outline-none transition flex items-center justify-center gap-2"
+    >
+      <lucide-icon name="ListFilterPlus" class="w-5 h-5"></lucide-icon>
+      Filtros
+    </button>
+  </div>
+  <!-- Filtros activos -->
+  @if (currentFilters.selectedCategory || currentFilters.selectedTag ||
+  currentFilters.minPrice || currentFilters.maxPrice || currentFilters.active
+  !== null) {
+  <div class="flex flex-wrap items-center gap-2 mb-4">
+    <span class="text-sm text-gray-600">Filtros activos:</span>
+
+    @if (currentFilters.selectedCategory) {
+    <div
+      class="flex items-center gap-1 bg-[#3a5a40]/10 px-2 py-1 rounded-[4px]"
+    >
+      <span class="text-sm text-[#3a5a40]">
+        Categoría: {{ getCategoryName(currentFilters.selectedCategory) }}
+      </span>
+      <button
+        (click)="removeCategoryFilter()"
+        class="text-[#3a5a40] hover:text-[#3a5a40]/80"
+      >
+        <lucide-icon name="x" class="w-4 h-4"></lucide-icon>
+      </button>
+    </div>
+    } @if (currentFilters.selectedTag) {
+    <div
+      class="flex items-center gap-1 bg-[#3a5a40]/10 px-2 py-1 rounded-[4px]"
+    >
+      <span class="text-sm text-[#3a5a40]">
+        Etiqueta: {{ getTagName(currentFilters.selectedTag) }}
+      </span>
+      <button
+        (click)="removeTagFilter()"
+        class="text-[#3a5a40] hover:text-[#3a5a40]/80"
+      >
+        <lucide-icon name="x" class="w-4 h-4"></lucide-icon>
+      </button>
+    </div>
+    } @if (currentFilters.minPrice || currentFilters.maxPrice) {
+    <div
+      class="flex items-center gap-1 bg-[#3a5a40]/10 px-2 py-1 rounded-[4px]"
+    >
+      <span class="text-sm text-[#3a5a40]">
+        Precio: {{ currentFilters.minPrice || "0" }} -
+        {{ currentFilters.maxPrice || "∞" }}
+      </span>
+      <button
+        (click)="removePriceFilter()"
+        class="text-[#3a5a40] hover:text-[#3a5a40]/80"
+      >
+        <lucide-icon name="x" class="w-4 h-4"></lucide-icon>
+      </button>
+    </div>
+    } @if (currentFilters.active !== null) {
+    <div
+      class="flex items-center gap-1 bg-[#3a5a40]/10 px-2 py-1 rounded-[4px]"
+    >
+      <span class="text-sm text-[#3a5a40]">
+        Estado: {{ currentFilters.active ? "Activo" : "Inactivo" }}
+      </span>
+      <button
+        (click)="removeActiveFilter()"
+        class="text-[#3a5a40] hover:text-[#3a5a40]/80"
+      >
+        <lucide-icon name="x" class="w-4 h-4"></lucide-icon>
+      </button>
+    </div>
+    }
+
+    <button
+      (click)="clearFilters()"
+      class="text-sm text-[#3a5a40] hover:underline"
+    >
+      Limpiar todos
+    </button>
+  </div>
+  }
 
   <!-- Tabla de productos -->
   <div class="overflow-x-auto">

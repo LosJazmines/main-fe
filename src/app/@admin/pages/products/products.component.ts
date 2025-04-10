@@ -22,6 +22,7 @@ import { CATEGORIES_DATA } from '@core/data/categories_data';
 import { TAGS_DATA } from '@core/data/tags_data';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { LoaderComponent } from '@shared/components/loader/loader.component';
+import { FilterDialogComponent } from './filter-dialog/filter-dialog.component';
 
 
 @Component({
@@ -80,6 +81,14 @@ export default class ProductsComponent implements OnInit {
 
   isLoading = false;
   isNewProduct = false;
+
+  currentFilters = {
+    selectedCategory: null as string | null,
+    selectedTag: null as string | null,
+    minPrice: null as number | null,
+    maxPrice: null as number | null,
+    active: null as boolean | null
+  };
 
   constructor(
     private _fb: FormBuilder,
@@ -677,5 +686,92 @@ export default class ProductsComponent implements OnInit {
         this._messageService.showError('Error al eliminar la imagen', 'bottom right', 5000);
       }
     });
+  }
+
+  openFilterDialog(): void {
+    const dialogRef = this._dialog.open(FilterDialogComponent, {
+      width: '600px',
+      data: { filters: this.currentFilters }
+    });
+
+    dialogRef.afterClosed().subscribe((filters: any) => {
+      if (filters) {
+        this.currentFilters = filters;
+        this.applyFilters();
+      }
+    });
+  }
+
+  applyFilters(): void {
+    this.filteredProducts = this.products.filter(product => {
+      // Filtrar por categoría
+      if (this.currentFilters.selectedCategory && product.category !== this.currentFilters.selectedCategory) {
+        return false;
+      }
+
+      // Filtrar por tag
+      if (this.currentFilters.selectedTag && !product.tags?.some((tag: any) => tag?.uuid === this.currentFilters.selectedTag)) {
+        return false;
+      }
+
+      // Filtrar por precio
+      if (this.currentFilters.minPrice && product.price < this.currentFilters.minPrice) {
+        return false;
+      }
+      if (this.currentFilters.maxPrice && product.price > this.currentFilters.maxPrice) {
+        return false;
+      }
+
+      // Filtrar por estado
+      if (this.currentFilters.active !== null && product.active !== this.currentFilters.active) {
+        return false;
+      }
+
+      return true;
+    });
+  }
+
+  clearFilters(): void {
+    this.currentFilters = {
+      selectedCategory: null,
+      selectedTag: null,
+      minPrice: null,
+      maxPrice: null,
+      active: null
+    };
+    this.filteredProducts = [...this.products];
+  }
+
+  getCategoryName(uuid: string | null): string {
+    if (!uuid) return '';
+    const category = this.categories.find(c => c.uuid === uuid);
+    return category?.name || '';
+  }
+
+  getTagName(uuid: string | null): string {
+    if (!uuid) return '';
+    const tag = this.tags.find(t => t.uuid === uuid);
+    return tag?.name || '';
+  }
+
+  removeCategoryFilter(): void {
+    this.currentFilters.selectedCategory = null;
+    this.applyFilters();
+  }
+
+  removeTagFilter(): void {
+    this.currentFilters.selectedTag = null;
+    this.applyFilters();
+  }
+
+  removePriceFilter(): void {
+    this.currentFilters.minPrice = null;
+    this.currentFilters.maxPrice = null;
+    this.applyFilters();
+  }
+
+  removeActiveFilter(): void {
+    this.currentFilters.active = null;
+    this.applyFilters();
   }
 }

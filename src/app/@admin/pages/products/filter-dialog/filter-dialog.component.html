@@ -1,0 +1,118 @@
+<div class="p-6">
+  <h2 class="text-2xl font-semibold text-[#3a5a40] mb-4">Filtrar Productos</h2>
+
+  <div class="space-y-6">
+    <!-- Categorías -->
+    <div>
+      <h3 class="text-lg font-semibold mb-2">Categorías</h3>
+      <div class="flex flex-wrap gap-2">
+        <ng-container *ngFor="let category of categories">
+          <button
+            type="button"
+            [id]="'category-' + category.uuid"
+            [ngClass]="{
+              'bg-[#3a5a40]/20 text-[#3a5a40]': filters.selectedCategory === category.uuid,
+              'hover:bg-[#3a5a40]/10': filters.selectedCategory !== category.uuid
+            }"
+            class="px-3 py-1 rounded-[4px] border border-[#3a5a40]/50 transition"
+            (click)="filters.selectedCategory = filters.selectedCategory === category.uuid ? null : category.uuid">
+            {{ category.name }}
+          </button>
+        </ng-container>
+      </div>
+    </div>
+
+    <!-- Tags -->
+    <div>
+      <h3 class="text-lg font-semibold mb-2">Etiquetas</h3>
+      <div class="flex flex-wrap gap-2">
+        <ng-container *ngFor="let tag of tags">
+          <button
+            type="button"
+            [id]="'tag-' + tag.uuid"
+            [ngClass]="{
+              'bg-[#3a5a40]/20 text-[#3a5a40]': filters.selectedTag === tag.uuid,
+              'hover:bg-[#3a5a40]/10': filters.selectedTag !== tag.uuid
+            }"
+            class="px-3 py-1 rounded-[4px] border border-[#3a5a40]/50 transition"
+            (click)="filters.selectedTag = filters.selectedTag === tag.uuid ? null : tag.uuid">
+            {{ tag.name }}
+          </button>
+        </ng-container>
+      </div>
+    </div>
+
+    <!-- Precio -->
+    <div>
+      <h3 class="text-lg font-semibold mb-2">Precio</h3>
+      <div class="flex items-center gap-2">
+        <input
+          type="number"
+          id="min-price"
+          [(ngModel)]="filters.minPrice"
+          placeholder="Mínimo"
+          class="w-24 p-2 border border-[#3a5a40]/50 rounded-[4px] focus:outline-none focus:ring-2 focus:ring-[#3a5a40]/20">
+        <span class="text-[#3a5a40]">-</span>
+        <input
+          type="number"
+          id="max-price"
+          [(ngModel)]="filters.maxPrice"
+          placeholder="Máximo"
+          class="w-24 p-2 border border-[#3a5a40]/50 rounded-[4px] focus:outline-none focus:ring-2 focus:ring-[#3a5a40]/20">
+      </div>
+    </div>
+
+    <!-- Estado -->
+    <div>
+      <h3 class="text-lg font-semibold mb-2">Estado</h3>
+      <div class="flex gap-4">
+        <button
+          type="button"
+          id="active-state"
+          [ngClass]="{
+            'bg-[#3a5a40]/20 text-[#3a5a40]': filters.active === true,
+            'hover:bg-[#3a5a40]/10': filters.active !== true
+          }"
+          class="px-3 py-1 rounded-[4px] border border-[#3a5a40]/50 transition"
+          (click)="filters.active = filters.active === true ? null : true">
+          Activo
+        </button>
+        <button
+          type="button"
+          id="inactive-state"
+          [ngClass]="{
+            'bg-[#3a5a40]/20 text-[#3a5a40]': filters.active === false,
+            'hover:bg-[#3a5a40]/10': filters.active !== false
+          }"
+          class="px-3 py-1 rounded-[4px] border border-[#3a5a40]/50 transition"
+          (click)="filters.active = filters.active === false ? null : false">
+          Inactivo
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="flex justify-end gap-2 mt-6">
+    <button
+      mat-button
+      id="clear-filters"
+      (click)="clearFilters()"
+      class="text-[#3a5a40]">
+      Limpiar
+    </button>
+    <button
+      mat-button
+      id="cancel-filters"
+      (click)="close()"
+      class="text-[#3a5a40]">
+      Cancelar
+    </button>
+    <button
+      mat-button
+      id="apply-filters"
+      (click)="applyFilters()"
+      class="bg-[#3a5a40]/80 text-white">
+      Aplicar
+    </button>
+  </div>
+</div>
