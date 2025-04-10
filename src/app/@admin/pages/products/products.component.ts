@@ -349,17 +349,17 @@ export default class ProductsComponent implements OnInit {
     );
   }
 
-  openDialogAddProduct(): void {
-    const dialogRef = this._dialog.open(AddProductComponent, {
-      data: { name: 'hola', animal: 'hola' },
-    });
-    dialogRef.afterClosed().subscribe((result: any) => {
-      if (result?.success) {
-        this.getProducts();
-      }
-      this._adminHeaderStore.updateHeaderTitle('Productos');
-    });
-  }
+  // openDialogAddProduct(): void {
+  //   const dialogRef = this._dialog.open(AddProductComponent, {
+  //     data: { name: 'hola', animal: 'hola' },
+  //   });
+  //   dialogRef.afterClosed().subscribe((result: any) => {
+  //     if (result?.success) {
+  //       this.getProducts();
+  //     }
+  //     this._adminHeaderStore.updateHeaderTitle('Productos');
+  //   });
+  // }
 
   openImageEditor(product: IProduct): void {
     const dialogRef = this._dialog.open(EditGalleryComponent, {
@@ -367,12 +367,11 @@ export default class ProductsComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe((updatedImages: any[]) => {
       if (updatedImages) {
-        // Actualizar el formulario con las imágenes actualizadas
+        // Actualizar el formulario y producto con la galería actualizada
         this.selectedProductForm.patchValue({
           images: updatedImages,
-          currentImageIndex: 0 // Resetear al índice 0
+          currentImageIndex: 0
         });
-        // Actualizar también el producto seleccionado
         if (this.selectedProduct) {
           this.selectedProduct.images = updatedImages;
         }
@@ -524,7 +523,7 @@ export default class ProductsComponent implements OnInit {
 
   saveProduct(): void {
     if (this.selectedProductForm.invalid) {
-      console.log('Formulario no válido', this.selectedProductForm.value);
+      this._messageService.showError('Formulario no válido', 'bottom right', 5000);
       return;
     }
 
@@ -544,12 +543,10 @@ export default class ProductsComponent implements OnInit {
     const tagsValue = this.selectedProductForm.get('tags')?.value;
     formData.append('tags', JSON.stringify(tagsValue));
 
-    // Adjuntar las imágenes seleccionadas al FormData
+    // Adjuntar las imágenes seleccionadas al FormData extrayendo la propiedad file
     const images = this.selectedProductForm.get('images')?.value;
-
-
-    images.forEach((file: File) => {
-      formData.append('files', file);
+    images.forEach((image: { file: File; url: string }) => {
+      formData.append('files', image.file);
     });
 
     this._productsService.createProduct(formData).subscribe({
@@ -569,6 +566,7 @@ export default class ProductsComponent implements OnInit {
     });
   }
 
+
   updateSelectedProduct(): void {
     if (this.selectedProductForm.invalid || !this.selectedProduct) {
       this._messageService.showError('Formulario no válido', 'bottom right', 5000);
@@ -578,7 +576,6 @@ export default class ProductsComponent implements OnInit {
     this.isLoading = true;
 
     const formData = new FormData();
-    // Incluimos el id del producto, si el backend lo requiere
     formData.append('id', this.selectedProduct.id);
     formData.append('name', this.selectedProductForm.get('name')?.value);
     formData.append('category', this.selectedProductForm.get('category')?.value);
@@ -596,21 +593,18 @@ export default class ProductsComponent implements OnInit {
     const tagsValue = this.selectedProductForm.get('tags')?.value;
     formData.append('tags', JSON.stringify(tagsValue));
 
-    // Adjuntar las imágenes actualizadas, si es necesario
+    // Adjuntar las imágenes actualizadas (extrayendo la propiedad file)
     const images = this.selectedProductForm.get('images')?.value;
-    images.forEach((file: File) => {
-      formData.append('files', file);
+    images.forEach((image: { file: File; url: string }) => {
+      formData.append('files', image.file);
     });
 
-    // Suponiendo que el servicio de productos tiene un método updateProduct()
     this._productsService.updateProduct(this.selectedProduct.id, formData).subscribe({
       next: (response: any) => {
         this._messageService.showInfo('Producto actualizado exitosamente', 'bottom right', 5000);
-        // Actualizar el producto seleccionado con los nuevos valores
         if (this.selectedProduct) {
           this.selectedProduct.active = this.selectedProductForm.get('active')?.value;
         }
-        // Reiniciar el formulario o actualizar la vista según convenga
         this.getProducts();
         this.isLoading = false;
       },
@@ -620,6 +614,7 @@ export default class ProductsComponent implements OnInit {
       }
     });
   }
+
 
 
 
@@ -644,7 +639,6 @@ export default class ProductsComponent implements OnInit {
   // }
 
   deleteSelectedProduct(): void {
-    console.log('selectedProduct', this.selectedProduct);
     if (this.selectedProduct) {
       // Verificar si el producto está activo
       if (this.selectedProduct.active) {
@@ -665,28 +659,28 @@ export default class ProductsComponent implements OnInit {
     }
   }
 
-  deleteImage(imageId: string): void {
-    if (!this.selectedProduct) {
-      return;
-    }
+  // deleteImage(imageId: string): void {
+  //   if (!this.selectedProduct) {
+  //     return;
+  //   }
 
-    this._productsService.deleteImage(this.selectedProduct.id, imageId).subscribe({
-      next: (response: any) => {
-        // Remover la imagen de la lista de imágenes del producto
-        if (this.selectedProduct?.images) {
-          this.selectedProduct.images = this.selectedProduct.images.filter(img => img.id !== imageId);
-          // Actualizar el formulario
-          this.selectedProductForm.patchValue({
-            images: this.selectedProduct.images
-          });
-        }
-        this._messageService.showInfo('Imagen eliminada correctamente', 'top center', 5000);
-      },
-      error: (error) => {
-        this._messageService.showError('Error al eliminar la imagen', 'bottom right', 5000);
-      }
-    });
-  }
+  //   this._productsService.deleteImage(this.selectedProduct.id, imageId).subscribe({
+  //     next: (response: any) => {
+  //       // Remover la imagen de la lista de imágenes del producto
+  //       if (this.selectedProduct?.images) {
+  //         this.selectedProduct.images = this.selectedProduct.images.filter(img => img.id !== imageId);
+  //         // Actualizar el formulario
+  //         this.selectedProductForm.patchValue({
+  //           images: this.selectedProduct.images
+  //         });
+  //       }
+  //       this._messageService.showInfo('Imagen eliminada correctamente', 'top center', 5000);
+  //     },
+  //     error: (error) => {
+  //       this._messageService.showError('Error al eliminar la imagen', 'bottom right', 5000);
+  //     }
+  //   });
+  // }
 
   openFilterDialog(): void {
     const dialogRef = this._dialog.open(FilterDialogComponent, {
