@@ -205,6 +205,7 @@
                 </ng-template>
                 <!-- Input file oculto para subir imagen -->
                 <input
+                  #fileInput
                   matTooltip="clickear para Agregar Imagen"
                   matTooltipClass="!text-[#3a5a40] !bg-[#3a5a40]/50"
                   type="file"
@@ -257,6 +258,14 @@
                   ></lucide-icon>
                 </button>
               </div>
+              <button
+                type="button"
+                class="mt-4 px-4 py-2 bg-[#3a5a40]/80 text-white rounded-[4px] shadow hover:bg-[#3a5a40]/90 focus:outline-none transition flex items-center justify-center gap-2"
+                (click)="fileInput.click()"
+              >
+                Agregar
+                <lucide-icon name="image-up"></lucide-icon>
+              </button>
             </div>
             <div class="flex flex-col mt-8">
               <span class="font-semibold mb-2">Visible en tienda</span>
@@ -547,14 +556,19 @@
           <div class="flex items-center">
             <button
               type="button"
-              class="px-4 py-2 bg-[#3a5a40]/80 text-white rounded-[4px] shadow hover:bg-[#3a5a40]/80 focus:outline-none transition"
+              class="min-w-[97px] px-4 py-2 bg-[#3a5a40]/80 text-white rounded-[4px] shadow hover:bg-[#3a5a40]/80 focus:outline-none transition flex items-center justify-center disabled:bg-[#3a5a40]/40"
               (click)="
                 index === 0 && isNewProduct
                   ? saveProduct()
                   : updateSelectedProduct()
               "
+              [disabled]="isLoading"
             >
+              @if (isLoading) {
+              <app-loader [size]="'15px'"></app-loader>
+              } @else {
               {{ index === 0 && isNewProduct ? "Crear" : "Actualizar" }}
+              }
             </button>
           </div>
         </div>

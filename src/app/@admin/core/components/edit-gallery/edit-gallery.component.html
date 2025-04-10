@@ -16,18 +16,41 @@
   <div
     class="w-full h-full flex flex-col md:flex-row items-center justify-center gap-2 px-8 pb-8 pt-4 overflow-auto"
   >
-    @for (gallery of gallerys(); track $index) {
-    <div class="w-[192px] h-[341px] flex flex-col items-center relative">
-      <!-- Contenedor de imagen con funcionalidad de subida -->
-
-      <div
-        class="w-[192px] h-[341px] border border-[#3a5a40]/50 rounded overflow-hidden"
-      >
-        <ng-container *ngIf="gallerys().length; else noImage">
+    @if (isLoading()) {
+      <app-loader></app-loader>
+    } @else {
+      @for (gallery of gallerys(); track $index) {
+      <div class="w-[192px] h-[341px] flex flex-col items-center relative">
+        <!-- Contenedor de imagen con funcionalidad de subida -->
+        <div
+          class="w-[192px] h-[341px] border border-[#3a5a40]/50 rounded overflow-hidden"
+        >
           <img class="w-full h-full object-cover" [src]="gallery.url" />
-        </ng-container>
-
-        <ng-template #noImage>
+          <!-- Input file oculto para subir imagen -->
+          <input
+            matTooltip="clickear para Agregar Imagen"
+            matTooltipClass="!text-[#3a5a40] !bg-[#3a5a40]/50"
+            type="file"
+            accept="image/*"
+            (change)="onImageUpload($event)"
+            class="absolute inset-0 opacity-0 cursor-pointer"
+          />
+          <div
+            [matMenuTriggerFor]="menu"
+            class="cursor-pointer absolute z-10 top-2 right-2 w-8 h-8 flex items-center justify-center bg-[#3a5a40]/50 hover:shadow-white hover:bg-[#3a5a40]/80 rounded-full"
+          >
+            <lucide-icon
+              name="ellipsis-vertical"
+              class="w-4 h-4 text-white"
+            ></lucide-icon>
+          </div>
+        </div>
+      </div>
+      } @empty {
+      <div class="w-[192px] h-[341px] flex flex-col items-center relative">
+        <div
+          class="w-[192px] h-[341px] border border-[#3a5a40]/50 rounded overflow-hidden"
+        >
           <div class="w-full h-full flex flex-col justify-center items-center">
             <lucide-icon
               name="image"
@@ -37,27 +60,18 @@
               ¡Agrega una imagen para destacar tu producto!
             </p>
           </div>
-        </ng-template>
-        <!-- Input file oculto para subir imagen -->
-        <input
-          matTooltip="clickear para Agregar Imagen"
-          matTooltipClass="!text-[#3a5a40] !bg-[#3a5a40]/50"
-          type="file"
-          accept="image/*"
-          (change)="onImageUpload($event)"
-          class="absolute inset-0 opacity-0 cursor-pointer"
-        />
-        <div
-          [matMenuTriggerFor]="menu"
-          class="cursor-pointer absolute z-10 top-2 right-2 w-8 h-8 flex items-center justify-center bg-[#3a5a40]/50 hover:shadow-white hover:bg-[#3a5a40]/80 rounded-full"
-        >
-          <lucide-icon
-            name="ellipsis-vertical"
-            class="w-4 h-4 text-white"
-          ></lucide-icon>
+          <!-- Input file oculto para subir imagen -->
+          <input
+            matTooltip="clickear para Agregar Imagen"
+            matTooltipClass="!text-[#3a5a40] !bg-[#3a5a40]/50"
+            type="file"
+            accept="image/*"
+            (change)="onImageUpload($event)"
+            class="absolute inset-0 opacity-0 cursor-pointer"
+          />
         </div>
       </div>
-    </div>
+      }
     }
   </div>
 </div>
@@ -67,7 +81,10 @@
   xPosition="before"
   class="!bg-[#3a5a40]/90 !text-white mt-2"
 >
-  <button mat-menu-item>
+  <button
+    mat-menu-item
+    (click)="deleteImage(gallerys()[0].id)"
+  >
     <div class="flex gap-2 items-center !text-white">
       <lucide-icon size="16" name="trash-2"></lucide-icon>
       <span>Eliminar</span>

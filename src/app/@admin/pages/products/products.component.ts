@@ -21,6 +21,7 @@ import { IProduct } from '@core/interfaces/product';
 import { CATEGORIES_DATA } from '@core/data/categories_data';
 import { TAGS_DATA } from '@core/data/tags_data';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
+import { LoaderComponent } from '@shared/components/loader/loader.component';
 
 
 @Component({
@@ -34,7 +35,8 @@ import { MatSlideToggleChange } from '@angular/material/slide-toggle';
     FormsModule,
     RouterModule,
     SearchModernoReactiveModule,
-    CustomSelectComponent
+    CustomSelectComponent,
+    LoaderComponent
   ],
   templateUrl: './products.component.html',
   styleUrls: ['./products.component.scss'],
@@ -354,8 +356,18 @@ export default class ProductsComponent implements OnInit {
     const dialogRef = this._dialog.open(EditGalleryComponent, {
       data: { product: product },
     });
-    dialogRef.afterClosed().subscribe((result: any) => {
-      // Maneja el resultado del diálogo si es necesario
+    dialogRef.afterClosed().subscribe((updatedImages: any[]) => {
+      if (updatedImages) {
+        // Actualizar el formulario con las imágenes actualizadas
+        this.selectedProductForm.patchValue({
+          images: updatedImages,
+          currentImageIndex: 0 // Resetear al índice 0
+        });
+        // Actualizar también el producto seleccionado
+        if (this.selectedProduct) {
+          this.selectedProduct.images = updatedImages;
+        }
+      }
     });
   }
 
@@ -554,6 +566,8 @@ export default class ProductsComponent implements OnInit {
       return;
     }
 
+    this.isLoading = true;
+
     const formData = new FormData();
     // Incluimos el id del producto, si el backend lo requiere
     formData.append('id', this.selectedProduct.id);
@@ -583,11 +597,17 @@ export default class ProductsComponent implements OnInit {
     this._productsService.updateProduct(this.selectedProduct.id, formData).subscribe({
       next: (response: any) => {
         this._messageService.showInfo('Producto actualizado exitosamente', 'bottom right', 5000);
+        // Actualizar el producto seleccionado con los nuevos valores
+        if (this.selectedProduct) {
+          this.selectedProduct.active = this.selectedProductForm.get('active')?.value;
+        }
         // Reiniciar el formulario o actualizar la vista según convenga
         this.getProducts();
+        this.isLoading = false;
       },
       error: (error) => {
         this._messageService.showError('Error al actualizar producto', 'bottom right', 5000);
+        this.isLoading = false;
       }
     });
   }
@@ -615,7 +635,14 @@ export default class ProductsComponent implements OnInit {
   // }
 
   deleteSelectedProduct(): void {
+    console.log('selectedProduct', this.selectedProduct);
     if (this.selectedProduct) {
+      // Verificar si el producto está activo
+      if (this.selectedProduct.active) {
+        this._messageService.showError('No se puede eliminar un producto activo. Desactívelo primero.', 'top center', 5000);
+        return;
+      }
+
       this._productsService.deleteProduct(this.selectedProduct?.id).subscribe({
         next: (response: any) => {
           this._messageService.showInfo('Producto eliminado correctamente', 'top center', 5000);
@@ -623,9 +650,32 @@ export default class ProductsComponent implements OnInit {
           this.getProducts();
         },
         error: (error) => {
-          this._messageService.showError('Error al eliminado producto', 'bottom right', 5000);
+          this._messageService.showError('Error al eliminar producto', 'bottom right', 5000);
         }
       });
     }
+  }
+
+  deleteImage(imageId: string): void {
+    if (!this.selectedProduct) {
+      return;
+    }
+
+    this._productsService.deleteImage(this.selectedProduct.id, imageId).subscribe({
+      next: (response: any) => {
+        // Remover la imagen de la lista de imágenes del producto
+        if (this.selectedProduct?.images) {
+          this.selectedProduct.images = this.selectedProduct.images.filter(img => img.id !== imageId);
+          // Actualizar el formulario
+          this.selectedProductForm.patchValue({
+            images: this.selectedProduct.images
+          });
+        }
+        this._messageService.showInfo('Imagen eliminada correctamente', 'top center', 5000);
+      },
+      error: (error) => {
+        this._messageService.showError('Error al eliminar la imagen', 'bottom right', 5000);
+      }
+    });
   }
 }

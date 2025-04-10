@@ -106,4 +106,8 @@ export class ProductsService {
       headers: headers,
     });
   }
+
+  deleteImage(productId: string, imageId: string) {
+    return this._http.delete(`${this.urlProducts}/${productId}/images/${imageId}`);
+  }
 }
