@@ -76,7 +76,7 @@ export default class HomeComponent implements OnInit {
       Math.floor(Math.random() * this.coleccionesTipos.length)
       ];
 
-    this.getProducts();
+    this.getProductsFindActive();
   }
 
   ngAfterViewInit() {
@@ -138,8 +138,9 @@ export default class HomeComponent implements OnInit {
   //   );
   // }
 
-  private getProducts(): void {
-    this._productsService.getAllProducts().subscribe({
+  private getProductsFindActive(): void {
+    this._productsService.getProductsFindActive().subscribe({
+
       next: (response: any) => {
         // Process the response here
         // const products = [...response];

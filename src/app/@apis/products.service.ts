@@ -9,6 +9,18 @@ export class ProductsService {
   urlProducts: string = `${environment.api}/product`;
 
   constructor(private _http: HttpClient) { }
+
+
+  getProductsFindActive() {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+    });
+    return this._http.get(`${this.urlProducts}/active`, {
+      headers: headers,
+    });
+  }
+
+  
   // Método para obtener todos los productos
   getAllProducts() {
     const headers = new HttpHeaders({

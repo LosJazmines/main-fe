@@ -157,7 +157,7 @@ export default class OnlineStoreComponent implements OnInit {
         this.applyFilter(); // Reordena los productos según el orden obtenido
       }
 
-      this.getProducts();
+      this.getProductsFindActive();
     });
     // Otras inicializaciones, por ejemplo, para la temporada
     this.temporada =
@@ -330,13 +330,14 @@ export default class OnlineStoreComponent implements OnInit {
   //   );
   // }
 
-  private getProducts(): void {
-    this._productsService.getAllProducts().subscribe({
+
+  private getProductsFindActive(): void {
+    this._productsService.getProductsFindActive().subscribe({
+
       next: (response: any) => {
         // Process the response here
         // const products = [...response];
         this.products.set([...response]);
-        console.log('Productos:', this.products());
 
         // If you need to handle the response, you can do so here
         // For example:
@@ -349,7 +350,6 @@ export default class OnlineStoreComponent implements OnInit {
     });
 
   }
-
 
   // Método para seleccionar una categoría
   selectCategory(category: string) {

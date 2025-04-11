@@ -1,3 +1,4 @@
+import { MessageService } from './../../../@core/services/snackbar.service';
 import { Component, OnChanges, Input, SimpleChanges, EventEmitter, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { LucideModule } from '../../lucide/lucide.module';
@@ -26,13 +27,14 @@ export class CardItemComponent {
   // Puedes seguir emitiendo eventos, por ejemplo, para la selección de categoría.
   @Output() categorySelected = new EventEmitter<string>();
 
-  constructor(private store: Store<AppState>) { }
+  constructor(private store: Store<AppState>, private _messageService: MessageService) { }
 
   addToCart() {
     if (this.product) {
       this.store.dispatch(
         userActions.setShoppingCart({ products: [this.product] })
       );
+      this._messageService.showInfo('Producto añadido al carrito', 'top center', 3000);
     }
   }
 }
