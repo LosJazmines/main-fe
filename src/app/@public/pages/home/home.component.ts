@@ -144,6 +144,7 @@ export default class HomeComponent implements OnInit {
         // Process the response here
         // const products = [...response];
         this.products.set([...response]);
+
         // If you need to handle the response, you can do so here
         // For example:
         // this.products = response.products;

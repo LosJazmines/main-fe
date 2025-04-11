@@ -144,7 +144,7 @@
                     class="w-full h-full object-cover"
                     *ngIf="(product.images?.length ?? 0) > 0"
                     [alt]="'Product thumbnail image'"
-                    [src]="product.images?.[0]?.url ?? ''"
+                    [src]="product.images[0]?.url ?? ''"
                   />
                   <div
                     class="flex items-center justify-center w-full h-full text-xs font-semibold uppercase"

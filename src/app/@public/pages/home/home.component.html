@@ -75,15 +75,10 @@
         >
           @for(product of products(); track $index){
           <app-card-item
-            [name]="product.name"
-            [description]="product.description"
-            [price]="product.price"
-            [image]="product.images[0]"
-            [category]="product.category"
-            [isNew]="product.isNew"
             [product]="product"
             [ngClass]="{ 'pl-6': $index === 0 }"
           ></app-card-item>
+
           }
         </div>
 
