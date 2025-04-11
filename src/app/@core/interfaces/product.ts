@@ -19,5 +19,5 @@ export interface IProduct {
   taxPercent?: number;
   weight?: number;
   images: any[];
-  tags?: string[];
+  tags?: any[];
 }

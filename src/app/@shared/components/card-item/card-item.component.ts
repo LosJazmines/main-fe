@@ -29,6 +29,16 @@ export class CardItemComponent {
 
   constructor(private store: Store<AppState>, private _messageService: MessageService) { }
 
+  isHovered = false;
+
+  onMouseEnter(): void {
+    this.isHovered = true;
+  }
+
+  onMouseLeave(): void {
+    this.isHovered = false;
+  }
+
   addToCart() {
     if (this.product) {
       this.store.dispatch(
