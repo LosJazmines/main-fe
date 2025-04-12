@@ -1,26 +1,79 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, throwError, BehaviorSubject } from 'rxjs';
+import { catchError, tap } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
+import { isPlatformBrowser } from '@angular/common';
+
+export interface User {
+  id: string;
+  email: string;
+  firstName?: string;
+  lastName?: string;
+  phone?: string;
+  address?: string;
+  city?: string;
+  zipCode?: string;
+  role: string;
+}
+
+export interface AuthResponse {
+  user: User;
+  token: string;
+}
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
   urlUsers: string = `${environment.api}/auth`;
+  private currentUserSubject = new BehaviorSubject<User | null>(null);
+  currentUser$ = this.currentUserSubject.asObservable();
 
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
     private _http: HttpClient
-  ) {}
+  ) {
+    // Check if we're in a browser environment before accessing localStorage
+    if (isPlatformBrowser(this.platformId)) {
+      // Check if there's a stored user in localStorage
+      const storedUser = localStorage.getItem('currentUser');
+      if (storedUser) {
+        this.currentUserSubject.next(JSON.parse(storedUser));
+      }
+    }
+  }
 
-  login(user: any) {
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-    });
-    return this._http.post(`${this.urlUsers}/login`, user, {
-      headers: headers,
-    });
+  private getToken(): string | null {
+    if (isPlatformBrowser(this.platformId)) {
+      return localStorage.getItem('token');
+    }
+    return null;
+  }
+
+  private setToken(token: string): void {
+    if (isPlatformBrowser(this.platformId)) {
+      localStorage.setItem('token', token);
+    }
+  }
+
+  private removeToken(): void {
+    if (isPlatformBrowser(this.platformId)) {
+      localStorage.removeItem('token');
+    }
+  }
+
+  login(email: string, password: string): Observable<AuthResponse> {
+    return this._http.post<AuthResponse>(`${this.urlUsers}/login`, { email, password }).pipe(
+      tap(response => {
+        if (response.user) {
+          if (isPlatformBrowser(this.platformId)) {
+            localStorage.setItem('currentUser', JSON.stringify(response.user));
+          }
+          this.currentUserSubject.next(response.user);
+        }
+      })
+    );
   }
 
   googleLogin(googleUser: any) {
@@ -33,19 +86,17 @@ export class AuthService {
     });
   }
 
-  register(userData: {
-    username: string;
-    email: string;
-    password: string;
-  }): Observable<any> {
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-    });
-    const ruta = `${this.urlUsers}/register`;
-    const body = userData;
-    return this._http.post(ruta, body, {
-      headers: headers,
-    });
+  register(userData: Partial<User>): Observable<AuthResponse> {
+    return this._http.post<AuthResponse>(`${this.urlUsers}/register`, userData).pipe(
+      tap(response => {
+        if (response.user) {
+          if (isPlatformBrowser(this.platformId)) {
+            localStorage.setItem('currentUser', JSON.stringify(response.user));
+          }
+          this.currentUserSubject.next(response.user);
+        }
+      })
+    );
   }
 
   registerEmail(email: string): Observable<any> {
@@ -115,8 +166,8 @@ export class AuthService {
    * @param email Email del usuario
    * @returns Observable con la respuesta del servidor
    */
-  forgotPassword(email: string): Observable<any> {
-    return this._http.post<any>(`${this.urlUsers}/forgot-password`, { email });
+  forgotPassword(email: string): Observable<{ message: string }> {
+    return this._http.post<{ message: string }>(`${this.urlUsers}/forgot-password`, { email });
   }
 
   /**
@@ -125,10 +176,37 @@ export class AuthService {
    * @param newPassword Nueva contraseña
    * @returns Observable con la respuesta del servidor
    */
-  resetPassword(token: string, newPassword: string): Observable<any> {
-    return this._http.post<any>(`${this.urlUsers}/reset-password`, { 
-      token, 
-      newPassword 
-    });
+  resetPassword(token: string, password: string): Observable<{ message: string }> {
+    return this._http.post<{ message: string }>(`${this.urlUsers}/reset-password`, { token, password });
+  }
+
+  logout(): void {
+    if (isPlatformBrowser(this.platformId)) {
+      localStorage.removeItem('currentUser');
+    }
+    this.currentUserSubject.next(null);
+  }
+
+  getCurrentUser(): User | null {
+    return this.currentUserSubject.value;
+  }
+
+  isLoggedIn(): boolean {
+    return !!this.currentUserSubject.value;
+  }
+
+  updateProfile(userData: Partial<User>): Observable<User> {
+    return this._http.put<User>(`${this.urlUsers}/profile`, userData).pipe(
+      tap(updatedUser => {
+        const currentUser = this.currentUserSubject.value;
+        if (currentUser) {
+          const newUser = { ...currentUser, ...updatedUser };
+          if (isPlatformBrowser(this.platformId)) {
+            localStorage.setItem('currentUser', JSON.stringify(newUser));
+          }
+          this.currentUserSubject.next(newUser);
+        }
+      })
+    );
   }
 }

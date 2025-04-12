@@ -93,7 +93,7 @@ export default class LoginComponent implements OnInit, OnDestroy {
     if (this.loginGroup.valid) {
       const formData = this.loginGroup.value;
       // Llamada al servicio de autenticación para registrar al usuario
-      this._authService.login(formData).subscribe({
+      this._authService.login(formData.email, formData.password).subscribe({
         next: (response: any) => {
           const { token, ...res } = response;
 
