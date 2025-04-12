@@ -1,0 +1,81 @@
+.payment-error-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 60vh;
+  padding: 2rem;
+
+  .error-card {
+    max-width: 600px;
+    width: 100%;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+    mat-card-header {
+      margin-bottom: 1.5rem;
+
+      mat-card-title {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 1.5rem;
+        
+        mat-icon {
+          font-size: 2rem;
+          height: 2rem;
+          width: 2rem;
+        }
+      }
+    }
+
+    .error-message {
+      font-size: 1.1rem;
+      margin-bottom: 1.5rem;
+      color: #555;
+    }
+
+    .error-details {
+      background-color: #f8f9fa;
+      padding: 1rem;
+      border-radius: 4px;
+      margin-bottom: 1rem;
+
+      p {
+        margin: 0.5rem 0;
+        color: #666;
+      }
+    }
+
+    mat-card-actions {
+      padding: 1rem;
+      
+      button {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+    }
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 600px) {
+  .payment-error-container {
+    padding: 1rem;
+
+    .error-card {
+      mat-card-title {
+        font-size: 1.25rem;
+
+        mat-icon {
+          font-size: 1.5rem;
+          height: 1.5rem;
+          width: 1.5rem;
+        }
+      }
+
+      .error-message {
+        font-size: 1rem;
+      }
+    }
+  }
+} 

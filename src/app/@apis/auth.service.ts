@@ -109,4 +109,26 @@ export class AuthService {
   //   const ruta = `${this.urlUsers}/reset-password`;
   //   return this._http.post(ruta, payload);
   // }
+
+  /**
+   * Solicitar recuperación de contraseña
+   * @param email Email del usuario
+   * @returns Observable con la respuesta del servidor
+   */
+  forgotPassword(email: string): Observable<any> {
+    return this._http.post<any>(`${this.urlUsers}/forgot-password`, { email });
+  }
+
+  /**
+   * Restablecer contraseña
+   * @param token Token de restablecimiento
+   * @param newPassword Nueva contraseña
+   * @returns Observable con la respuesta del servidor
+   */
+  resetPassword(token: string, newPassword: string): Observable<any> {
+    return this._http.post<any>(`${this.urlUsers}/reset-password`, { 
+      token, 
+      newPassword 
+    });
+  }
 }

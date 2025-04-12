@@ -21,8 +21,11 @@ import { MessageService } from '../../../@core/services/snackbar.service';
 import { ProductsService } from '../../../@apis/products.service';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
+import { environment } from '../../../../environments/environment';
+import { MercadoPagoService, MercadoPagoPreference } from '../../services/mercado-pago-service.service';
+import { MatDialog } from '@angular/material/dialog';
+import LoginComponent from '../../../@public/pages/forms/login/login.component';
 
-import { MercadoPagoService } from '../../services/mercado-pago-service.service';
 declare var MercadoPago: any;
 
 function loadMercadoPago(): Promise<void> {
@@ -34,7 +37,6 @@ function loadMercadoPago(): Promise<void> {
     document.body.appendChild(script);
   });
 }
-
 
 @Component({
   selector: 'app-purchase-summary',
@@ -83,7 +85,9 @@ export class PurchaseSummaryComponent implements OnInit, OnDestroy {
     private messageService: MessageService,
     private store: Store<AppState>,
     private productsService: ProductsService,
-    private mercadoPagoService: MercadoPagoService
+    private mercadoPagoService: MercadoPagoService,
+    private router: Router,
+    private dialog: MatDialog
   ) { }
 
   ngOnInit(): void {
@@ -165,74 +169,70 @@ export class PurchaseSummaryComponent implements OnInit, OnDestroy {
     }
   }
 
-  // Método para iniciar el proceso de pago
-  // pagar() {
-  //   const pagoData = {
-  //     monto: 100, // Ejemplo
-  //     descripcion: 'Producto de ejemplo',
-  //     metodo_pago: 'visa', // o el método adecuado
-  //     email: 'cliente@ejemplo.com'
-  //   };
-
-  //   this.mercadoPagoService.getPreference(pagoData).subscribe((response: any) => {
-  //     if (!response || !response.id) {
-  //       console.error('Error: No se recibió un ID de preferencia válido.');
-  //       return;
-  //     }
-
-  //     const mp = new MercadoPago(
-  //       'TEST-444977579419473-012917-5e99c6dc33b21b77449e3fc36153787d-284936648',
-  //       {
-  //         locale: 'es-AR',
-  //       }
-  //     );
-
-  //     const checkout = mp.checkout({
-  //       preference: {
-  //         id: response.id,
-  //       },
-  //       render: {
-  //         container: '.cho-container',
-  //         label: 'Pagar con Mercado Pago',
-  //       },
-  //     });
-
-  //     checkout.open();
-  //   });
-  // }
-
-
   async pagar() {
-    // Carga el SDK de Mercado Pago
-    await loadMercadoPago();
+    try {
+      // Verificar si el usuario está logueado
+      this.store.select(state => state.currentUser.currentUser).subscribe(user => {
+        if (!user) {
+          // Abrir el popup de login en lugar de redirigir
+          const dialogRef = this.dialog.open(LoginComponent, {
+            width: '400px',
+            disableClose: true,
+            data: { returnUrl: '/checkout' }
+          });
 
-    // Datos de pago
-    const pagoData = {
-      monto: 100,
-      descripcion: 'Producto de ejemplo',
-      email: 'cliente@ejemplo.com'
-    };
-    
+          dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+              // Si el login fue exitoso, intentar el pago nuevamente
+              this.pagar();
+            }
+          });
+          return;
+        }
 
-    // Inicializa MercadoPago con tu clave pública
-    const mp = new window.MercadoPago('APP_USR-ab775a76-3448-4707-9b0d-22083e7c6f6d', { locale: 'es-AR' });
+        // Prepare the preference data in the format expected by the backend
+        const preferenceData = {
+          productos: this.shoppingCart().map(item => ({
+            id: item.id,
+            title: item.name,
+            quantity: item.quantity,
+            currency_id: 'ARS',
+            unit_price: item.price,
+            picture_url: item.image
+          })),
+          email: user.email,
+          back_urls: {
+            success: environment.MP_SUCCESS_URL,
+            failure: environment.MP_FAILURE_URL,
+            pending: environment.MP_PENDING_URL
+          },
+          auto_return: 'approved',
+          notification_url: environment.MP_NOTIFICATION_URL,
+          statement_descriptor: 'LOS JAZMINES',
+          external_reference: `ORDER-${Date.now()}`
+        };
 
-    // Obtiene la preferencia desde el backend
-    this.mercadoPagoService.getPreference(pagoData).subscribe((response: any) => {
-      if (response.results.length === 0) {
-
-      } else {
-        window.location.href = response.results[0].link_mercadopago;
-      }
-
-      // Inicializa el checkout
-      const checkout = mp.checkout({
-        preference: { id: response.id },
-        autoOpen: true // Abre el checkout automáticamente
+        // Get the preference from MercadoPago
+        this.mercadoPagoService.getPreference(preferenceData).subscribe({
+          next: (response: any) => {
+            if (response.results && response.results.length > 0) {
+              // Redirect to MercadoPago checkout
+              window.location.href = response.results[0].link_mercadopago;
+            } else {
+              this.messageService.showError('Error al procesar el pago', 'bottom right', 5000);
+            }
+          },
+          error: (error) => {
+            console.error('Error creating preference:', error);
+            this.messageService.showError('Error al procesar el pago', 'bottom right', 5000);
+          }
+        });
       });
-    });
+    } catch (error) {
+      console.error('Error in payment process:', error);
+      this.messageService.showError('Error al procesar el pago', 'bottom right', 5000);
+    }
   }
-
 
   send() {
     console.log('Enviando compra...');

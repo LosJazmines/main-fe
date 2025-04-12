@@ -97,6 +97,30 @@ export const routes: Routes = [
         loadComponent: () => import('./@public/pages/about/about.component'),
         title: 'Los Jazmines - About',
       },
+      {
+        path: 'payment/success',
+        loadComponent: () =>
+          import('./@public/pages/payment/success/success.component').then(
+            (m) => m.PaymentSuccessComponent
+          ),
+        title: 'Los Jazmines - Payment Success',
+      },
+      {
+        path: 'payment/failure',
+        loadComponent: () =>
+          import('./@public/pages/payment/failure/failure.component').then(
+            (m) => m.PaymentFailureComponent
+          ),
+        title: 'Los Jazmines - Payment Failure',
+      },
+      {
+        path: 'payment/pending',
+        loadComponent: () =>
+          import('./@public/pages/payment/pending/pending.component').then(
+            (m) => m.PaymentPendingComponent
+          ),
+        title: 'Los Jazmines - Payment Pending',
+      },
     ],
   },
 
@@ -188,7 +212,7 @@ export const routes: Routes = [
     path: 'mp',
     children: mpRoutes,
   },
-  // @Rutas vacias y rutas comodín
+    // @Rutas vacias y rutas comodín
   {
     path: '',
     redirectTo: '',
