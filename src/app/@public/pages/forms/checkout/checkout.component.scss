@@ -1,121 +1,107 @@
 @use "./../../../../@shared/scss/variables.scss" as v;
 @use "./../../../../@shared/scss/mixins.scss" as mixins;
 
-// .checkout-container {
-//   //   width: 100%;
-//   height: 100%;
-//   display: flex;
-//   justify-content: center;
-//   align-items: center;
-//   .checkout {
-//     min-width: 600px;
-//     height: 500px;
-//     background-color: v.$quaternary;
-//     border-radius: 8px;
-//     padding: 8px 16px;
-//   }
-// }
+.checkout-container {
+  @apply w-full max-w-7xl mx-auto px-4 py-8;
 
-// .checkout-container {
-//   width: 100%;
-//   height: 100%;
-//   display: flex;
-//   justify-content: center;
-//   align-items: center;
+  .checkout {
+    @apply grid grid-cols-1 md:grid-cols-2 gap-8;
 
-//   .checkout {
-//     min-width: 744px;
-//     height: 500px;
-//     border-radius: 8px;
-//     padding: 8px 16px;
-//     display: flex;
-//     // flex-direction: row-reverse;
-//     justify-content: center;
-//     align-items: center;
-//     gap: 0.5rem;
-//     border-radius: v.$border-radius;
+    .left {
+      @apply bg-white p-6 rounded-lg shadow-md;
 
-//     .left {
-//       width: 60%;
-//       height: 85%;
-//       flex: 1;
-//       display: flex;
-//       border-radius: v.$border-radius;
-//       background-color: v.$quaternary;
-//       justify-content: center;
-//       align-items: center;
-//       transform: translateX(25px);
-//       z-index: 1;
-//     }
+      .cart-items {
+        @apply space-y-4 mb-6;
 
-.right {
-  z-index: 2;
-  width: 100%;
-  height: 100%;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  // border-radius: v.$border-radius;
-  // background-color: rgb(0, 0, 0);
-  justify-content: center;
-  align-items: center;
-  box-shadow: v.$primary-box-shadow;
+        .cart-item {
+          @apply flex justify-between items-start p-4 border border-gray-200 rounded-lg;
+
+          .item-details {
+            @apply flex-1;
+
+            .item-title {
+              @apply text-lg font-semibold text-gray-800;
+            }
+
+            .item-description {
+              @apply text-sm text-gray-600 mt-1;
+            }
+
+            .item-quantity {
+              @apply text-sm text-gray-500 mt-2;
+            }
+          }
+
+          .item-price {
+            @apply text-lg font-semibold text-gray-800 ml-4;
+          }
+        }
+      }
+
+      .cart-total {
+        @apply flex justify-between items-center p-4 bg-gray-50 rounded-lg;
+
+        .total-label {
+          @apply text-lg font-semibold text-gray-800;
+        }
+
+        .total-amount {
+          @apply text-xl font-bold text-primary;
+        }
+      }
+    }
+
+    .right {
+      @apply bg-white p-6 rounded-lg shadow-md;
+
+      .title {
+        @apply text-2xl font-bold text-gray-800 mb-6;
+      }
+
+      form {
+        @apply space-y-4;
+
+        .form-row {
+          @apply grid grid-cols-1 md:grid-cols-2 gap-4;
+        }
+
+        .payment-methods {
+          @apply mt-8;
+
+          .payment-options {
+            @apply space-y-4;
+
+            .payment-option {
+              @apply flex items-center p-4 border border-gray-200 rounded-lg cursor-pointer transition-colors;
+
+              &:hover {
+                @apply bg-gray-50;
+              }
+
+              &.selected {
+                @apply border-primary bg-primary/5;
+              }
+            }
+          }
+        }
+
+        .actions {
+          @apply flex justify-end items-center mt-8;
+        }
+      }
+    }
+  }
 }
-// .title {
-//   font-size: 2rem;
-//   color: v.$font-principal;
-//   margin-bottom: 2rem;
-// }
 
-//       .checkout-form {
-//         width: 100%;
-//         display: flex;
-//         flex-direction: column;
-//         justify-content: center;
-//         align-items: center;
-//         gap: 0.5rem;
+// Material Design Overrides
+::ng-deep {
+  .mat-mdc-form-field {
+    @apply w-full;
+  }
 
-//         .form-field {
-//           width: 70%;
-//           color: v.$font-principal;
-//           .form-label {
-//             color: v.$font-principal;
-//           }
-
-//           .form-input {
-//             color: v.$font-principal;
-//           }
-
-//           .form-error {
-//           }
-//         }
-//       }
-
-//       .items {
-//         width: 100%;
-//         display: flex;
-//         flex-direction: column;
-//         justify-content: center;
-//         align-items: center;
-//         gap: 0.5rem;
-//       }
-
-//       .login-buttons {
-//         width: 70%;
-//         display: flex;
-//         justify-content: space-between;
-//         align-items: center;
-//         gap: 1.5rem;
-
-//         .login-button {
-//           border-radius: v.$border-radius;
-//         }
-
-//         .login-button--register {
-//           background-color: transparent;
-//           color: v.$font-principal;
-//         }
-//       }
-//     }
-//   }
-// }
+  .mat-mdc-radio-button {
+    .mdc-form-field {
+      @apply w-full;
+    }
+  }
+}

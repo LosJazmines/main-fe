@@ -1,5 +1,5 @@
 <div
-  class="z-2 w-full h-full min-h-[452px] flex flex-col justify-center items-center shadow-lg bg-primary rounded-[4px] px-8 py-4 relative"
+  class="z-[2] w-full h-full min-h-[452px] flex flex-col justify-center items-center shadow-lg bg-primary rounded-[4px] px-8 py-4 relative"
 >
   <a
     (click)="emitViewType('login')"
@@ -14,7 +14,7 @@
     Recuperar Contraseña
   </h1>
 
-  <form class="login-form" [formGroup]="checkouGroup" (submit)="submitEvent()">
+  <form class="login-form" [formGroup]="checkoutForm" (submit)="submitCheckout()">
     <div class="flex-1 w-full">
       <label for="email" class="block text-sm font-medium text-white/80"
         >Email</label
@@ -38,7 +38,7 @@
 
     <div class="flex flex-col gap-2 w-full">
       <button
-        (click)="submitEvent()"
+        (click)="submitCheckout()"
         type="submit"
         class="px-4 py-2 bg-[#3a5a40]/80 text-white rounded-[4px] shadow hover:bg-[#A2E100]/20 focus:outline-none transition"
       >
@@ -80,6 +80,132 @@
             class="loading"
           ></div>
         </button> -->
+</div>
+
+<div class="checkout-container">
+  <div class="checkout">
+    <div class="left">
+      <h2 class="text-xl font-semibold text-gray-700 mb-4">Resumen del Pedido</h2>
+      <div class="cart-items">
+        <div *ngFor="let item of cartItems" class="cart-item">
+          <div class="item-details">
+            <h3 class="item-title">{{ item.title }}</h3>
+            <p class="item-description">{{ item.description }}</p>
+            <div class="item-quantity">Cantidad: {{ item.quantity }}</div>
+          </div>
+          <div class="item-price">
+            {{ item.unit_price | currency:item.currency_id }}
+          </div>
+        </div>
+      </div>
+      <div class="cart-total">
+        <h3 class="total-label">Total</h3>
+        <div class="total-amount">{{ totalAmount | currency:'ARS' }}</div>
+      </div>
+    </div>
+
+    <div [@slideInLeft] class="right">
+      <h1 class="title">Checkout</h1>
+
+      <form [formGroup]="checkoutForm" (ngSubmit)="submitCheckout()">
+        <div class="form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Nombre</mat-label>
+            <input matInput formControlName="firstName" required>
+            <mat-error *ngIf="checkoutForm.get('firstName')?.hasError('required')">
+              Este campo es requerido
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Apellido</mat-label>
+            <input matInput formControlName="lastName" required>
+            <mat-error *ngIf="checkoutForm.get('lastName')?.hasError('required')">
+              Este campo es requerido
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>Email</mat-label>
+          <input matInput formControlName="email" required type="email">
+          <mat-error *ngIf="checkoutForm.get('email')?.hasError('required')">
+            Este campo es requerido
+          </mat-error>
+          <mat-error *ngIf="checkoutForm.get('email')?.hasError('email')">
+            Email inválido
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>Teléfono</mat-label>
+          <input matInput formControlName="phone" required>
+          <mat-error *ngIf="checkoutForm.get('phone')?.hasError('required')">
+            Este campo es requerido
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>Dirección</mat-label>
+          <input matInput formControlName="address" required>
+          <mat-error *ngIf="checkoutForm.get('address')?.hasError('required')">
+            Este campo es requerido
+          </mat-error>
+        </mat-form-field>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Ciudad</mat-label>
+            <input matInput formControlName="city" required>
+            <mat-error *ngIf="checkoutForm.get('city')?.hasError('required')">
+              Este campo es requerido
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Código Postal</mat-label>
+            <input matInput formControlName="zipCode" required>
+            <mat-error *ngIf="checkoutForm.get('zipCode')?.hasError('required')">
+              Este campo es requerido
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="payment-methods">
+          <h3 class="text-lg font-semibold mb-4">Método de Pago</h3>
+          <div class="payment-options">
+            <mat-radio-group formControlName="paymentMethod" class="flex flex-col gap-4">
+              <mat-radio-button *ngFor="let method of paymentMethods" 
+                              [value]="method.id"
+                              (change)="selectPaymentMethod(method.id)"
+                              class="payment-option">
+                <div class="flex items-center gap-2">
+                  <lucide-icon [name]="method.icon" class="w-6 h-6"></lucide-icon>
+                  <span>{{ method.name }}</span>
+                </div>
+              </mat-radio-button>
+            </mat-radio-group>
+          </div>
+        </div>
+
+        <div class="actions mt-6">
+          <button type="button" 
+                  mat-stroked-button 
+                  class="mr-4"
+                  routerLink="/cart">
+            Volver al Carrito
+          </button>
+          <button type="submit" 
+                  mat-raised-button 
+                  color="primary"
+                  [disabled]="checkoutForm.invalid || isLoading">
+            <span *ngIf="!isLoading">Proceder al Pago</span>
+            <mat-spinner *ngIf="isLoading" diameter="24"></mat-spinner>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
 </div>
 
 <!-- <div class="checkout-container">

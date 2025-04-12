@@ -64,17 +64,25 @@
         Continuar compra
       </button>
       } @if (IsButtom()) {
-      <button
-        class="bg-[#009ee3] hover:bg-[#008cba] active:bg-[#007bb5] cursor-pointer text-white text-[16px] border-none rounded-[4px] transition-colors duration-300 shadow-md flex items-center justify-center w-full py-2"
-        (click)="pagar()"
-      >
-        <img
-          class="w-8 h-8 mr-4"
-          src="../../../../assets/icons/mercado-pago.svg"
-          alt="Mercado Pago"
-        />
-        Pagar con Mercado Pago
-      </button>
+        <button
+          (click)="pagar()"
+          class="mercado-pago-btn"
+          [disabled]="isLoading"
+        >
+          <img
+            *ngIf="!isLoading"
+            src="../../../../assets/icons/mercado-pago.svg"
+            alt="Mercado Pago"
+            class="mercado-pago-img"
+          />
+          <mat-spinner
+            *ngIf="isLoading"
+            diameter="24"
+            class="mercado-pago-spinner"
+          >
+          </mat-spinner>
+          <span>{{ isLoading ? 'Procesando...' : 'Pagar con Mercado Pago' }}</span>
+        </button>
       }
     </div>
     }
