@@ -23,6 +23,16 @@ export class AuthService {
     });
   }
 
+  googleLogin(googleUser: any) {
+    console.log('Google login called with:', googleUser);
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+    });
+    return this._http.post(`${this.urlUsers}/google`, googleUser, {
+      headers: headers,
+    });
+  }
+
   register(userData: {
     username: string;
     email: string;

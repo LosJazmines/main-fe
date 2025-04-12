@@ -43,12 +43,16 @@ export const appConfig: ApplicationConfig = {
           {
             id: GoogleLoginProvider.PROVIDER_ID,
             provider: new GoogleLoginProvider(
-              '262282692430-cg56q67dgppq13q98jncjlt62hv0p89o.apps.googleusercontent.com'
+              '262282692430-cg56q67dgppq13q98jncjlt62hv0p89o.apps.googleusercontent.com',
+              {
+                oneTapEnabled: false,
+                prompt: 'select_account'
+              }
             ),
           },
         ],
         onError: (err) => {
-          console.error(err);
+          console.error('Google Sign-In error:', err);
         },
       } as SocialAuthServiceConfig,
     },

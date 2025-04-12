@@ -66,6 +66,12 @@ export const routes: Routes = [
         title: 'Los Jazmines - Login',
       },
       {
+        path: 'auth/google/callback',
+        loadComponent: () =>
+          import('./@public/pages/forms/google-callback/google-callback.component'),
+        title: 'Los Jazmines - Google Callback',
+      },
+      {
         path: 'checkout',
         loadComponent: () =>
           import('./@public/pages/forms/checkout/checkout.component'),
