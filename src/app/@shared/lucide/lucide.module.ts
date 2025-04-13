@@ -15,7 +15,6 @@ import {
   QrCode,
   ArrowBigRight,
   BadgeCheck,
-  Trophy,
   ChevronUp,
   Globe,
   DoorOpen,
@@ -121,7 +120,9 @@ import {
   Download,
   ImagePlus,
   ImageUp,
-  ListFilterPlus
+  ListFilterPlus,
+  Trophy,
+  MessageSquare
 } from 'lucide-angular';
 
 export const LUCIDE_MODULES = [
@@ -246,7 +247,8 @@ export const LUCIDE_MODULES = [
     Download,
     ImagePlus,
     ImageUp,
-    ListFilterPlus
+    ListFilterPlus,
+    MessageSquare 
   }),
 ];
 

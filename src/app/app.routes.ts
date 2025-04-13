@@ -148,12 +148,12 @@ export const routes: Routes = [
         title: 'User - Perfil',
       },
       {
-        path: 'order/:idOrder',
+        path: 'orders/:id',
         loadComponent: () =>
-          import('./@user/pages/order/order.component').then(
-            (m) => m.OrderComponent
+          import('./@user/pages/order/order-details/order-details.component').then(
+            (m) => m.OrderDetailsComponent
           ),
-        title: 'User - Order',
+        title: 'User - Order Details',
       },
     ],
   },
