@@ -12,6 +12,12 @@ export const navbar_admin = [
     roles: ['admin']
   },
   {
+    route: 'a/messages',
+    icon: 'messages-square',
+    label: 'Messages',
+    roles: ['admin']
+  },
+  {
     route: 'a/products',
     icon: 'archive',
     label: 'Products',

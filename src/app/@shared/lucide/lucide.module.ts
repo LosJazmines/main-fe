@@ -123,7 +123,10 @@ import {
   ListFilterPlus,
   Trophy,
   MessageSquare,
-  Tag
+  Tag,
+  Send,
+  MessagesSquare,
+  RefreshCw
 } from 'lucide-angular';
 
 export const LUCIDE_MODULES = [
@@ -250,7 +253,10 @@ export const LUCIDE_MODULES = [
     ImageUp,
     ListFilterPlus,
     MessageSquare,
-    Tag
+    Tag,
+    Send,
+    MessagesSquare,
+    RefreshCw
   }),
 ];
 

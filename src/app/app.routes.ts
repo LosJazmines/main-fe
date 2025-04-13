@@ -204,6 +204,12 @@ export const routes: Routes = [
           import('./@admin/pages/payments/payments.component'),
         title: 'Admin - Payments',
       },
+      {
+        path: 'messages',
+        loadComponent: () =>
+          import('./@admin/pages/messages/messages.component'),
+        title: 'Admin - Messages',
+      },
     ],
   },
 

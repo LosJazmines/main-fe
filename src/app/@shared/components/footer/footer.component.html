@@ -1,138 +1,110 @@
-<footer class="bg-[#588157]">
-  <div class="container mx-auto py-4 max-w-[1200px]">
-    <div class="mb-4 grid grid-cols-1 md:grid-cols-3 gap-8">
+<footer class="bg-[#588157] py-12">
+  <div class="container mx-auto px-4 md:px-6 max-w-[1200px]">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-16 mb-12">
+      <!-- Sobre Nosotros -->
       <div class="space-y-4">
-        <h3 class="text-lg text-white !font-playfair">Sobre Nosotros</h3>
-        <p class="text-sm text-white">
-          <span class="text-base font-playfair">Los Jazmines</span> es tu
-          destino para arreglos florales únicos y elegantes, creados con pasión
-          y dedicación.
+        <h3 class="text-xl text-white font-playfair mb-6">Sobre Nosotros</h3>
+        <p class="text-[15px] text-white/90 leading-relaxed max-w-sm">
+          Los Jazmines es tu destino para arreglos florales únicos y elegantes,
+          creados con pasión y dedicación.
         </p>
-
-        <div class="flex item gap-4">
-          <div class="cursor-pointer">
-            <lucide-icon
-              name="instagram"
-              size="24"
-              class="text-white"
-            ></lucide-icon>
-          </div>
-          <div class="cursor-pointer">
-            <lucide-icon
-              name="facebook"
-              size="24"
-              class="text-white"
-            ></lucide-icon>
-          </div>
-        </div>
-      </div>
-
-      <!-- <div class="space-y-4">
-        <h3 class="text-lg text-white !font-playfair">Enlaces Rápidos</h3>
-        <ul class="space-y-2">
-          <li>
-            <a
-              href="#"
-              class="text-sm text-white hover:text-primary elegant-transition"
-              >Catálogo</a
-            >
-          </li>
-          <li>
-            <a
-              href="#"
-              class="text-sm text-white hover:text-primary elegant-transition"
-              >Colecciones</a
-            >
-          </li>
-          <li>
-            <a
-              href="#"
-              class="text-sm text-white hover:text-primary elegant-transition"
-              >Ofertas Especiales</a
-            >
-          </li>
-          <li>
-            <a
-              href="#"
-              class="text-sm text-white hover:text-primary elegant-transition"
-              >Cuidado de Flores</a
-            >
-          </li>
-        </ul>
-      </div> -->
-
-      <div class="space-y-4">
-        <h3 class="text-lg text-white !font-playfair">Atención al Cliente</h3>
-        <ul class="space-y-2">
-          <li>
-            <a
-              href="#"
-              class="text-sm text-white hover:text-primary elegant-transition"
-              >Contacto</a
-            >
-          </li>
-          <li>
-            <a
-              href="#"
-              class="text-sm text-white hover:text-primary elegant-transition"
-              >Envíos</a
-            >
-          </li>
-          <li>
-            <a
-              href="#"
-              class="text-sm text-white hover:text-primary elegant-transition"
-              >Devoluciones</a
-            >
-          </li>
-          <li>
-            <a
-              href="#"
-              class="text-sm text-white hover:text-primary elegant-transition"
-              >FAQ</a
-            >
-          </li>
-        </ul>
-      </div>
-
-      <div class="space-y-4">
-        <h3 class="text-lg text-white !font-playfair">Dónde nos ubicamos</h3>
-        <p class="text-sm text-white font-playfair">
-          Nos encontramos en la hermosa ciudad de
-          <strong>Tandil, Buenos Aires</strong>, en
-          <strong>Av. España 995</strong>. ¡Te esperamos!
-        </p>
-        <div class="flex items-center gap-2">
-          <lucide-icon name="map-pin" class="text-white"></lucide-icon>
-          <a
-            href="https://www.google.com/maps/search/Av.+España+995,+Tandil,+Buenos+Aires"
-            target="_blank"
-            class="text-sm text-[#ffffff] hover:underline"
-          >
-            Ver en Google Maps
+        <div class="flex items-center gap-6 pt-2">
+          <a href="#" class="text-white hover:text-white/80 transition-colors">
+            <lucide-icon name="instagram" size="20"></lucide-icon>
+          </a>
+          <a href="#" class="text-white hover:text-white/80 transition-colors">
+            <lucide-icon name="facebook" size="20"></lucide-icon>
           </a>
         </div>
       </div>
+
+      <!-- Contacto -->
+      <div class="space-y-4">
+        <h3 class="text-xl text-white font-playfair mb-6">Contacto</h3>
+        <form
+          [formGroup]="contactForm"
+          (ngSubmit)="onSubmit()"
+          class="space-y-4 flex flex-col justify-end items-center"
+        >
+          <div class="w-full mt-2">
+            <input
+              type="text"
+              formControlName="name"
+              placeholder="Nombre"
+              class="w-full px-3 py-2 bg-white/10 rounded-lg text-white placeholder-white/60 border border-white/20 focus:outline-none focus:border-white/40 text-[15px]"
+            />
+          </div>
+          <div class="w-full">
+            <input
+              type="email"
+              formControlName="email"
+              placeholder="Email"
+              class="w-full px-3 py-2 bg-white/10 rounded-lg text-white placeholder-white/60 border border-white/20 focus:outline-none focus:border-white/40 text-[15px]"
+            />
+          </div>
+          <div class="w-full">
+            <textarea
+              formControlName="message"
+              placeholder="Mensaje"
+              rows="3"
+              class="w-full px-3 py-2 bg-white/10 rounded-lg text-white placeholder-white/60 border border-white/20 focus:outline-none focus:border-white/40 text-[15px] resize-none"
+            ></textarea>
+          </div>
+          <button
+            type="submit"
+            [disabled]="contactForm.invalid || isSubmitting"
+            class="w-full mt-4 px-4 py-2 bg-white/20 hover:bg-white/30 text-white rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-[15px] font-medium flex items-center justify-center gap-2"
+          >
+            <span>Enviar mensaje</span>
+            <lucide-icon
+              name="send"
+              size="16"
+              *ngIf="!isSubmitting"
+            ></lucide-icon>
+            <lucide-icon
+              name="loader-2"
+              size="16"
+              class="animate-spin"
+              *ngIf="isSubmitting"
+            ></lucide-icon>
+          </button>
+        </form>
+      </div>
+
+      <!-- Ubicación -->
+      <div class="space-y-4">
+        <h3 class="text-xl text-white font-playfair mb-6">Ubicación</h3>
+        <p class="text-[15px] text-white/90 font-medium mb-4">
+          Av. España 995, Tandil, Buenos Aires
+        </p>
+        <div
+          class="aspect-video w-full rounded-lg overflow-hidden shadow-lg bg-white/5"
+        >
+          <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3151.8354345096034!2d-59.1337!3d-37.3275!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95911f9b175aa9e3%3A0x5c8f2893a4cbb95e!2sAv.%20Espa%C3%B1a%20995%2C%20Tandil%2C%20Provincia%20de%20Buenos%20Aires!5e0!3m2!1ses!2sar!4v1645541234567!5m2!1ses!2sar"
+            width="100%"
+            height="100%"
+            style="border: 0"
+            allowfullscreen=""
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+          ></iframe>
+        </div>
+        <a
+          href="https://www.google.com/maps/dir/?api=1&destination=Av.+España+995,+Tandil,+Buenos+Aires"
+          target="_blank"
+          class="inline-flex items-center gap-2 text-[15px] text-white/90 hover:text-white transition-colors mt-2"
+        >
+          <lucide-icon name="map-pin" size="18"></lucide-icon>
+          Ver indicaciones en Google Maps
+        </a>
+      </div>
     </div>
 
-    <div
-      class="pt-4 border-t border-gray-200/50 flex flex-col md:flex-row justify-center items-center gap-4"
-    >
-      <p class="text-sm text-white font-600 font-playfair">
+    <div class="border-t border-white/10 pt-6">
+      <p class="text-[14px] text-white/80 text-center font-playfair">
         © 2024 LosJazmines. Todos los derechos reservados.
       </p>
-
-      <!-- <div class="flex gap-4">
-        <a href="#" class="text-gray-400 hover:text-primary elegant-transition">
-          <span class="sr-only">Facebook</span>
-        </a>
-        <a href="#" class="text-gray-400 hover:text-primary elegant-transition">
-          <span class="sr-only">Instagram</span>
-        </a>
-        <a href="#" class="text-gray-400 hover:text-primary elegant-transition">
-          <span class="sr-only">Twitter</span>
-        </a>
-      </div> -->
     </div>
   </div>
 </footer>
