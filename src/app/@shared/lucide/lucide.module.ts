@@ -126,7 +126,10 @@ import {
   Tag,
   Send,
   MessagesSquare,
-  RefreshCw
+  RefreshCw,
+  ShoppingBag,
+  ImageOff,
+  PackageX
 } from 'lucide-angular';
 
 export const LUCIDE_MODULES = [
@@ -256,7 +259,10 @@ export const LUCIDE_MODULES = [
     Tag,
     Send,
     MessagesSquare,
-    RefreshCw
+    RefreshCw,
+    ShoppingBag,
+    ImageOff,
+    PackageX
   }),
 ];
 

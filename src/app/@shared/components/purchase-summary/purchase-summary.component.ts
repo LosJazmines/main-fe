@@ -209,7 +209,7 @@ export class PurchaseSummaryComponent implements OnInit, OnDestroy {
 
   private createWebOrder(cart: any[], total: number, user: any) {
     this.isLoading = true;
-    
+
     const orderData = {
       customerId: user.id.toString(),
       nombre_customer: user.name || 'Cliente',
@@ -230,15 +230,17 @@ export class PurchaseSummaryComponent implements OnInit, OnDestroy {
 
     this.http.post(`${environment.api}/orders`, orderData).subscribe({
       next: (response: any) => {
+        console.log({ response: response });
+
         this.isLoading = false;
         // Limpiar el carrito después de crear la orden
         this.store.dispatch(clearCart());
-        
-        // Mostrar el diálogo de éxito
+
+        // Mostrar el diálogo de éxito con la información completa de la respuesta
         const dialogRef = this.dialog.open(OrderSuccessDialogComponent, {
           width: '400px',
           disableClose: true,
-          data: { orderId: response.id }
+          data: response
         });
 
         dialogRef.afterClosed().subscribe(result => {
@@ -279,7 +281,7 @@ export class PurchaseSummaryComponent implements OnInit, OnDestroy {
         this.isLoading = false;
 
         const mpData = response?.results?.[0];
-        
+
         if (mpData?.link_mercadopago) {
           localStorage.setItem('lastOrder', JSON.stringify({
             items: cart,
@@ -299,18 +301,18 @@ export class PurchaseSummaryComponent implements OnInit, OnDestroy {
       error: (error) => {
         console.error('Error detallado:', error);
         this.isLoading = false;
-        
+
         localStorage.setItem('mpError', JSON.stringify({
           timestamp: new Date().toISOString(),
           error: error.error || error.message || 'Error desconocido'
         }));
 
-        const errorMessage = error.error?.message 
+        const errorMessage = error.error?.message
           ? Array.isArray(error.error.message)
             ? error.error.message.join(', ')
             : error.error.message
           : 'Error al procesar el pago. Por favor, intenta nuevamente.';
-          
+
         this.messageService.showError(errorMessage, 'bottom right', 5000);
       }
     });
