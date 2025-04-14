@@ -64,24 +64,45 @@
         Continuar compra
       </button>
       } @if (IsButtom()) {
+        <div class="w-full mb-4">
+          <mat-radio-group [(ngModel)]="paymentMethod" class="flex flex-col gap-2">
+            <mat-radio-button value="mercado-pago" class="text-gray-700">
+              <div class="flex items-center gap-2">
+                <img src="../../../../assets/icons/mercado-pago.svg" alt="Mercado Pago" class="w-6 h-6">
+                <span>Pagar con Mercado Pago</span>
+              </div>
+            </mat-radio-button>
+            <mat-radio-button value="web" class="text-gray-700">
+              <div class="flex items-center gap-2">
+                <lucide-icon name="credit-card" class="w-6 h-6"></lucide-icon>
+                <span>Pagar más tarde</span>
+              </div>
+            </mat-radio-button>
+          </mat-radio-group>
+        </div>
         <button
           (click)="pagar()"
           class="mercado-pago-btn"
           [disabled]="isLoading"
         >
           <img
-            *ngIf="!isLoading"
+            *ngIf="!isLoading && paymentMethod === 'mercado-pago'"
             src="../../../../assets/icons/mercado-pago.svg"
             alt="Mercado Pago"
             class="mercado-pago-img"
           />
+          <lucide-icon
+            *ngIf="!isLoading && paymentMethod === 'web'"
+            name="credit-card"
+            class="mercado-pago-img"
+          ></lucide-icon>
           <mat-spinner
             *ngIf="isLoading"
             diameter="24"
             class="mercado-pago-spinner"
           >
           </mat-spinner>
-          <span>{{ isLoading ? 'Procesando...' : 'Pagar con Mercado Pago' }}</span>
+          <span>{{ isLoading ? 'Procesando...' : paymentMethod === 'mercado-pago' ? 'Pagar con Mercado Pago' : 'Crear orden' }}</span>
         </button>
       }
     </div>

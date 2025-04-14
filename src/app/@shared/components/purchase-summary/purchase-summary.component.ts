@@ -26,6 +26,9 @@ import { MercadoPagoService, MercadoPagoPreference } from '../../services/mercad
 import { MatDialog } from '@angular/material/dialog';
 import LoginComponent from '../../../@public/pages/forms/login/login.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { HttpClient } from '@angular/common/http';
+import { clearCart } from '../../store/actions/user.actions';
+import { OrderSuccessDialogComponent } from '../order-success-dialog/order-success-dialog.component';
 
 declare var MercadoPago: any;
 
@@ -73,6 +76,7 @@ export class PurchaseSummaryComponent implements OnInit, OnDestroy {
   private unsubscribeAll!: Subscription;
 
   isLoading = false;
+  paymentMethod: 'mercado-pago' | 'web' = 'mercado-pago';
 
   constructor(
     private messageService: MessageService,
@@ -80,7 +84,8 @@ export class PurchaseSummaryComponent implements OnInit, OnDestroy {
     private productsService: ProductsService,
     private mercadoPagoService: MercadoPagoService,
     private router: Router,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private http: HttpClient
   ) { }
 
   ngOnInit(): void {
@@ -189,77 +194,126 @@ export class PurchaseSummaryComponent implements OnInit, OnDestroy {
           return;
         }
 
-        const preferenceData: MercadoPagoPreference = {
-          productos: cart.map(item => ({
-            product_id: item.id.toString(),
-            title: item.name || 'Producto sin nombre',
-            quantity: item.quantity,
-            unit_price: Math.round(Number(item.price) * 100) / 100, // Asegurar 2 decimales
-            picture_url: item.image || undefined
-          })).filter(item => item.quantity > 0 && item.unit_price > 0), // Filtrar items inválidos
-          email: user.email
-        };
-
-        // Validar que haya productos válidos después del filtro
-        if (preferenceData.productos.length === 0) {
-          this.messageService.showError('No hay productos válidos para procesar', 'bottom right', 5000);
-          return;
+        if (this.paymentMethod === 'web') {
+          this.createWebOrder(cart, total, user);
+        } else {
+          this.createMercadoPagoOrder(cart, total, user);
         }
-
-        console.log('Enviando datos de preferencia:', JSON.stringify(preferenceData, null, 2));
-        this.isLoading = true;
-
-        this.mercadoPagoService.getPreference(preferenceData).subscribe({
-          next: (response: any) => {
-            console.log('Respuesta de MercadoPago:', response);
-            this.isLoading = false;
-
-            const mpData = response?.results?.[0];
-            
-            if (mpData?.link_mercadopago) {
-              // Guardar información de la orden
-              localStorage.setItem('lastOrder', JSON.stringify({
-                items: cart,
-                total: total,
-                timestamp: new Date().toISOString(),
-                preferenceId: mpData.preference_id
-              }));
-
-              // Limpiar cualquier error previo
-              localStorage.removeItem('mpError');
-
-              // Redirigir al checkout
-              console.log('Redirigiendo a:', mpData.link_mercadopago);
-              window.location.href = mpData.link_mercadopago;
-            } else {
-              throw new Error('No se recibió el link de pago');
-            }
-          },
-          error: (error) => {
-            console.error('Error detallado:', error);
-            this.isLoading = false;
-            
-            // Guardar el error para debugging
-            localStorage.setItem('mpError', JSON.stringify({
-              timestamp: new Date().toISOString(),
-              error: error.error || error.message || 'Error desconocido'
-            }));
-
-            const errorMessage = error.error?.message 
-              ? Array.isArray(error.error.message)
-                ? error.error.message.join(', ')
-                : error.error.message
-              : 'Error al procesar el pago. Por favor, intenta nuevamente.';
-              
-            this.messageService.showError(errorMessage, 'bottom right', 5000);
-          }
-        });
       });
     } catch (error) {
-      console.error('Error en el proceso de pago:', error);
+      console.error('Error en pagar:', error);
       this.isLoading = false;
-      this.messageService.showError('Error inesperado al procesar el pago', 'bottom right', 5000);
+      this.messageService.showError('Error al procesar el pago', 'bottom right', 5000);
     }
+  }
+
+  private createWebOrder(cart: any[], total: number, user: any) {
+    this.isLoading = true;
+    
+    const orderData = {
+      customerId: user.id.toString(),
+      nombre_customer: user.name || 'Cliente',
+      items: cart.map(item => ({
+        productId: item.id.toString(),
+        quantity: item.quantity,
+        price: Math.round(Number(item.price) * 100) / 100
+      })),
+      nombreDestinatario: user.name || 'Cliente',
+      direccion: user.address || 'Dirección no especificada',
+      ciudad: user.city || 'Ciudad no especificada',
+      estado: user.state || 'Estado no especificada',
+      pais: user.country || 'País no especificado',
+      metododepago: 'web',
+      status: 'pending',
+      total: total
+    };
+
+    this.http.post(`${environment.api}/orders`, orderData).subscribe({
+      next: (response: any) => {
+        this.isLoading = false;
+        // Limpiar el carrito después de crear la orden
+        this.store.dispatch(clearCart());
+        
+        // Mostrar el diálogo de éxito
+        const dialogRef = this.dialog.open(OrderSuccessDialogComponent, {
+          width: '400px',
+          disableClose: true,
+          data: { orderId: response.id }
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+          // La navegación se maneja desde los botones del diálogo
+        });
+      },
+      error: (error) => {
+        console.error('Error al crear la orden:', error);
+        this.isLoading = false;
+        this.messageService.showError('Error al crear la orden', 'bottom right', 5000);
+      }
+    });
+  }
+
+  private createMercadoPagoOrder(cart: any[], total: number, user: any) {
+    const preferenceData: MercadoPagoPreference = {
+      productos: cart.map(item => ({
+        product_id: item.id.toString(),
+        title: item.name || 'Producto sin nombre',
+        quantity: item.quantity,
+        unit_price: Math.round(Number(item.price) * 100) / 100,
+        picture_url: item.image || undefined
+      })).filter(item => item.quantity > 0 && item.unit_price > 0),
+      email: user.email
+    };
+
+    if (preferenceData.productos.length === 0) {
+      this.messageService.showError('No hay productos válidos para procesar', 'bottom right', 5000);
+      return;
+    }
+
+    console.log('Enviando datos de preferencia:', JSON.stringify(preferenceData, null, 2));
+    this.isLoading = true;
+
+    this.mercadoPagoService.getPreference(preferenceData).subscribe({
+      next: (response: any) => {
+        console.log('Respuesta de MercadoPago:', response);
+        this.isLoading = false;
+
+        const mpData = response?.results?.[0];
+        
+        if (mpData?.link_mercadopago) {
+          localStorage.setItem('lastOrder', JSON.stringify({
+            items: cart,
+            total: total,
+            timestamp: new Date().toISOString(),
+            preferenceId: mpData.preference_id
+          }));
+
+          localStorage.removeItem('mpError');
+
+          console.log('Redirigiendo a:', mpData.link_mercadopago);
+          window.location.href = mpData.link_mercadopago;
+        } else {
+          throw new Error('No se recibió el link de pago');
+        }
+      },
+      error: (error) => {
+        console.error('Error detallado:', error);
+        this.isLoading = false;
+        
+        localStorage.setItem('mpError', JSON.stringify({
+          timestamp: new Date().toISOString(),
+          error: error.error || error.message || 'Error desconocido'
+        }));
+
+        const errorMessage = error.error?.message 
+          ? Array.isArray(error.error.message)
+            ? error.error.message.join(', ')
+            : error.error.message
+          : 'Error al procesar el pago. Por favor, intenta nuevamente.';
+          
+        this.messageService.showError(errorMessage, 'bottom right', 5000);
+      }
+    });
   }
 
   private calculateTotal(): number {

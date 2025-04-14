@@ -1,0 +1,96 @@
+<div class="flex flex-col">
+  <!-- Header -->
+  <div class="bg-[#3a5a40] p-6 text-center">
+    <div class="flex justify-center mb-3">
+      <lucide-icon
+        name="circle-check"
+        class="w-16 h-16 text-white"
+      ></lucide-icon>
+    </div>
+    <h2 class="text-2xl font-semibold text-white mb-1">
+      ¡Orden creada con éxito!
+    </h2>
+    <p class="text-white/90 text-sm">Orden #{{ data.orderNumber }}</p>
+  </div>
+
+  <!-- Content -->
+  <div class="p-6">
+    <!-- Productos -->
+    <div class="max-h-[250px] overflow-y-auto mb-6 bg-gray-50 rounded-lg">
+      <div
+        *ngFor="let item of data.items"
+        class="flex items-center gap-4 p-4 border-b border-gray-100 last:border-b-0 hover:bg-white transition-colors"
+      >
+        <div
+          class="w-16 h-16 rounded-lg overflow-hidden bg-white border border-gray-100 flex-shrink-0"
+        >
+          <ng-container *ngIf="item.product">
+            <img
+              *ngIf="item.product.images?.length"
+              [src]="item.product.images[0].url"
+              [alt]="item.product.name"
+              class="w-full h-full object-cover"
+            />
+            <div
+              *ngIf="!item.product.images?.length"
+              class="w-full h-full flex items-center justify-center bg-gray-100"
+            >
+              <lucide-icon
+                name="image-off"
+                class="w-8 h-8 text-gray-400"
+              ></lucide-icon>
+            </div>
+          </ng-container>
+        </div>
+        <div class="flex-1">
+          <p class="font-medium text-gray-800">{{ item.product.name }}</p>
+          <div class="flex items-center justify-between mt-1">
+            <p class="text-sm text-gray-500">Cantidad: {{ item.quantity }}</p>
+            <p class="text-sm font-medium text-[#3a5a40]">
+              ${{ item.price | number : "1.2-2" }}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Detalles -->
+    <div class="space-y-2 mb-6 border-t border-gray-100 pt-4">
+      <div class="flex justify-between items-center">
+        <span class="text-gray-600">Subtotal:</span>
+        <span class="font-medium">${{ data.subtotal | number : "1.2-2" }}</span>
+      </div>
+      <div class="flex justify-between items-center">
+        <span class="text-gray-600">Envío:</span>
+        <span class="font-medium capitalize">{{ data.costoEnvio }}</span>
+      </div>
+      <div
+        class="flex justify-between items-center text-lg font-semibold text-[#3a5a40]"
+      >
+        <span>Total:</span>
+        <span>${{ data.total | number : "1.2-2" }}</span>
+      </div>
+    </div>
+
+    <!-- Buttons -->
+    <div class="flex flex-col gap-3">
+      <a
+        [routerLink]="['/orders', data.id]"
+        (click)="dialogRef.close()"
+        class="w-full flex items-center justify-center gap-2 rounded-lg bg-[#3a5a40] px-4 py-3 text-white shadow-md transition duration-300 hover:bg-[#3a5a40]/90"
+      >
+        <lucide-icon name="file-text" class="w-5 h-5"></lucide-icon>
+        <span class="text-base font-medium">Ver mi orden</span>
+      </a>
+
+      <a
+        routerLink="/"
+        (click)="dialogRef.close()"
+        class="w-full flex items-center justify-center gap-2 rounded-lg border border-[#3a5a40] px-4 py-3 text-[#3a5a40] transition duration-300 hover:bg-[#3a5a40]/10"
+      >
+        <lucide-icon name="arrow-left" class="w-5 h-5"></lucide-icon>
+        <span class="text-base font-medium">Seguir comprando</span>
+      </a>
+    </div>
+  </div>
+</div>
