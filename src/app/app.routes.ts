@@ -1,10 +1,14 @@
 import { Routes } from '@angular/router';
 import { mpRoutes } from '@public-pages/mp/mp.routes';
+import { AppResolver } from './@core/resolvers/app.resolver';
 
 export const routes: Routes = [
   // @Rutas Public
   {
     path: '',
+    resolve: {
+      appData: AppResolver
+    },
     loadComponent: () => import('./@public/pages/public.component'),
     title: 'LosJazmines',
     children: [

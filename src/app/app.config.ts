@@ -16,17 +16,16 @@ import {
 } from '@angular/common/http';
 import { authInterceptor } from './@core/interceptors/auth-interceptor.interceptor';
 import { provideStore } from '@ngrx/store';
-import { reducers } from './@shared/store/reducers';
+import { reducers } from './@shared/store';
 import { GoogleLoginProvider, SocialAuthServiceConfig, SocialLoginModule } from '@abacritt/angularx-social-login';
+import { LucideModule } from './@shared/lucide/lucide.module';
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    //withPreloading(PreloadAllModules)
-    // Preloading improves UX by loading parts of your application in the background. You can preload modules, standalone components or component data.
-    provideStore(reducers), // Mover esto arriba
+    provideStore(reducers),
     provideStoreDevtools({
       maxAge: 25,
-      logOnly: false, // Desactiva `logOnly` para verificar
+      logOnly: !isDevMode(),
       autoPause: true,
       connectInZone: true,
     }),
@@ -35,6 +34,7 @@ export const appConfig: ApplicationConfig = {
     provideAnimationsAsync(),
     provideHttpClient(withFetch(), withInterceptors([authInterceptor])),
     SocialLoginModule,
+    LucideModule,
     {
       provide: 'SocialAuthServiceConfig',
       useValue: {
@@ -55,6 +55,6 @@ export const appConfig: ApplicationConfig = {
           console.error('Google Sign-In error:', err);
         },
       } as SocialAuthServiceConfig,
-    },
+    }
   ],
 };

@@ -17,6 +17,7 @@ import { TokenService } from './@core/services/token.service';
 import * as userActions from './@shared/store/actions/user.actions';
 import { toggleLeftSidebarFilters } from '@shared/components/sidebars/left-sidebar-filters/store/actions/left-sidebar-filters.actions';
 import { selectIsLeftSidebarFiltersOpen } from '@shared/components/sidebars/left-sidebar-filters/store/selectors/left-sidebar-filters.selectors';
+import { SplashScreenComponent } from '@shared/components/splash-screen/splash-screen.component';
 
 @Component({
   selector: 'app-root',
@@ -28,6 +29,7 @@ import { selectIsLeftSidebarFiltersOpen } from '@shared/components/sidebars/left
     RightSidebarComponent,
     LeftSidebarComponent,
     LeftSidebarFiltersComponent,
+    SplashScreenComponent
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',

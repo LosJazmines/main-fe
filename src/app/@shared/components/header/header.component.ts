@@ -11,7 +11,7 @@ import { toggleLeftSidebar } from '../sidebars/left-sidebar/store/actions/left-s
 import { TokenService } from '../../../@core/services/token.service';
 import { MessageService } from '../../../@core/services/snackbar.service';
 import { Observable, Subscription } from 'rxjs';
-import { UserState } from '../../store/reducers/user.reducer';
+import { State as UserState } from '../../store/reducers/user.reducer';
 import {
   selectCurrentUser,
   selectIsAdmin,

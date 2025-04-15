@@ -23,6 +23,7 @@ import * as userActions from '../../../../../@shared/store/actions/user.actions'
 import { SearchModernoReactiveModule } from '../../../../core/components/search-moderno-reactive/search-moderno-reactive.module';
 import { ProductsService } from '../../../../../@apis/products.service';
 import { ProductCardAddComponent } from '../../../../core/components/product-card-add/product-card-add.component';
+import { CartItem } from '@shared/models/order.model';
 
 @Component({
   selector: 'app-order-step2',
@@ -86,7 +87,7 @@ export class OrderStep2Component implements OnInit, OnDestroy {
           this.shoppingCartLength.set(shoppingCart.length);
 
           // Mapear cantidades desde el carrito
-          this.quantities = shoppingCart.reduce((acc, item) => {
+          this.quantities = shoppingCart.reduce((acc: { [key: string]: number }, item: CartItem) => {
             acc[item.id] = item.quantity;
             return acc;
           }, {} as { [key: string]: number });

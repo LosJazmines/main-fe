@@ -3,117 +3,22 @@
   id="splash-screen"
   class="splash-screen"
   [@fadeOutTop]
-  *ngIf="_splashScreenService._loading$ | async"
+  *ngIf="splashScreenService._loading$ | async"
 >
-  <div class="svg-container">
-    <svg
-      id="&#x421;&#x43B;&#x43E;&#x439;_1"
-      height="512"
-      viewBox="0 0 128 128"
-      width="512"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path
-        class="animated-color"
-        d="m2 36.71a2 2 0 0 0 2-2v-30.71h30.71a2 2 0 0 0 0-4h-32.71a2 2 0 0 0 -2 2v32.71a2 2 0 0 0 2 2z"
-      />
-      <path
-        class="animated-color"
-        d="m126 91.29a2 2 0 0 0 -2 2v30.71h-30.71a2 2 0 0 0 0 4h32.71a2 2 0 0 0 2-2v-32.71a2 2 0 0 0 -2-2z"
-      />
-      <path
-        class="animated-color"
-        d="m126 0h-32.71a2 2 0 0 0 0 4h30.71v30.71a2 2 0 1 0 4 0v-32.71a2 2 0 0 0 -2-2z"
-      />
-      <path
-        class="animated-color"
-        d="m34.71 124h-30.71v-30.71a2 2 0 0 0 -4 0v32.71a2 2 0 0 0 2 2h32.71a2 2 0 1 0 0-4z"
-      />
-      <path
-        class="animated-color"
-        d="m86 104a2 2 0 0 0 -2 2v2h-18v-10.78a2 2 0 0 0 -4 0v12.78a2 2 0 0 0 2 2h22a2 2 0 0 0 2-2v-4a2 2 0 0 0 -2-2z"
-      />
-      <path
-        class="animated-color"
-        d="m98 104a2 2 0 0 0 -2 2v4a2 2 0 0 0 2 2h12a2 2 0 0 0 0-4h-10v-2a2 2 0 0 0 -2-2z"
-      />
-      <path
-        class="animated-color"
-        d="m110 52h-20a2 2 0 0 0 0 4h20a2 2 0 0 0 0-4z"
-      />
-      <path
-        class="animated-color"
-        d="m16 18v24a2 2 0 0 0 2 2h24a2 2 0 0 0 2-2v-24a2 2 0 0 0 -2-2h-24a2 2 0 0 0 -2 2zm4 2h20v20h-20z"
-      />
-      <path
-        class="animated-color"
-        d="m86 44h24a2 2 0 0 0 2-2v-24a2 2 0 0 0 -2-2h-24a2 2 0 0 0 -2 2v24a2 2 0 0 0 2 2zm2-24h20v20h-20z"
-      />
-      <path
-        class="animated-color"
-        d="m42 84h-24a2 2 0 0 0 -2 2v24a2 2 0 0 0 2 2h24a2 2 0 0 0 2-2v-24a2 2 0 0 0 -2-2zm-2 24h-20v-20h20z"
-      />
-      <path
-        class="animated-color"
-        d="m94 76h-16a2 2 0 0 0 -2 2v16a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-16a2 2 0 0 0 -2-2zm-2 16h-12v-12h12z"
-      />
-      <path
-        class="animated-color"
-        d="m26 104h8a2 2 0 0 0 2-2v-8a2 2 0 0 0 -2-2h-8a2 2 0 0 0 -2 2v8a2 2 0 0 0 2 2zm2-8h4v4h-4z"
-      />
-      <path
-        class="animated-color"
-        d="m34 24h-8a2 2 0 0 0 -2 2v8a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-8a2 2 0 0 0 -2-2zm-2 8h-4v-4h4z"
-      />
-      <path
-        class="animated-color"
-        d="m102 24h-8a2 2 0 0 0 -2 2v8a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-8a2 2 0 0 0 -2-2zm-2 8h-4v-4h4z"
-      />
-      <path
-        class="animated-color"
-        d="m64 44a2 2 0 0 0 2-2v-10h6v10a2 2 0 0 0 4 0v-12a2 2 0 0 0 -2-2h-10a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2z"
-      />
-      <path
-        class="animated-color"
-        d="m64 20h10a2 2 0 0 0 0-4h-10a2 2 0 0 0 0 4z"
-      />
-      <path
-        class="animated-color"
-        d="m72 86a2 2 0 0 0 -2-2h-16a2 2 0 0 0 -2 2v24a2 2 0 0 0 4 0v-22h14a2 2 0 0 0 2-2z"
-      />
-      <path class="animated-color" d="m18 52a2 2 0 0 0 0 4h8a2 2 0 0 0 0-4z" />
-      <path
-        class="animated-color"
-        d="m54 32a2 2 0 0 0 2-2v-12a2 2 0 0 0 -4 0v12a2 2 0 0 0 2 2z"
-      />
-      <path
-        class="animated-color"
-        d="m36 54a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-12a2 2 0 0 0 -4 0v10h-14a2 2 0 0 0 -2 2z"
-      />
-      <path
-        class="animated-color"
-        d="m64 56h14a2 2 0 0 0 0-4h-14a2 2 0 0 0 0 4z"
-      />
-      <path
-        class="animated-color"
-        d="m18 76h16a2 2 0 0 0 0-4h-16a2 2 0 0 0 0 4z"
-      />
-      <path
-        class="animated-color"
-        d="m50 72h-4a2 2 0 0 0 0 4h4a2 2 0 0 0 0-4z"
-      />
-      <path
-        class="animated-color"
-        d="m110 100a2 2 0 0 0 2-2v-12a2 2 0 0 0 -2-2h-4a2 2 0 0 0 0 4h2v10a2 2 0 0 0 2 2z"
-      />
-      <path
-        class="animated-color"
-        d="m110 72h-5a2 2 0 0 0 0 4h5a2 2 0 0 0 0-4z"
-      />
-      <path
-        class="animated-path"
-        d="m126 62h-124a2 2 0 0 0 0 4h124a2 2 0 0 0 0-4z"
-      />
-    </svg>
+  <div class="flex flex-col items-center justify-center h-full">
+    <app-logo class="mb-8 text-[#3a5a40]"></app-logo>
+    <div class="flower-container mb-4">
+      <div class="flower">
+        <div class="petal"></div>
+        <div class="petal"></div>
+        <div class="petal"></div>
+        <div class="petal"></div>
+        <div class="petal"></div>
+        <div class="center"></div>
+      </div>
+    </div>
+    <p class="text-lg text-gray-600 animate-pulse">
+      Cargando...
+    </p>
   </div>
 </div>

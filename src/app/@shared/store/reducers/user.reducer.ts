@@ -1,9 +1,12 @@
 import { createReducer, on } from '@ngrx/store';
 import * as userActions from '../actions/user.actions';
+import { DeliveryInfo } from '../../models/order.model';
 
-export interface UserState {
-  currentUser: any;
+export interface State {
   shoppingCart: any[];
+  currentUser: any | null;
+  deliveryInfo: DeliveryInfo | null;
+  // Add other user state properties as needed
 }
 
 // Función segura para obtener el carrito desde localStorage
@@ -14,16 +17,17 @@ const getShoppingCartFromStorage = (): any[] => {
   return [];
 };
 
-const initialState: UserState = {
-  currentUser: null,
+export const initialState: State = {
   shoppingCart: getShoppingCartFromStorage(), // 🔥 Recuperamos el carrito de forma segura
+  currentUser: null,
+  deliveryInfo: null
 };
 
 export const userReducer = createReducer(
   initialState,
 
   /* Set Current User */
-  on(userActions.setCurrentUser, (state, action): UserState => {
+  on(userActions.setCurrentUser, (state, action): State => {
     return {
       ...state,
       currentUser: action.currentUser,

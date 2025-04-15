@@ -1,18 +1,17 @@
 <div class="flex flex-col gap-4 font-sans">
-  <!-- Radio buttons para seleccionar método de entrega -->
-  <div
-    class="container mx-auto max-w-4xl p-4 bg-white w-full shadow rounded-[4px]"
-  >
+  <!-- Método de Entrega -->
+  <div class="container mx-auto max-w-4xl p-4 bg-white w-full shadow rounded-[4px]">
     <h2 class="text-2xl font-semibold mb-4 text-gray-800">Método de Entrega</h2>
     <div class="flex gap-4">
-      <label class="flex items-center gap-2 cursor-pointer">
+      <!-- Envío a Domicilio -->
+      <label class="flex-1">
         <input
           type="radio"
           [(ngModel)]="metodoEntrega"
           value="domicilio"
           name="entrega"
           class="hidden"
-          (click)="seleccionarSucursal($event)"
+          (change)="seleccionarSucursal($event)"
         />
         <div
           class="flex items-center p-4 border rounded-[4px] shadow cursor-pointer transition-colors duration-200"
@@ -23,57 +22,58 @@
           <lucide-icon
             name="truck"
             [size]="24"
-            class="text-gray-700"
             [ngClass]="{
-              ' !text-white': metodoEntrega === 'domicilio'
+              'text-gray-700': metodoEntrega !== 'domicilio',
+              'text-white': metodoEntrega === 'domicilio'
             }"
           ></lucide-icon>
           <span
-            class="ml-2 font-semibold text-gray-800"
+            class="ml-2 font-semibold"
             [ngClass]="{
-              ' !text-white': metodoEntrega === 'domicilio'
+              'text-gray-800': metodoEntrega !== 'domicilio',
+              'text-white': metodoEntrega === 'domicilio'
             }"
-            >Envío a Domicilio</span
-          >
+          >Envío a Domicilio</span>
         </div>
       </label>
 
-      <label class="flex items-center gap-2 cursor-pointer">
+      <!-- Retiro en Sucursal -->
+      <label class="flex-1">
         <input
           type="radio"
           [(ngModel)]="metodoEntrega"
           value="sucursal"
           name="entrega"
           class="hidden"
-          (click)="seleccionarSucursal($event)"
+          (change)="seleccionarSucursal($event)"
         />
         <div
           class="flex items-center p-4 border rounded-[4px] shadow cursor-pointer transition-colors duration-200"
           [ngClass]="{
-            '!bg-[#3a5a40]/65 !text-white': metodoEntrega === 'sucursal'
+            'bg-[#3a5a40]/65 text-white': metodoEntrega === 'sucursal'
           }"
         >
           <lucide-icon
             name="store"
             [size]="24"
-            class="text-gray-700"
             [ngClass]="{
-              '!text-white': metodoEntrega === 'sucursal'
+              'text-gray-700': metodoEntrega !== 'sucursal',
+              'text-white': metodoEntrega === 'sucursal'
             }"
           ></lucide-icon>
           <span
-            class="ml-2 font-semibold text-gray-800"
+            class="ml-2 font-semibold"
             [ngClass]="{
-              ' !text-white': metodoEntrega === 'sucursal'
+              'text-gray-800': metodoEntrega !== 'sucursal',
+              'text-white': metodoEntrega === 'sucursal'
             }"
-            >Retiro en Sucursal</span
-          >
+          >Retiro en Sucursal</span>
         </div>
       </label>
     </div>
   </div>
 
-  <!-- Card de Retiro en Sucursal -->
+  <!-- Retiro en Sucursal Info -->
   <div
     *ngIf="metodoEntrega === 'sucursal'"
     class="container mx-auto max-w-4xl p-4 bg-white w-full shadow rounded-[4px]"
@@ -82,188 +82,183 @@
       <lucide-icon name="store" [size]="24" class="text-gray-700"></lucide-icon>
       <h2 class="text-2xl font-semibold text-gray-800">Retiro en Sucursal</h2>
     </div>
-    <div class="flex items-center gap-4 p-2">
-      <lucide-icon name="info" [size]="16" class="text-gray-600"></lucide-icon>
-      <p class="text-base font-medium text-gray-700">
-        Debes acercarte a nuestra sucursal para retirar tu pedido.
-      </p>
-    </div>
-    <div class="flex items-center gap-4 p-2">
-      <lucide-icon
-        name="map-pin-house"
-        [size]="16"
-        class="text-gray-600"
-      ></lucide-icon>
-      <p class="text-base font-medium text-gray-700">
-        Dirección: Avenida España 995, Tandil, Buenos Aires.
-      </p>
-    </div>
-    <div class="flex items-center gap-4 p-2">
-      <lucide-icon
-        name="calendar-clock"
-        [size]="16"
-        class="text-gray-600"
-      ></lucide-icon>
-      <p class="text-base font-medium text-gray-700">
-        Horario de atención: Lunes a Sábado, 9:00 AM - 18:00 PM.
-      </p>
+
+    <div class="flex flex-col gap-2 mb-4">
+      <div class="flex items-center gap-4 p-2">
+        <lucide-icon name="info" [size]="16" class="text-gray-600"></lucide-icon>
+        <p class="text-base font-medium text-gray-700">
+          Debes acercarte a nuestra sucursal para retirar tu pedido.
+        </p>
+      </div>
+      <div class="flex items-center gap-4 p-2">
+        <lucide-icon name="map-pin" [size]="16" class="text-gray-600"></lucide-icon>
+        <p class="text-base font-medium text-gray-700">
+          Dirección: Avenida España 995, Tandil, Buenos Aires.
+        </p>
+      </div>
+      <div class="flex items-center gap-4 p-2">
+        <lucide-icon name="clock" [size]="16" class="text-gray-600"></lucide-icon>
+        <p class="text-base font-medium text-gray-700">
+          Horario de atención: Lunes a Sábado, 9:00 AM - 18:00 PM.
+        </p>
+      </div>
     </div>
 
-    <div
-      class="w-full h-[120px] lg:h-auto rounded shadow-lg overflow-hidden mb-4"
-    >
-      <google-map [center]="center" [zoom]="zoom" width="100%" height="150px">
+    <div class="w-full h-[200px] rounded shadow-lg overflow-hidden">
+      <google-map [center]="center" [zoom]="zoom" width="100%" height="100%">
         <map-marker [position]="center"></map-marker>
       </google-map>
     </div>
   </div>
 
-  <!-- Card de Envío a Domicilio -->
+  <!-- Envío a Domicilio Form -->
   <div
     *ngIf="metodoEntrega === 'domicilio'"
     class="container mx-auto max-w-4xl p-4 bg-white w-full shadow rounded-[4px]"
   >
-    <h2 class="text-2xl font-semibold mb-4 text-gray-800">
-      Datos del Destinatario
-    </h2>
+    <div class="flex items-center gap-4 mb-4">
+      <lucide-icon name="truck" [size]="24" class="text-gray-700"></lucide-icon>
+      <h2 class="text-2xl font-semibold text-gray-800">Datos del Destinatario</h2>
+    </div>
 
-    <!-- Campo de Código Postal -->
-    <div class="mb-4 w-full">
-      <!-- Mensaje informativo -->
-      <p class="text-gray-600 mb-2">
-        Actualmente, solo realizamos envíos en la ciudad de Tandil (CP: 7000).
-        La entrega se efectúa el mismo día.
-      </p>
-      <label
-        for="codigoPostal"
-        class="block text-base font-medium text-gray-700"
-      >
-        Código Postal
-      </label>
-      <input
-        id="codigoPostal"
-        [formControl]="codigoPostal"
-        type="text"
-        class="p-2 w-full border border-gray-300 rounded-[4px] focus:outline-none focus:ring-2 focus:ring-[#A2E100]/20"
-        placeholder="Ej: 7000"
-        (input)="validarCodigoPostal()"
-        pattern="7000"
-      />
-      <!-- Mensaje de error -->
-      <p *ngIf="codigoPostalInvalido" class="text-red-500 text-base">
-        El código postal ingresado no corresponde a Tandil (7000).
+    <!-- Código Postal -->
+    <div class="mb-4">
+      <div class="flex items-center gap-2 mb-2">
+        <lucide-icon name="mail" [size]="16" class="text-gray-600"></lucide-icon>
+        <p class="text-sm text-gray-600">
+          Actualmente, solo realizamos envíos en la ciudad de Tandil (CP: 7000).
+          La entrega se efectúa el mismo día.
+        </p>
+      </div>
+
+      <div class="relative">
+        <input
+          [formControl]="codigoPostal"
+          type="text"
+          class="p-2 w-full border rounded-[4px] focus:outline-none focus:ring-2"
+          [ngClass]="{
+            'border-red-500 focus:ring-red-200': codigoPostalInvalido,
+            'border-green-500 focus:ring-green-200': codigoPostalValido,
+            'border-gray-300 focus:ring-blue-200': !codigoPostal.touched
+          }"
+          placeholder="Ingresa el código postal (7000)"
+        />
+        <div class="absolute right-2 top-2">
+          <lucide-icon
+            *ngIf="codigoPostalValido"
+            name="check-circle"
+            [size]="20"
+            class="text-green-500"
+          ></lucide-icon>
+          <lucide-icon
+            *ngIf="codigoPostalInvalido && codigoPostal.touched"
+            name="x-circle"
+            [size]="20"
+            class="text-red-500"
+          ></lucide-icon>
+        </div>
+      </div>
+      
+      <p *ngIf="codigoPostalInvalido && codigoPostal.touched" class="mt-1 text-sm text-red-500">
+        Solo realizamos envíos dentro de Tandil (CP 7000).
       </p>
     </div>
 
-    <p *ngIf="codigoPostalInvalido" class="text-red-500 text-base">
-      Solo realizamos envíos dentro de Tandil (CP 7000).
-    </p>
-    <p *ngIf="codigoPostalInvalido" class="text-red-500 text-base">
-      El código postal ingresado no está dentro del área permitida.
-    </p>
-
-    <!-- Formulario aparece solo si el CP es válido -->
-    <form
-      *ngIf="codigoPostalValido"
-      [formGroup]="destinatarioForm"
-      (ngSubmit)="onSubmit()"
-    >
-      <div class="flex flex-col md:flex-row gap-4 items-center">
-        <div class="w-full md:mb-4 flex-1">
-          <label for="nombre" class="block text-base font-medium text-gray-700">
+    <!-- Formulario de Envío -->
+    <form [formGroup]="destinatarioForm" class="space-y-4" *ngIf="codigoPostalValido" (statusChanges)="onFormValid(destinatarioForm.valid)">
+      <!-- Nombre y Teléfono -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="relative">
+          <label class="block text-sm font-medium text-gray-700 mb-1">
             Nombre del destinatario
           </label>
           <input
-            id="nombre"
             formControlName="nombre"
             type="text"
-            class="p-2 w-full border border-gray-300 rounded-[4px] focus:outline-none focus:ring-2 focus:ring-[#A2E100]/20"
+            class="p-2 w-full border rounded-[4px] focus:outline-none focus:ring-2"
+            [ngClass]="{
+              'border-red-500 focus:ring-red-200': destinatarioForm.get('nombre')?.invalid && destinatarioForm.get('nombre')?.touched,
+              'border-gray-300 focus:ring-blue-200': !destinatarioForm.get('nombre')?.touched
+            }"
             placeholder="Nombre completo"
           />
+          <p *ngIf="destinatarioForm.get('nombre')?.invalid && destinatarioForm.get('nombre')?.touched" class="mt-1 text-sm text-red-500">
+            El nombre es requerido (mínimo 3 caracteres)
+          </p>
         </div>
 
-        <div class="w-full mb-4 flex-1">
-          <label
-            for="telefono"
-            class="block text-base font-medium text-gray-700"
-          >
-            Teléfono destinatario
+        <div class="relative">
+          <label class="block text-sm font-medium text-gray-700 mb-1">
+            Teléfono del destinatario
           </label>
           <input
-            id="telefonoMovil"
             formControlName="telefonoMovil"
             type="tel"
-            class="p-2 w-full border border-gray-300 rounded-[4px] focus:outline-none focus:ring-2 focus:ring-[#A2E100]/20"
-            placeholder="+549 11 12345678"
+            class="p-2 w-full border rounded-[4px] focus:outline-none focus:ring-2"
+            [ngClass]="{
+              'border-red-500 focus:ring-red-200': destinatarioForm.get('telefonoMovil')?.invalid && destinatarioForm.get('telefonoMovil')?.touched,
+              'border-gray-300 focus:ring-blue-200': !destinatarioForm.get('telefonoMovil')?.touched
+            }"
+            placeholder="+54 9 249 1234567"
           />
+          <p *ngIf="destinatarioForm.get('telefonoMovil')?.invalid && destinatarioForm.get('telefonoMovil')?.touched" class="mt-1 text-sm text-red-500">
+            Ingresa un número de teléfono válido
+          </p>
         </div>
       </div>
 
-      <div class="mb-4">
-        <label
-          for="direccion"
-          class="block text-base font-medium text-gray-700"
-        >
+      <!-- Dirección -->
+      <div class="relative">
+        <label class="block text-sm font-medium text-gray-700 mb-1">
           Dirección completa de entrega
         </label>
-        <div class="flex gap-2 items-center">
+        <div class="flex gap-2">
           <input
-            id="direccion"
             formControlName="direccion"
             type="text"
-            class="p-2 w-full border border-gray-300 rounded-[4px] focus:outline-none focus:ring-2 focus:ring-[#A2E100]/20"
-            placeholder="Ejemplo: Avenida España 995, Tandil"
-            ngx-google-places-autocomplete
-            (onAddressChange)="handleAddressChange($event)"
+            class="p-2 flex-1 border rounded-[4px] focus:outline-none focus:ring-2"
+            [ngClass]="{
+              'border-red-500 focus:ring-red-200': destinatarioForm.get('direccion')?.invalid && destinatarioForm.get('direccion')?.touched,
+              'border-gray-300 focus:ring-blue-200': !destinatarioForm.get('direccion')?.touched
+            }"
+            placeholder="Ingresa la dirección completa"
+            #searchBox
             (input)="onAddressInput()"
           />
           <button
-            matRipple
-            class="mt-1 flex justify-center items-center min-h-[38px] min-w-[38px] border border-gray-300 bg-black text-white rounded hover:bg-gray-300 transition-colors"
+            type="button"
+            class="p-2 bg-gray-800 text-white round ed-[4px] hover:bg-gray-700 transition-colors"
             (click)="usarMiUbicacion()"
           >
-            <lucide-icon name="map-pin-house" [size]="24"></lucide-icon>
+            <lucide-icon name="map-pin" [size]="20"></lucide-icon>
           </button>
         </div>
+        <p *ngIf="destinatarioForm.get('direccion')?.errors?.['outsideTandil']" class="mt-1 text-sm text-red-500">
+          La dirección debe estar dentro de Tandil
+        </p>
+        <p *ngIf="destinatarioForm.get('direccion')?.errors?.['invalidPostalCode']" class="mt-1 text-sm text-red-500">
+          La dirección debe corresponder al código postal 7000
+        </p>
       </div>
 
-      <div
-        class="w-full h-[120px] lg:h-auto rounded shadow-lg overflow-hidden mb-4"
-      >
-        <google-map [center]="center" [zoom]="zoom" width="100%" height="150px">
-          <map-marker [position]="center"></map-marker>
+      <!-- Mapa -->
+      <div class="w-full h-[200px] rounded shadow-lg overflow-hidden">
+        <google-map [center]="center" [zoom]="zoom" width="100%" height="100%">
+          <map-marker [position]="center" [options]="{draggable: true}" (mapClick)="onMarkerDrag($event)"></map-marker>
         </google-map>
       </div>
 
-      <div class="mb-4">
-        <label
-          for="comentarios"
-          class="block text-base font-medium text-gray-700"
-        >
-          Comentarios
+      <!-- Comentarios -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">
+          Comentarios adicionales
         </label>
         <textarea
-          id="comentarios"
           formControlName="comentarios"
-          class="p-2 w-full border border-gray-300 rounded-[4px] focus:outline-none focus:ring-2 focus:ring-[#A2E100]/20"
-          placeholder="Ejemplo: No funciona bien el timbre"
+          rows="3"
+          class="p-2 w-full border border-gray-300 rounded-[4px] focus:outline-none focus:ring-2 focus:ring-blue-200"
+          placeholder="Instrucciones especiales de entrega (opcional)"
         ></textarea>
-      </div>
-
-      <div class="flex justify-between items-center gap-4">
-        <button
-          mat-button
-          [routerLink]="['/card-order']"
-          class="bg-gray-300 text-base text-white px-4 py-2 rounded-[4px] hover:bg-gray-400 transition-colors"
-        >
-          Volver
-        </button>
-        <button
-          type="submit"
-          class="bg-blue-500 text-white text-base px-4 py-2 rounded-[4px] focus:ring-2 focus:ring-blue-500 hover:bg-blue-600 transition-colors"
-        >
-          Siguiente
-        </button>
       </div>
     </form>
   </div>

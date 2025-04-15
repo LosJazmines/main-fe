@@ -1,111 +1,61 @@
-<div class="w-full lg:w-[360px] bg-white rounded-[4px] shadow-lg">
-  <div
-    class="w-full h-full flex flex-col p-4"
-    [ngClass]="{
-      'min-h-[147px]': shoppingCart().length === 0,
-      'min-h-[295px]': shoppingCart().length !== 0
-    }"
-  >
-    <div class="w-full h-full">
-      <div class="border-b border-black/10">
-        <h2
-          class="text-2xl font-bold pb-4 !font-playfair"
-          [ngClass]="{
-            'text-black/30': shoppingCart().length === 0,
-            'text-gray-800': shoppingCart().length !== 0
-          }"
-        >
-          Resumen de Compra
-        </h2>
-      </div>
-      @if (shoppingCart().length !== 0 ) {
-      <div class="p-2">
-        <div class="flex gap-2 justify-between items-center">
-          <p class="pb-2 text-base font-semibold font-sans text-gray-800">
-            Productos <span>({{ totalCantidadProductos() }})</span>
-          </p>
-          <p class="pb-2 text-base font-semibold font-sans text-gray-800">
-            ${{ totalPrecioCarrito() | number : "1.2-2" }}
-          </p>
-        </div>
-        <div class="flex gap-2 justify-between items-center">
-          <p class="pb-2 text-base font-semibold font-sans text-gray-800">
-            Envío
-          </p>
-          <p class="pb-2 text-base font-semibold font-sans text-gray-800">-</p>
-        </div>
-        <div class="flex gap-2 justify-between items-center mt-4">
-          <p class="pb-2 text-base font-semibold font-sans text-gray-800">
-            Total :
-          </p>
-          <p class="pb-2 text-base font-semibold font-sans text-gray-800">
-            ${{ totalCarrito() | number : "1.2-2" }}
-          </p>
-        </div>
-      </div>
-      } @else {
-      <div class="h-full p-2 flex justify-center items-center">
-        <p class="text-base font-semibold font-sans text-black/30">
-          Aquí verás los importes de tu compra una vez que agregues productos.
-        </p>
-      </div>
-      }
+<div class="w-full lg:w-[300px] bg-white rounded-lg shadow-lg p-4">
+  <div class="flex flex-col gap-4">
+    <h2 class="text-2xl font-bold text-gray-800">Resumen de Compra</h2>
+    
+    <!-- Productos y total -->
+    <div class="flex justify-between items-center">
+      <span class="text-gray-600">Productos ({{totalCantidadProductos()}})</span>
+      <span class="font-semibold">${{totalCarrito()}}</span>
     </div>
-    @if (shoppingCart().length !== 0 ) {
-    <div
-      class="w-full h-full flex-1 flex flex-col gap-4 justify-between items-end"
+
+    <!-- Envío -->
+    <div class="flex justify-between items-center">
+      <span class="text-gray-600">Envío</span>
+      <span class="font-semibold">-</span>
+    </div>
+
+    <!-- Línea divisoria -->
+    <div class="border-t border-gray-200 my-2"></div>
+
+    <!-- Total -->
+    <div class="flex justify-between items-center">
+      <span class="text-lg font-bold">Total:</span>
+      <span class="text-lg font-bold">${{totalCarrito()}}</span>
+    </div>
+
+    <!-- Método de pago -->
+    <div class="flex flex-col gap-2">
+      <label class="text-gray-700 font-medium">Método de pago</label>
+      <div class="flex flex-col gap-2">
+        <label class="flex items-center gap-2 p-2 border rounded cursor-pointer">
+          <input type="radio" [(ngModel)]="paymentMethod" value="mercado-pago" name="paymentMethod">
+          <img src="assets/icons/mercado-pago.svg" alt="Mercado Pago" class="h-6">
+          <span>Pagar con Mercado Pago</span>
+        </label>
+        <label class="flex items-center gap-2 p-2 border rounded cursor-pointer">
+          <input type="radio" [(ngModel)]="paymentMethod" value="web" name="paymentMethod">
+          <i-lucide name="credit-card"></i-lucide>
+          <span>Pagar más tarde</span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Botón de pago -->
+    @if (!IsButtom()) {
+    <button
+      (click)="onContinuarCompra()"
+      class="w-full py-3 bg-[#3a5a40] text-white font-semibold rounded-[4px] hover:bg-[#3a5a40]/90 transition-colors"
     >
-      @if( !IsButtom() ) {
-      <button
-        (click)="onContinuarCompra()"
-        type="submit"
-        class="text-[16px] bg-[#3a5a40]/80 text-white rounded-[4px] border-none hover:bg-[#3a5a40]/90 transition duration-300 shadow-md flex items-center justify-center w-full py-2"
-      >
-        Continuar compra
-      </button>
-      } @if (IsButtom()) {
-        <div class="w-full mb-4">
-          <mat-radio-group [(ngModel)]="paymentMethod" class="flex flex-col gap-2">
-            <mat-radio-button value="mercado-pago" class="text-gray-700">
-              <div class="flex items-center gap-2">
-                <img src="../../../../assets/icons/mercado-pago.svg" alt="Mercado Pago" class="w-6 h-6">
-                <span>Pagar con Mercado Pago</span>
-              </div>
-            </mat-radio-button>
-            <mat-radio-button value="web" class="text-gray-700">
-              <div class="flex items-center gap-2">
-                <lucide-icon name="credit-card" class="w-6 h-6"></lucide-icon>
-                <span>Pagar más tarde</span>
-              </div>
-            </mat-radio-button>
-          </mat-radio-group>
-        </div>
-        <button
-          (click)="pagar()"
-          class="mercado-pago-btn"
-          [disabled]="isLoading"
-        >
-          <img
-            *ngIf="!isLoading && paymentMethod === 'mercado-pago'"
-            src="../../../../assets/icons/mercado-pago.svg"
-            alt="Mercado Pago"
-            class="mercado-pago-img"
-          />
-          <lucide-icon
-            *ngIf="!isLoading && paymentMethod === 'web'"
-            name="credit-card"
-            class="mercado-pago-img"
-          ></lucide-icon>
-          <mat-spinner
-            *ngIf="isLoading"
-            diameter="24"
-            class="mercado-pago-spinner"
-          >
-          </mat-spinner>
-          <span>{{ isLoading ? 'Procesando...' : paymentMethod === 'mercado-pago' ? 'Pagar con Mercado Pago' : 'Crear orden' }}</span>
-        </button>
-      }
-    </div>
+      Continuar con la compra
+    </button>
+    } @else {
+    <button
+      (click)="pagar()"
+      class="w-full py-3 bg-[#3a5a40] text-white font-semibold rounded-[4px] hover:bg-[#3a5a40]/90 transition-colors"
+      [disabled]="!(canCreateOrder$ | async)"
+    >
+      Crear Orden
+    </button>
     }
   </div>
 </div>

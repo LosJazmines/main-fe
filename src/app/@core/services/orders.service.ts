@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { Order } from '../models/order.model';
 import { environment } from '../../../environments/environment';
 import { OrderStatus } from '../models/order-status.enum';
+import { AddressValidationService } from './address-validation.service';
 
 export interface OrderItem {
   id: number;
@@ -25,7 +26,10 @@ export interface OrderItem {
 export class OrdersService {
   private apiUrl = `${environment.api}/orders`;
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private addressValidationService: AddressValidationService
+  ) {}
 
   getOrders(): Observable<Order[]> {
     return this.http.get<Order[]>(this.apiUrl);
@@ -40,6 +44,21 @@ export class OrdersService {
   }
 
   createOrder(orderData: Partial<Order>): Observable<Order> {
+    if (!orderData.metodoEnvio) {
+      return throwError(() => new Error('El método de envío es requerido'));
+    }
+
+    const validationResult = this.addressValidationService.validateDeliveryAddress({
+      metodoEnvio: orderData.metodoEnvio,
+      direccion: orderData.direccion,
+      ciudad: orderData.ciudad,
+      estado: orderData.estado,
+      pais: orderData.pais
+    });
+
+    if (!validationResult.isValid) {
+      return throwError(() => new Error(validationResult.message));
+    }
     return this.http.post<Order>(this.apiUrl, orderData);
   }
 
