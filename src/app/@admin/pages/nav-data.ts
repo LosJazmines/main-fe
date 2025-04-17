@@ -35,4 +35,10 @@ export const navbar_admin = [
     label: 'Datos Bancarios',
     roles: ['admin']
   },
+  {
+    route: 'a/config',
+    icon: 'settings',
+    label: 'Configuración',
+    roles: ['admin']
+  },
 ];

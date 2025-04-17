@@ -1,0 +1,121 @@
+<div class="p-4">
+  <div class="mb-4">
+    <h2 class="text-2xl font-bold mb-4">{{ editingCategory ? 'Edit Category' : 'Add New Category' }}</h2>
+    <form [formGroup]="categoryForm" (ngSubmit)="onSubmit()" class="space-y-4">
+      <div class="flex flex-col">
+        <label for="name" class="mb-1">Name</label>
+        <input 
+          id="name"
+          type="text"
+          pInputText
+          formControlName="name"
+          [class.ng-invalid]="categoryForm.get('name')?.invalid && categoryForm.get('name')?.touched"
+          class="p-2 border rounded"
+        />
+        <small class="text-red-500" *ngIf="categoryForm.get('name')?.invalid && categoryForm.get('name')?.touched">
+          Name is required
+        </small>
+      </div>
+
+      <div class="flex flex-col">
+        <label for="slug" class="mb-1">Slug</label>
+        <input 
+          id="slug"
+          type="text"
+          pInputText
+          formControlName="slug"
+          [class.ng-invalid]="categoryForm.get('slug')?.invalid && categoryForm.get('slug')?.touched"
+          class="p-2 border rounded"
+        />
+        <small class="text-red-500" *ngIf="categoryForm.get('slug')?.invalid && categoryForm.get('slug')?.touched">
+          Slug is required
+        </small>
+      </div>
+
+      <div class="flex flex-col">
+        <label for="value" class="mb-1">Value</label>
+        <input 
+          id="value"
+          type="text"
+          pInputText
+          formControlName="value"
+          [class.ng-invalid]="categoryForm.get('value')?.invalid && categoryForm.get('value')?.touched"
+          class="p-2 border rounded"
+        />
+        <small class="text-red-500" *ngIf="categoryForm.get('value')?.invalid && categoryForm.get('value')?.touched">
+          Value is required
+        </small>
+      </div>
+
+      <div class="flex gap-2">
+        <button 
+          type="submit" 
+          [disabled]="categoryForm.invalid || loading"
+          class="px-4 py-2 bg-primary text-white rounded hover:bg-primary-dark transition-colors"
+        >
+          {{ editingCategory ? 'Update Category' : 'Add Category' }}
+        </button>
+        <button 
+          type="button" 
+          (click)="resetForm()"
+          class="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 transition-colors"
+          *ngIf="editingCategory"
+        >
+          Cancel
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <div class="mt-8">
+    <h3 class="text-xl font-bold mb-4">Categories</h3>
+    <!-- <p-table 
+      [value]="categories" 
+      [loading]="loading"
+      [paginator]="true" 
+      [rows]="10"
+      styleClass="p-datatable-sm"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Name</th>
+          <th>Slug</th>
+          <th>Value</th>
+          <th>Actions</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-category>
+        <tr>
+          <td>{{ category.name }}</td>
+          <td>{{ category.slug }}</td>
+          <td>{{ category.value }}</td>
+          <td>
+            <div class="flex gap-2">
+              <button 
+                class="p-2 text-amber-600 hover:text-amber-700 transition-colors"
+                (click)="editCategory(category)"
+              >
+                <i-lucide name="pencil" class="w-5 h-5"></i-lucide>
+              </button>
+              <button 
+                class="p-2 text-red-600 hover:text-red-700 transition-colors"
+                (click)="deleteCategory(category.uuid)"
+              >
+                <i-lucide name="trash-2" class="w-5 h-5"></i-lucide>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="4" class="text-center p-4">
+            No categories found
+          </td>
+        </tr>
+      </ng-template>
+    </p-table> -->
+  </div>
+</div>
+
+<!-- <p-toast></p-toast>  -->

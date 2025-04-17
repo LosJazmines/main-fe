@@ -21,6 +21,8 @@ import { ProductsService } from '../../../@apis/products.service';
 import { LucideModule } from '@shared/lucide/lucide.module';
 import { filter_home } from '@apis/data/filter';
 import { RouterModule } from '@angular/router';
+import { PublicStoreConfigService } from '../../core/services/store-config.service';
+
 // register Swiper custom elements
 register();
 @Component({
@@ -60,10 +62,15 @@ export default class HomeComponent implements OnInit {
 
   isBrowser: boolean;
 
+  imgHeader: { url: string; order: number }[] = [];
+  loading = true;
+  error: string | null = null;
+
   constructor(
     private _productsService: ProductsService,
     @Inject(PLATFORM_ID) private platformId: Object,
-    @Inject(DOCUMENT) private document: Document
+    @Inject(DOCUMENT) private document: Document,
+    private storeConfigService: PublicStoreConfigService
   ) {
     this.isBrowser = isPlatformBrowser(this.platformId);
     this.temporada = this.obtenerTemporada();
@@ -77,6 +84,7 @@ export default class HomeComponent implements OnInit {
       ];
 
     this.getProductsFindActive();
+    this.loadBanners();
   }
 
   ngAfterViewInit() {
@@ -102,27 +110,6 @@ export default class HomeComponent implements OnInit {
     this.updateShadows();
   }
 
-
-  imgHeader: any[] = [
-    {
-      img_url: './../../../../assets/img/header/banner diario-980x460.jpg',
-    },
-    {
-      img_url: './../../../../assets/img/header/Banner mayo.-980x460.jpg',
-    },
-    {
-      img_url: './../../../../assets/img/header/banner mayo3-980x460.jpg',
-    },
-    {
-      img_url: './../../../../assets/img/header/banner diario-980x460.jpg',
-    },
-    {
-      img_url: './../../../../assets/img/header/Banner mayo.-980x460.jpg',
-    },
-    {
-      img_url: './../../../../assets/img/header/banner mayo3-980x460.jpg',
-    },
-  ];
 
   // Categoría seleccionada para el filtro
   selectedCategory: string = '';
@@ -179,5 +166,22 @@ export default class HomeComponent implements OnInit {
     } else {
       return 'Invierno';
     }
+  }
+
+  loadBanners(): void {
+    this.loading = true;
+    this.error = null;
+
+    this.storeConfigService.getHomeBanners().subscribe({
+      next: (banners) => {
+        this.imgHeader = banners.sort((a, b) => a.order - b.order);
+        this.loading = false;
+      },
+      error: (error) => {
+        this.error = 'Error loading banners';
+        this.loading = false;
+        console.error('Error loading banners:', error);
+      }
+    });
   }
 }

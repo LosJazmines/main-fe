@@ -119,6 +119,16 @@ import {
   Box,
   Timer,
   Printer,
+  ImagePlus,
+  ListFilterPlus,
+  MoreVertical,
+  ImageUp,
+  FolderOpen,
+  Tags,
+  Type,
+  ToggleLeft,
+  ToggleRight,
+  Folder,
 } from 'lucide-angular';
 
 @NgModule({
@@ -239,7 +249,17 @@ import {
     ArrowRight,
     Box,
     Timer,
-    Printer
+    Printer,
+    ImagePlus,
+    ListFilterPlus,
+    MoreVertical,
+    ImageUp,
+    FolderOpen,
+    Tags,
+    Type,
+    ToggleRight,
+    ToggleLeft,
+    Folder
   })],
   exports: [LucideAngularModule]
 })

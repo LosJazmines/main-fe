@@ -7,7 +7,7 @@ import {
 
 import { routes } from './app.routes';
 import { provideClientHydration } from '@angular/platform-browser';
-import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
 import {
   provideHttpClient,
@@ -19,6 +19,7 @@ import { provideStore } from '@ngrx/store';
 import { reducers } from './@shared/store';
 import { GoogleLoginProvider, SocialAuthServiceConfig, SocialLoginModule } from '@abacritt/angularx-social-login';
 import { LucideModule } from './@shared/lucide/lucide.module';
+import { provideToastr } from 'ngx-toastr';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -31,8 +32,9 @@ export const appConfig: ApplicationConfig = {
     }),
     provideRouter(routes, withPreloading(PreloadAllModules)),
     provideClientHydration(),
-    provideAnimationsAsync(),
+    provideAnimations(),
     provideHttpClient(withFetch(), withInterceptors([authInterceptor])),
+    provideToastr(),
     SocialLoginModule,
     LucideModule,
     {

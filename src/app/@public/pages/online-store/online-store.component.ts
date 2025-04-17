@@ -23,6 +23,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { toggleLeftSidebarFilters } from '@shared/components/sidebars/left-sidebar-filters/store/actions/left-sidebar-filters.actions';
 import { ProductsService } from '@apis/products.service';
+import { PublicStoreConfigService } from '../../../@public/core/services/store-config.service';
+import { BannerImage } from '@core/types/store-config';
 // register Swiper custom elements
 register();
 
@@ -63,6 +65,9 @@ export default class OnlineStoreComponent implements OnInit {
   selectedOrderText: string = 'Ascendente';
   dropdownOpen = false;
   products = signal<any[]>([]);
+  loading = false;
+  error: string | null = null;
+  imgHeader: BannerImage[] = [];
 
   orderOptions = [
     { value: 'ascendente', text: 'Ascendente' },
@@ -89,13 +94,13 @@ export default class OnlineStoreComponent implements OnInit {
     });
   }
 
-
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
     private router: Router,
     private store: Store,
     private route: ActivatedRoute,
     private _productsService: ProductsService,
+    @Inject(PublicStoreConfigService) private storeConfigService: PublicStoreConfigService,
   ) {
     this.isBrowser = isPlatformBrowser(this.platformId);
     this.temporada = this.obtenerTemporada();
@@ -164,13 +169,30 @@ export default class OnlineStoreComponent implements OnInit {
       this.coleccionesTipos[
       Math.floor(Math.random() * this.coleccionesTipos.length)
       ];
+
+    this.loadBanners();
+  }
+
+  loadBanners(): void {
+    this.loading = true;
+    this.error = null;
+
+    this.storeConfigService.getStoreBanners().subscribe({
+      next: (banners: BannerImage[]) => {
+        this.imgHeader = banners.sort((a: BannerImage, b: BannerImage) => a.order - b.order);
+        this.loading = false;
+      },
+      error: (error: Error) => {
+        this.error = 'Error loading banners';
+        this.loading = false;
+        console.error('Error loading banners:', error);
+      }
+    });
   }
 
   openLeftFiltersDrawer() {
     this.store.dispatch(toggleLeftSidebarFilters({ isOpen: true }));
   }
-
-
 
   // products = [
   //   {
@@ -296,27 +318,6 @@ export default class OnlineStoreComponent implements OnInit {
   //   // Más productos
   // ];
 
-  imgHeader: any[] = [
-    {
-      img_url: './../../../../assets/img/header/banner diario-980x460.jpg',
-    },
-    {
-      img_url: './../../../../assets/img/header/Banner mayo.-980x460.jpg',
-    },
-    {
-      img_url: './../../../../assets/img/header/banner mayo3-980x460.jpg',
-    },
-    {
-      img_url: './../../../../assets/img/header/banner diario-980x460.jpg',
-    },
-    {
-      img_url: './../../../../assets/img/header/Banner mayo.-980x460.jpg',
-    },
-    {
-      img_url: './../../../../assets/img/header/banner mayo3-980x460.jpg',
-    },
-  ];
-
   // Categoría seleccionada para el filtro
   selectedCategory: string = '';
 
@@ -330,10 +331,8 @@ export default class OnlineStoreComponent implements OnInit {
   //   );
   // }
 
-
   private getProductsFindActive(): void {
     this._productsService.getProductsFindActive().subscribe({
-
       next: (response: any) => {
         // Process the response here
         // const products = [...response];
@@ -348,13 +347,13 @@ export default class OnlineStoreComponent implements OnInit {
         console.error('Error fetching products:', error);
       },
     });
-
   }
 
   // Método para seleccionar una categoría
   selectCategory(category: string) {
     this.selectedCategory = category;
   }
+
   obtenerTemporada(): string {
     const mes = new Date().getMonth(); // Obtiene el mes actual (0-11)
 

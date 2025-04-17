@@ -25,32 +25,10 @@ export class CarrouselSwiperStoreComponent implements OnInit {
 
   isBrowser: boolean;
 
-  imgHeader: any[] = [
-    {
-      img_url: './../../../../assets/img/header/banner diario-980x460.jpg',
-    },
-    {
-      img_url: './../../../../assets/img/header/Banner mayo.-980x460.jpg',
-    },
-    {
-      img_url: './../../../../assets/img/header/banner mayo3-980x460.jpg',
-    },
-    {
-      img_url: './../../../../assets/img/header/banner diario-980x460.jpg',
-    },
-    {
-      img_url: './../../../../assets/img/header/Banner mayo.-980x460.jpg',
-    },
-    {
-      img_url: './../../../../assets/img/header/banner mayo3-980x460.jpg',
-    },
-  ];
-
   constructor(@Inject(PLATFORM_ID) private platformId: Object) {
     this.isBrowser = isPlatformBrowser(this.platformId);
   }
   ngOnInit(): void { }
-
 }
 
 

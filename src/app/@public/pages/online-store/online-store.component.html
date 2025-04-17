@@ -7,12 +7,26 @@
     <div class="right">
       <div class="h-10 w-full"><app-breadcrumb></app-breadcrumb></div>
 
-      <div class="header">
-        <div [@zoomIn] [@zoomOut] class="carrousel">
-          <div class="carrousel-items">
+      <div class="header h-[400px] relative mb-8">
+        <div [@zoomIn] [@zoomOut] class="carrousel h-full">
+          <div class="carrousel-items h-full">
+            <div *ngIf="loading" class="w-full h-full flex items-center justify-center bg-gray-100">
+              <p class="text-gray-500">Loading banners...</p>
+            </div>
+            
+            <div *ngIf="error" class="w-full h-full flex items-center justify-center bg-red-50">
+              <p class="text-red-500">{{ error }}</p>
+            </div>
+
             <app-carrousel-swiper-store
+              *ngIf="!loading && !error && imgHeader.length > 0"
               [images]="imgHeader"
+              class="block h-full"
             ></app-carrousel-swiper-store>
+
+            <div *ngIf="!loading && !error && imgHeader.length === 0" class="w-full h-full flex items-center justify-center bg-gray-100">
+              <p class="text-gray-500">No banners available</p>
+            </div>
           </div>
         </div>
       </div>

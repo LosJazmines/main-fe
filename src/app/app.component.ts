@@ -9,6 +9,8 @@ import { Store } from '@ngrx/store';
 import { selectIsRightSidebarOpen } from './@shared/components/sidebars/right-sidebar/store/selectors/right-sidebar.selectors';
 import { selectIsLeftSidebarOpen } from './@shared/components/sidebars/left-sidebar/store/selectors/left-sidebar.selectors';
 import { toggleLeftSidebar } from './@shared/components/sidebars/left-sidebar/store/actions/left-sidebar.actions';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ToastrModule } from 'ngx-toastr';
 
 import { toggleRightSidebar } from './@shared/components/sidebars/right-sidebar/store/actions/right-sidebar.actions';
 import { LeftSidebarFiltersComponent } from './@shared/components/sidebars/left-sidebar-filters/left-sidebar-filters.component';

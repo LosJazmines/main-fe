@@ -214,6 +214,11 @@ export const routes: Routes = [
           import('./@admin/pages/messages/messages.component'),
         title: 'Admin - Messages',
       },
+      {
+        path: 'config',
+        loadComponent: () => import('./@admin/pages/config/config.component').then(m => m.ConfigComponent),
+        title: 'Admin - Config',
+      },
     ],
   },
 
