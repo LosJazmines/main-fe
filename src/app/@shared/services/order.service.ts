@@ -29,6 +29,8 @@ interface CreateOrderRequest {
   pais: string;
   metodoEnvio: 'PICKUP' | 'DELIVERY';
   metododepago?: 'web' | 'mercado-pago';
+  comentarios?: string;
+  telefonoMovil?: string;
 }
 
 @Injectable({
@@ -95,7 +97,9 @@ export class OrderService {
         estado: request.deliveryInfo.estado,
         pais: request.deliveryInfo.pais,
         metodoEnvio: request.deliveryInfo.metodoEnvio || 'PICKUP',
-        metododepago: request.paymentMethod
+        metododepago: request.paymentMethod,
+        comentarios: request.deliveryInfo.comentarios,
+        telefonoMovil: request.deliveryInfo.telefonoMovil
       };
 
       const response = await firstValueFrom(

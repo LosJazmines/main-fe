@@ -1,83 +1,44 @@
-<ng-container *ngIf="!editMode">
-  <div class="min-w-[360px] bg-white overflow-hidden">
-    <!-- Header con fondo -->
-    <div class="relative h-32 bg-gray-200">
-      <ng-container *ngIf="contact?.background; else defaultBackground">
-        <img
-          class="absolute inset-0 object-cover w-full h-full"
-          [src]="contact.background"
-          alt="Fondo del contacto"
-        />
-      </ng-container>
-      <ng-template #defaultBackground>
-        <!-- Fallback: fondo de color -->
-        <div class="absolute inset-0 bg-[#3a5a40]/20 backdrop-blur-md"></div>
-      </ng-template>
-      <!-- Botón de cierre -->
-      <div class="absolute top-2 right-2">
-        <!-- <button mat-icon-button [matTooltip]="'Cerrar'" (click)="closeDrawer()">
-            lucide-icon name="x-mark" [size]="24"></lucide-icon>
-
-        </button> -->
-        <button
-          mat-icon-button
-          aria-label="menu"
-          (click)="closeDrawer()"
-          class="!text-white"
-        >
-          <lucide-icon name="x"></lucide-icon>
-        </button>
-      </div>
-    </div>
-    <!-- Contenido principal -->
-    <div class="p-4">
-      <!-- Avatar centrado -->
-      <div class="flex justify-center -mt-12">
-        <div
-          class="w-24 h-24 rounded-full overflow-hidden border-4 border-white !z-10"
-        >
-          <ng-container *ngIf="contact?.avatar; else defaultAvatar">
-            <img
-              class="object-cover w-full h-full"
-              [src]="contact.avatar"
-              alt="Avatar del contacto"
-            />
-          </ng-container>
-          <ng-template #defaultAvatar>
-            <div
-              class="flex items-center justify-center bg-gray-300 text-gray-600 text-4xl uppercase"
-            >
-              {{ contact?.name ? contact.name.charAt(0) : "" }}
-            </div>
-          </ng-template>
-        </div>
-      </div>
-      <!-- Información básica -->
-      <div class="mt-4 text-center">
-        <h2 class="text-xl font-bold text-gray-800">{{ contact?.name }}</h2>
-        <p class="text-sm text-gray-500">{{ contact?.email }}</p>
-      </div>
-      <!-- Botones de acción -->
-      <div class="mt-4 flex flex-col justify-center gap-2 w-full">
-        <button
-          class="px-4 py-2 bg-blue-500/80 text-white rounded-[4px] hover:bg-blue-600 focus:outline-none"
-          (click)="editContact(contact)"
-        >
-          Editar
-        </button>
-        <button
-          class="px-4 py-2 bg-red-500/80 text-white rounded-[4px] hover:bg-red-600 focus:outline-none"
-          (click)="deleteContact(contact)"
-        >
-          Eliminar
-        </button>
-        <button
-          class="px-4 py-2 bg-yellow-500/80 text-white rounded-[4px] hover:bg-yellow-600 focus:outline-none"
-          (click)="blockContact(contact)"
-        >
-          Bloquear
-        </button>
-      </div>
+<div class="min-w-[360px] bg-white overflow-hidden">
+  <!-- Header con fondo -->
+  <div class="relative h-32 bg-[#3a5a40]/20 backdrop-blur-md">
+    <!-- Botón de cierre -->
+    <div class="absolute top-2 right-2">
+      <button
+        mat-icon-button
+        aria-label="menu"
+        (click)="close.emit()"
+        class="!text-white"
+      >
+        <lucide-icon name="x"></lucide-icon>
+      </button>
     </div>
   </div>
-</ng-container>
+  <!-- Contenido principal -->
+  <div class="p-4">
+    <div class="flex items-center justify-between mb-6">
+      <div class="flex items-center gap-3">
+        <div
+          class="w-10 h-10 bg-[#3a5a40]/80 rounded-full flex items-center justify-center text-white font-bold"
+        >
+          <span>{{ getInitials() }}</span>
+        </div>
+        <div>
+          <h2 class="text-lg font-medium text-gray-900">{{ user?.username }}</h2>
+          <p class="text-sm text-gray-500">{{ user?.email }}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- User Form -->
+    <app-user-form
+      [user]="user"
+      (formSubmit)="onFormSubmit($event)"
+      (formCancel)="close.emit()"
+    ></app-user-form>
+
+    <!-- Error message -->
+    <div *ngIf="error" class="mt-4 p-2 bg-red-100 text-red-700 rounded text-center">
+      {{ error }}
+    </div>
+  </div>
+</div>

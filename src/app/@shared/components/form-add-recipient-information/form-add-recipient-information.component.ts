@@ -82,9 +82,8 @@ export class FormAddRecipientInformationComponent implements OnInit, AfterViewIn
     this.destinatarioForm = this.fb.group({
       nombre: ['', [Validators.required, Validators.minLength(3)]],
       direccion: ['', [Validators.required, Validators.minLength(5)]],
-      telefonoMovil: ['', [
-        Validators.required,
-        Validators.pattern(/^\+?54\s?9?\s?\d{2,4}\s?\d{6,8}$/)
+      telefonoMovil: ['+54 ', [
+        Validators.pattern(/^\+54\s?9?\s?\d{2,4}\s?\d{6,8}$/)
       ]],
       pais: ['Argentina'],
       estado: ['Buenos Aires'],
@@ -92,7 +91,7 @@ export class FormAddRecipientInformationComponent implements OnInit, AfterViewIn
       comentarios: [''],
       latitud: [''],
       longitud: [''],
-      codigoPostal: ['']
+      codigoPostal: this.codigoPostal
     });
 
     this.codigoPostal.valueChanges.subscribe(() => {
@@ -102,11 +101,52 @@ export class FormAddRecipientInformationComponent implements OnInit, AfterViewIn
     });
 
     this.destinatarioForm.valueChanges.subscribe(() => {
-      if (this.metodoEntrega === 'sucursal' || 
-          (this.destinatarioForm.valid && this.direccionValida && this.codigoPostalValido)) {
+      const formState = {
+        formValid: this.destinatarioForm.valid,
+        direccionValida: this.direccionValida,
+        codigoPostalValido: this.codigoPostalValido,
+        metodoEntrega: this.metodoEntrega,
+        formValues: this.destinatarioForm.value,
+        formErrors: Object.keys(this.destinatarioForm.controls).reduce((acc: { [key: string]: any }, key) => {
+          const control = this.destinatarioForm.get(key);
+          acc[key] = control?.errors;
+          return acc;
+        }, {})
+      };
+      
+      console.log('Form Validation State:', formState);
+
+      const isValid = this.metodoEntrega === 'sucursal' || 
+          (this.destinatarioForm.valid && this.direccionValida && this.codigoPostalValido);
+
+      if (isValid) {
+        console.log('Emitting form value:', this.destinatarioForm.value);
         this.formCargado.emit(this.destinatarioForm.value);
+        
+        // Dispatch actions to update store
+        if (this.metodoEntrega === 'sucursal') {
+          this.store.dispatch(OrderActions.setDeliveryMethod({ method: 'PICKUP' }));
+        } else {
+          this.store.dispatch(OrderActions.setDeliveryMethod({ method: 'DELIVERY' }));
+          this.store.dispatch(OrderActions.setDeliveryInfo({ 
+            deliveryInfo: {
+              nombre: this.destinatarioForm.value.nombre,
+              direccion: this.destinatarioForm.value.direccion,
+              ciudad: this.destinatarioForm.value.ciudad,
+              estado: this.destinatarioForm.value.estado,
+              pais: this.destinatarioForm.value.pais,
+              codigoPostal: this.destinatarioForm.value.codigoPostal,
+              telefonoMovil: this.destinatarioForm.value.telefonoMovil,
+              metodoEnvio: 'DELIVERY',
+              comentarios: this.destinatarioForm.value.comentarios
+            }
+          }));
+        }
+        this.store.dispatch(OrderActions.validateOrder({ isValid: true }));
       } else {
-        this.formCargado.emit(null); // Emitir null si el formulario no es válido
+        console.log('Emitting null - Form invalid');
+        this.formCargado.emit(null);
+        this.store.dispatch(OrderActions.validateOrder({ isValid: false }));
       }
       this.saveDeliveryInfo();
     });
@@ -152,6 +192,10 @@ export class FormAddRecipientInformationComponent implements OnInit, AfterViewIn
         if (this.isAddressInTandil(lat, lng)) {
           this.center = { lat, lng };
           this.zoom = 16;
+          
+          // Obtener el código postal
+          const postalCode = this.getAddressComponent(place, 'postal_code') || '7000';
+          
           this.destinatarioForm.patchValue({
             direccion: place.formatted_address,
             ciudad: this.getAddressComponent(place, 'locality'),
@@ -160,6 +204,10 @@ export class FormAddRecipientInformationComponent implements OnInit, AfterViewIn
             latitud: lat.toString(),
             longitud: lng.toString()
           });
+          
+          // Actualizar el código postal
+          this.codigoPostal.setValue(postalCode);
+          
           this.direccionValida = true;
           this.destinatarioForm.get('direccion')?.setErrors(null);
           this.validarCodigoPostal();
@@ -175,20 +223,30 @@ export class FormAddRecipientInformationComponent implements OnInit, AfterViewIn
   validarCodigoPostal() {
     // Solo validar si no es retiro en sucursal
     if (this.metodoEntrega === 'sucursal') {
+      console.log('Código postal: Retiro en sucursal - validación omitida');
       this.codigoPostalValido = true;
       this.codigoPostalInvalido = false;
       return;
     }
 
     const codigo = this.codigoPostal.value;
+    console.log('Validando código postal:', {
+      codigo,
+      esValido: codigo === '7000'
+    });
+    
     this.codigoPostalValido = codigo === '7000';
     this.codigoPostalInvalido = !this.codigoPostalValido;
     
     if (!this.codigoPostalValido) {
+      console.log('Código postal inválido');
       this.validationError.emit('Solo se permiten envíos al código postal 7000 (Tandil)');
       this.destinatarioForm.get('direccion')?.setErrors({ 'invalidPostalCode': true });
     } else {
+      console.log('Código postal válido');
       this.destinatarioForm.get('direccion')?.setErrors(null);
+      // Actualizar el código postal en el formulario principal
+      this.destinatarioForm.patchValue({ codigoPostal: codigo }, { emitEvent: false });
     }
   }
 
@@ -404,6 +462,11 @@ export class FormAddRecipientInformationComponent implements OnInit, AfterViewIn
     }
   }
 
+  onFormValid(isValid: boolean) {
+    // Form validation is already handled in valueChanges subscription
+    // This method is just to satisfy the template binding
+  }
+
   private saveDeliveryInfo() {
     if (this.metodoEntrega === 'sucursal' || 
         (this.destinatarioForm.valid && this.direccionValida && this.codigoPostalValido)) {
@@ -425,9 +488,5 @@ export class FormAddRecipientInformationComponent implements OnInit, AfterViewIn
     } else {
       localStorage.removeItem('deliveryInfo');
     }
-  }
-
-  onFormValid(isValid: boolean) {
-    this.store.dispatch(OrderActions.validateOrder({ isValid }));
   }
 }

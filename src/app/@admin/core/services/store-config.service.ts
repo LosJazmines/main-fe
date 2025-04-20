@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
-import { StoreConfig, Category, Tag } from '../types/store-config';
+import { StoreConfig, Category } from '../types/store-config';
 import { environment } from '../../../../environments/environment';
 import { catchError } from 'rxjs/operators';
 import { MessageService } from '../../../@core/services/snackbar.service';
 import { TypeSnackBarPosition } from '../../../@core/types/snackbar.types';
+import { TagConfig } from '@core/models/tag-config.model';
 
 @Injectable({
   providedIn: 'root'
@@ -66,19 +67,19 @@ export class StoreConfigService {
   }
 
   // Tags
-  getTags(type?: 'flower' | 'plant' | 'extra', isActive?: boolean): Observable<Tag[]> {
+  getTags(type?: 'flower' | 'plant' | 'extra', isActive?: boolean): Observable<TagConfig[]> {
     let params = new HttpParams();
     if (type) params = params.set('type', type);
     if (isActive !== undefined) params = params.set('isActive', isActive.toString());
-    return this.http.get<Tag[]>(`${this.apiUrl}/tags`, { params });
+    return this.http.get<TagConfig[]>(`${this.apiUrl}/tags`, { params });
   }
 
-  createTag(tag: { name: string; type: 'flower' | 'plant' | 'extra' }): Observable<Tag> {
-    return this.http.post<Tag>(`${this.apiUrl}/tags`, tag);
+  createTag(tag: Partial<TagConfig>): Observable<TagConfig> {
+    return this.http.post<TagConfig>(`${this.apiUrl}/tags`, tag);
   }
 
-  updateTag(uuid: string, tag: Partial<Tag>): Observable<Tag> {
-    return this.http.put<Tag>(`${this.apiUrl}/tags/${uuid}`, tag);
+  updateTag(uuid: string, tag: Partial<TagConfig>): Observable<TagConfig> {
+    return this.http.put<TagConfig>(`${this.apiUrl}/tags/${uuid}`, tag);
   }
 
   deleteTag(uuid: string): Observable<void> {

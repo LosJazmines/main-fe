@@ -165,7 +165,7 @@
     </div>
 
     <!-- Formulario de Envío -->
-    <form [formGroup]="destinatarioForm" class="space-y-4" *ngIf="codigoPostalValido" (statusChanges)="onFormValid(destinatarioForm.valid)">
+    <form [formGroup]="destinatarioForm" class="space-y-4" *ngIf="codigoPostalValido">
       <!-- Nombre y Teléfono -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div class="relative">

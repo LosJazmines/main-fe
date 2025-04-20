@@ -1,0 +1,134 @@
+<form [formGroup]="userForm" (ngSubmit)="onSubmit()" class="space-y-4 p-4">
+  <!-- Email -->
+  <div class="relative">
+    <label class="block text-sm font-medium text-gray-700 mb-1">
+      Email
+    </label>
+    <input
+      formControlName="email"
+      type="email"
+      class="p-2 w-full border rounded-[4px] focus:outline-none focus:ring-2"
+      [ngClass]="{
+        'border-red-500 focus:ring-red-200': userForm.get('email')?.invalid && userForm.get('email')?.touched,
+        'border-gray-300 focus:ring-blue-200': !userForm.get('email')?.touched
+      }"
+      placeholder="Ingresa el email"
+    />
+    <p *ngIf="userForm.get('email')?.invalid && userForm.get('email')?.touched" class="mt-1 text-sm text-red-500">
+      Ingresa un email válido
+    </p>
+  </div>
+
+  <!-- Password -->
+  <div class="relative" *ngIf="!user">
+    <label class="block text-sm font-medium text-gray-700 mb-1">
+      Contraseña
+    </label>
+    <input
+      formControlName="password"
+      type="password"
+      class="p-2 w-full border rounded-[4px] focus:outline-none focus:ring-2"
+      [ngClass]="{
+        'border-red-500 focus:ring-red-200': userForm.get('password')?.invalid && userForm.get('password')?.touched,
+        'border-gray-300 focus:ring-blue-200': !userForm.get('password')?.touched
+      }"
+      placeholder="Ingresa la contraseña"
+    />
+    <p *ngIf="userForm.get('password')?.invalid && userForm.get('password')?.touched" class="mt-1 text-sm text-red-500">
+      La contraseña debe tener al menos 6 caracteres, una mayúscula, una minúscula y un número
+    </p>
+  </div>
+
+  <!-- Username -->
+  <div class="relative">
+    <label class="block text-sm font-medium text-gray-700 mb-1">
+      Nombre de usuario
+    </label>
+    <input
+      formControlName="username"
+      type="text"
+      class="p-2 w-full border rounded-[4px] focus:outline-none focus:ring-2"
+      [ngClass]="{
+        'border-red-500 focus:ring-red-200': userForm.get('username')?.invalid && userForm.get('username')?.touched,
+        'border-gray-300 focus:ring-blue-200': !userForm.get('username')?.touched
+      }"
+      placeholder="Ingresa el nombre de usuario"
+    />
+    <p *ngIf="userForm.get('username')?.invalid && userForm.get('username')?.touched" class="mt-1 text-sm text-red-500">
+      El nombre de usuario es requerido
+    </p>
+  </div>
+
+  <!-- Phone Number -->
+  <div class="relative">
+    <label class="block text-sm font-medium text-gray-700 mb-1">
+      Teléfono
+    </label>
+    <input
+      formControlName="phoneNumber"
+      type="tel"
+      class="p-2 w-full border border-gray-300 rounded-[4px] focus:outline-none focus:ring-2 focus:ring-blue-200"
+      placeholder="Ingresa el número de teléfono (opcional)"
+    />
+  </div>
+
+  <!-- Address -->
+  <div class="relative">
+    <label class="block text-sm font-medium text-gray-700 mb-1">
+      Dirección
+    </label>
+    <input
+      formControlName="address"
+      type="text"
+      class="p-2 w-full border border-gray-300 rounded-[4px] focus:outline-none focus:ring-2 focus:ring-blue-200"
+      placeholder="Ingresa la dirección (opcional)"
+    />
+  </div>
+
+  <!-- Roles -->
+  <div class="relative">
+    <label class="block text-sm font-medium text-gray-700 mb-1">
+      Roles
+    </label>
+    <app-custom-select
+      [options]="roleOptions"
+      [placeholder]="'Selecciona un rol'"
+      [initialValue]="userForm.get('roles')?.value"
+      (selectionChange)="userForm.patchValue({ roles: $event.id })"
+    ></app-custom-select>
+    <p *ngIf="userForm.get('roles')?.value?.length === 0" class="mt-1 text-sm text-red-500">
+      Debes seleccionar al menos un rol
+    </p>
+  </div>
+
+  <!-- Status -->
+  <div class="flex items-center gap-2">
+    <input
+      type="checkbox"
+      formControlName="isActive"
+      id="isActive"
+      class="w-4 h-4 text-[#3a5a40] border-gray-300 rounded focus:ring-[#3a5a40]"
+    />
+    <label for="isActive" class="text-sm font-medium text-gray-700">
+      Usuario activo
+    </label>
+  </div>
+
+  <!-- Buttons -->
+  <div class="flex justify-end gap-2 mt-6">
+    <button
+      type="button"
+      (click)="onCancel()"
+      class="px-4 py-2 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-[4px] transition-colors"
+    >
+      Cancelar
+    </button>
+    <button
+      type="submit"
+      [disabled]="userForm.invalid"
+      class="px-4 py-2 text-white bg-[#3a5a40] hover:bg-[#3a5a40]/90 rounded-[4px] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+    >
+      {{ user ? 'Actualizar' : 'Crear' }} Usuario
+    </button>
+  </div>
+</form> 

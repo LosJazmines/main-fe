@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
-import { environment } from '../../environments/environment.dev';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { environment } from '../../environments/environment';
+import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { httpOptionsService } from './httpOptions.service';
+import { catchError } from 'rxjs/operators';
+import { throwError } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -31,13 +33,22 @@ export class OrdersService {
   }
 
   // Método para crear un nuevo producto  // Método para crear un nuevo producto
-  createOrder(productData: any) {
+  createOrder(orderData: any) {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
     });
-    return this._http.post(`${this.urlOrders}`, productData, {
+    return this._http.post(`${this.urlOrders}`, orderData, {
       headers: headers,
-    });
+    }).pipe(
+      catchError((error: HttpErrorResponse) => {
+        console.error('Error creating order:', error);
+        let errorMessage = 'Error al crear la orden';
+        if (error.error && error.error.message) {
+          errorMessage = error.error.message;
+        }
+        return throwError(() => new Error(errorMessage));
+      })
+    );
   }
 
   // Método para actualizar un producto existente
@@ -87,5 +98,19 @@ export class OrdersService {
       'Content-Type': 'application/json',
     });
     return this._http.post(`${this.urlOrders}/search`, filters, { headers });
+  }
+
+  getOrdersByStatus(status: string) {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+    });
+    return this._http.get(`${this.urlOrders}/status/${status}`, { headers });
+  }
+
+  getOrderCounts() {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+    });
+    return this._http.get(`${this.urlOrders}/counts`, { headers });
   }
 }

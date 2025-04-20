@@ -3,6 +3,7 @@ import { Store } from '@ngrx/store';
 import { AppState } from '../store';
 import { selectShoppingCart } from '../store/selectors/user.selector';
 import { OrderItem, CartItem } from '../models/order.model';
+import { clearCart } from '../store/actions/user.actions';
 
 @Injectable({
   providedIn: 'root'
@@ -25,7 +26,6 @@ export class CartService {
   }
 
   clearCart(): void {
-    // Implement clear cart logic using your store actions
-    // You might want to dispatch a clearCart action here
+    this.store.dispatch(clearCart());
   }
 } 

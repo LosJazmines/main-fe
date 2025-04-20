@@ -22,7 +22,7 @@ import { CarrouselSwiperStoreComponent } from '@shared/components/carrousel-swip
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { toggleLeftSidebarFilters } from '@shared/components/sidebars/left-sidebar-filters/store/actions/left-sidebar-filters.actions';
-import { ProductsService } from '@apis/products.service';
+import { ProductsService, ProductFilters } from '@apis/products.service';
 import { PublicStoreConfigService } from '../../../@public/core/services/store-config.service';
 import { BannerImage } from '@core/types/store-config';
 // register Swiper custom elements
@@ -65,7 +65,7 @@ export default class OnlineStoreComponent implements OnInit {
   selectedOrderText: string = 'Ascendente';
   dropdownOpen = false;
   products = signal<any[]>([]);
-  loading = false;
+  isLoading = signal<boolean>(false);
   error: string | null = null;
   imgHeader: BannerImage[] = [];
 
@@ -76,23 +76,11 @@ export default class OnlineStoreComponent implements OnInit {
     { value: 'menorValor', text: 'Menor Valor' }
   ];
 
-  toggleDropdown() {
-    this.dropdownOpen = !this.dropdownOpen;
-  }
-
-  selectOrder(option: any) {
-    this.selectedOrder = option.value;
-    this.selectedOrderText = option.text;
-    this.dropdownOpen = false;
-    this.applyFilter();
-
-    // Actualizar la URL con el parámetro 'order'
-    this.router.navigate([], {
-      relativeTo: this.route,
-      queryParams: { order: this.selectedOrder },
-      queryParamsHandling: 'merge'
-    });
-  }
+  currentFilters: ProductFilters = {};
+  priceRange = {
+    min: '',
+    max: ''
+  };
 
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
@@ -151,40 +139,53 @@ export default class OnlineStoreComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // Configurar estado inicial del orden si está presente en los query params
+    // Subscribe to URL query parameter changes
     this.route.queryParams.subscribe(params => {
+      // Parse price values to numbers
+      const minPrice = params['minPrice'] ? Number(params['minPrice']) : undefined;
+      const maxPrice = params['maxPrice'] ? Number(params['maxPrice']) : undefined;
+
+      // Update price range inputs
+      this.priceRange = {
+        min: minPrice?.toString() || '',
+        max: maxPrice?.toString() || ''
+      };
+
+      this.currentFilters = {
+        category: params['category'],
+        tag: params['tag'],
+        minPrice: minPrice,
+        maxPrice: maxPrice,
+        order: params['order']
+      };
+
+      // Update selected order if present in URL
       if (params['order']) {
         this.selectedOrder = params['order'];
         const foundOption = this.orderOptions.find(option => option.value === params['order']);
         if (foundOption) {
           this.selectedOrderText = foundOption.text;
         }
-        this.applyFilter(); // Reordena los productos según el orden obtenido
       }
 
-      this.getProductsFindActive();
+      this.loadProducts(this.currentFilters);
     });
-    // Otras inicializaciones, por ejemplo, para la temporada
-    this.temporada =
-      this.coleccionesTipos[
-      Math.floor(Math.random() * this.coleccionesTipos.length)
-      ];
 
     this.loadBanners();
   }
 
   loadBanners(): void {
-    this.loading = true;
+    this.isLoading.set(true);
     this.error = null;
 
     this.storeConfigService.getStoreBanners().subscribe({
       next: (banners: BannerImage[]) => {
         this.imgHeader = banners.sort((a: BannerImage, b: BannerImage) => a.order - b.order);
-        this.loading = false;
+        this.isLoading.set(false);
       },
       error: (error: Error) => {
         this.error = 'Error loading banners';
-        this.loading = false;
+        this.isLoading.set(false);
         console.error('Error loading banners:', error);
       }
     });
@@ -367,5 +368,98 @@ export default class OnlineStoreComponent implements OnInit {
     } else {
       return 'Invierno';
     }
+  }
+
+  private loadProducts(filters?: ProductFilters): void {
+    this.isLoading.set(true);
+
+    this._productsService.getProductsFindActive(filters).subscribe({
+      next: (response: any) => {
+        let products = [...response];
+        
+        // Apply client-side ordering if needed
+        if (filters?.order) {
+          products = this.orderProducts(products, filters.order);
+        }
+
+        this.products.set(products);
+        this.isLoading.set(false);
+      },
+      error: (error) => {
+        console.error('Error fetching products:', error);
+        this.isLoading.set(false);
+      },
+    });
+  }
+
+  private orderProducts(products: any[], order: string): any[] {
+    switch (order) {
+      case 'ascendente':
+        return [...products].sort((a, b) => a.price - b.price);
+      case 'descendente':
+        return [...products].sort((a, b) => b.price - a.price);
+      case 'mayorValor':
+        return [...products].sort((a, b) => b.price - a.price);
+      case 'menorValor':
+        return [...products].sort((a, b) => a.price - b.price);
+      default:
+        return products;
+    }
+  }
+
+  onFiltersChanged(event: any) {
+    // Parse price values to numbers
+    const minPrice = this.priceRange.min ? Number(this.priceRange.min) : undefined;
+    const maxPrice = this.priceRange.max ? Number(this.priceRange.max) : undefined;
+
+    // Merge new filters with existing ones, including order
+    const newFilters: ProductFilters = {
+      ...this.currentFilters,
+      category: event.category,
+      tag: event.tag,
+      minPrice: minPrice,
+      maxPrice: maxPrice
+    };
+
+    // Update URL with new filters
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: {
+        category: event.category,
+        tag: event.tag,
+        minPrice: minPrice,
+        maxPrice: maxPrice
+      },
+      queryParamsHandling: 'merge'
+    });
+
+    // Update current filters and load products
+    this.currentFilters = newFilters;
+    this.loadProducts(newFilters);
+  }
+
+  toggleDropdown() {
+    this.dropdownOpen = !this.dropdownOpen;
+  }
+
+  selectOrder(option: { value: string; text: string }) {
+    this.selectedOrder = option.value;
+    this.selectedOrderText = option.text;
+    this.dropdownOpen = false;
+
+    // Update filters with new order and reload products
+    this.currentFilters = {
+      ...this.currentFilters,
+      order: option.value as 'ascendente' | 'descendente' | 'mayorValor' | 'menorValor'
+    };
+
+    // Update URL and reload products
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { order: option.value },
+      queryParamsHandling: 'merge'
+    });
+
+    this.loadProducts(this.currentFilters);
   }
 }

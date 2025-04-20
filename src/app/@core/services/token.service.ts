@@ -1,29 +1,34 @@
-import { Injectable } from '@angular/core';
+import { Injectable, PLATFORM_ID, Inject } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class TokenService {
-  private readonly TOKEN_KEY = '';
+  private readonly TOKEN_KEY = 'auth_token';
 
-  constructor() {}
+  constructor(@Inject(PLATFORM_ID) private platformId: Object) {}
 
   // Guarda el token en el almacenamiento local
   setToken(token: string): void {
-    localStorage.setItem('user', token);
+    if (isPlatformBrowser(this.platformId)) {
+      localStorage.setItem(this.TOKEN_KEY, token);
+    }
   }
 
   // Obtiene el token del almacenamiento local
   getToken(): string | null {
-    if (typeof window !== 'undefined' && window.localStorage) {
-      return localStorage.getItem('user');
+    if (isPlatformBrowser(this.platformId)) {
+      return localStorage.getItem(this.TOKEN_KEY);
     }
     return null; // o cualquier otro valor por defecto
   }
 
   // Elimina el token del almacenamiento local
   removeToken(): void {
-    localStorage.removeItem('user');
+    if (isPlatformBrowser(this.platformId)) {
+      localStorage.removeItem(this.TOKEN_KEY);
+    }
   }
 
   // Verifica si el token existe

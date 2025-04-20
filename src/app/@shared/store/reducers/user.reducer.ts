@@ -1,10 +1,11 @@
 import { createReducer, on } from '@ngrx/store';
 import * as userActions from '../actions/user.actions';
 import { DeliveryInfo } from '../../models/order.model';
+import { User } from '@apis/auth.service';
 
 export interface State {
   shoppingCart: any[];
-  currentUser: any | null;
+  currentUser: User | null;
   deliveryInfo: DeliveryInfo | null;
   // Add other user state properties as needed
 }
@@ -17,9 +18,23 @@ const getShoppingCartFromStorage = (): any[] => {
   return [];
 };
 
+// Función segura para obtener el usuario desde localStorage
+const getCurrentUserFromStorage = (): User | null => {
+  if (typeof window !== 'undefined') {
+    const storedUser = localStorage.getItem('currentUser');
+    const storedToken = localStorage.getItem('token');
+    if (storedUser && storedToken) {
+      const user = JSON.parse(storedUser);
+      user.token = storedToken;
+      return user;
+    }
+  }
+  return null;
+};
+
 export const initialState: State = {
-  shoppingCart: getShoppingCartFromStorage(), // 🔥 Recuperamos el carrito de forma segura
-  currentUser: null,
+  shoppingCart: getShoppingCartFromStorage(),
+  currentUser: getCurrentUserFromStorage(),
   deliveryInfo: null
 };
 
@@ -115,6 +130,14 @@ export const userReducer = createReducer(
   }),
 
   on(userActions.clearShoppingCart, (state) => {
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('shoppingCart');
+    }
+
+    return { ...state, shoppingCart: [] };
+  }),
+
+  on(userActions.clearCart, (state) => {
     if (typeof window !== 'undefined') {
       localStorage.removeItem('shoppingCart');
     }

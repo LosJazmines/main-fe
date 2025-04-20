@@ -1,6 +1,15 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment.dev';
+import { Observable } from 'rxjs';
+
+export interface ProductFilters {
+  category?: string;
+  tag?: string;
+  minPrice?: number;
+  maxPrice?: number;
+  order?: 'ascendente' | 'descendente' | 'mayorValor' | 'menorValor';
+}
 
 @Injectable({
   providedIn: 'root',
@@ -10,28 +19,62 @@ export class ProductsService {
 
   constructor(private _http: HttpClient) { }
 
-
-  getProductsFindActive() {
+  getProductsFindActive(filters?: ProductFilters): Observable<any> {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
     });
+
+    let params = new HttpParams();
+    
+    if (filters) {
+      if (filters.category) {
+        params = params.set('category', filters.category);
+      }
+      if (filters.tag) {
+        params = params.set('tag', filters.tag);
+      }
+      if (filters.minPrice !== undefined && filters.minPrice !== null) {
+        params = params.set('minPrice', filters.minPrice.toString());
+      }
+      if (filters.maxPrice !== undefined && filters.maxPrice !== null) {
+        params = params.set('maxPrice', filters.maxPrice.toString());
+      }
+    }
+
     return this._http.get(`${this.urlProducts}/active`, {
       headers: headers,
+      params: params
     });
   }
 
-  
-  // Método para obtener todos los productos
-  getAllProducts() {
+  getAllProducts(filters?: ProductFilters) {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
     });
+
+    let params = new HttpParams();
+    
+    if (filters) {
+      if (filters.category) {
+        params = params.set('category', filters.category);
+      }
+      if (filters.tag) {
+        params = params.set('tag', filters.tag);
+      }
+      if (filters.minPrice !== undefined && filters.minPrice !== null) {
+        params = params.set('minPrice', filters.minPrice.toString());
+      }
+      if (filters.maxPrice !== undefined && filters.maxPrice !== null) {
+        params = params.set('maxPrice', filters.maxPrice.toString());
+      }
+    }
+
     return this._http.get(`${this.urlProducts}`, {
       headers: headers,
+      params: params
     });
   }
 
-  // Método para obtener un producto por su ID
   getProductById(productId: string) {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',

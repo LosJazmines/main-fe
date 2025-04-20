@@ -65,7 +65,7 @@ export class ConfigComponent implements OnInit {
     ) {
         this.tagForm = this.fb.group({
             name: ['', Validators.required],
-            type: ['flower', Validators.required]
+            categoryUuid: ['', Validators.required]
         });
 
         this.categoryForm = this.fb.group({
@@ -217,10 +217,7 @@ export class ConfigComponent implements OnInit {
         this.editingTag = tag;
         this.tagForm.patchValue({
             name: tag.name,
-            slug: tag.slug,
-            value: tag.value,
-            type: tag.type,
-            description: tag.description
+            categoryUuid: tag.categoryUuid
         });
         this.showNewTagDialog = true;
     }
@@ -247,9 +244,9 @@ export class ConfigComponent implements OnInit {
         if (this.tagForm.invalid) return;
 
         this.loading = true;
-        const tagData = {
+        const tagData: Partial<TagConfig> = {
             name: this.tagForm.get('name')?.value,
-            type: this.tagForm.get('type')?.value
+            categoryUuid: this.tagForm.get('categoryUuid')?.value
         };
 
         this.storeConfigService.createTag(tagData).subscribe({

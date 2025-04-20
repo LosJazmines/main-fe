@@ -8,6 +8,7 @@ import { PipesModule } from '../../../../@core/pipes/pipes.module';
 export interface Order {
   id: string;
   orderNumber: number;
+  nombre_customer: string;
   total: number;
   subtotal: number;
   status: string;
@@ -21,8 +22,9 @@ export interface Order {
   comentarios: string;
   latitud: number;
   longitud: number;
-  costoEnvio: string; // Nuevo campo agregado
-  metodoEnvio: string; // Nuevo campo agregado
+  costoEnvio: string;
+  metodoEnvio: string;
+  metododepago: string;
   createdAt: Date;
   updatedAt: Date;
   items: {
@@ -30,6 +32,7 @@ export interface Order {
     productId: string;
     quantity: number;
     price: number;
+    orderId: string;
     product: {
       id: string;
       name: string;
@@ -41,9 +44,9 @@ export interface Order {
       characteristics: string | null;
     };
   }[];
-  customer: {
+  customer?: {
     id: string;
-    username?: string ;
+    username?: string;
     direccion?: string;
     telefono?: string;
     email: string;
@@ -79,7 +82,7 @@ export class OrderCardRowComponent {
     this.updateStatus.emit(newStatus);
   }
 
-  printReceipt(order: any) {
+  printReceipt(order: Order) {
     const printContent = `
       <html>
         <head>
@@ -114,19 +117,27 @@ export class OrderCardRowComponent {
         </head>
         <body>
           <div class="ticket">
-            <div class="title">Pedido #${order.id}</div>
-            <div class="info"><strong>Cliente:</strong> ${
-              order.clientName
-            }</div>
-            <div class="info"><strong>Teléfono:</strong> ${
-              order.clientPhone
-            }</div>
-            <div class="info"><strong>Dirección:</strong> ${
-              order.clientAddress
-            }</div>
-            <div class="info"><strong>Fecha:</strong> ${new Date(
-              order.date
-            ).toLocaleString()}</div>
+            <div class="title">Pedido #${order.orderNumber}</div>
+            <div class="info"><strong>Cliente:</strong> ${order.nombre_customer}</div>
+            <div class="info"><strong>Teléfono:</strong> ${order.telefono || 'No especificado'}</div>
+            <div class="info"><strong>Dirección:</strong> ${order.direccion}</div>
+            <div class="info"><strong>Ciudad:</strong> ${order.ciudad}</div>
+            <div class="info"><strong>Estado:</strong> ${order.estado}</div>
+            <div class="info"><strong>País:</strong> ${order.pais}</div>
+            <div class="info"><strong>Fecha:</strong> ${new Date(order.createdAt).toLocaleString()}</div>
+            <div class="separator"></div>
+            <div class="items">
+              ${order.items.map(item => `
+                <div class="info">
+                  <strong>${item.product.name}</strong><br>
+                  ${item.quantity} x $${item.price} = $${(item.quantity * item.price).toFixed(2)}
+                </div>
+              `).join('')}
+            </div>
+            <div class="separator"></div>
+            <div class="info"><strong>Subtotal:</strong> $${order.subtotal.toFixed(2)}</div>
+            <div class="info"><strong>Envío:</strong> ${order.costoEnvio === 'gratis' ? 'Gratis' : '$' + order.costoEnvio}</div>
+            <div class="info"><strong>Total:</strong> $${order.total.toFixed(2)}</div>
             <div class="separator"></div>
             <div class="info">¡Gracias por su compra!</div>
           </div>

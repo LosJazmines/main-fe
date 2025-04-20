@@ -18,6 +18,12 @@ export const navbar_admin = [
     roles: ['admin']
   },
   {
+    route: 'a/notifications',
+    icon: 'bell',
+    label: 'Notifications',
+    roles: ['admin']
+  },
+  {
     route: 'a/products',
     icon: 'archive',
     label: 'Products',

@@ -1,23 +1,4 @@
 <div class="min-h-full">
-  <!-- Header -->
-  <!-- <div class="flex justify-between items-center mb-4">
-    <h1 class="text-3xl mb-6 text-[#3a5a40] !font-playfair">Ordenes</h1>
-
-    <div class="flex items-center gap-4">
-      <app-search-moderno-reactive
-        [inputPlaceholder]="'Buscar por Direccion o Nombre del destinatario'"
-        (search)="handleSearch($event)"
-      ></app-search-moderno-reactive>
-      <button
-        (click)="openDialogAddOrder()"
-        class="px-4 py-2 bg-[#3a5a40]/80 text-white rounded-[4px] shadow hover:bg-[#3a5a40]/80 focus:outline-none transition flex items-center gap-2"
-      >
-        <lucide-icon name="plus" class="w-5 h-5"></lucide-icon>
-        Crear Pedido
-      </button>
-    </div>
-  </div> -->
-
   <div
     class="flex flex-col lg:flex-row justify-between items-center mb-4 gap-4"
   >
@@ -40,113 +21,146 @@
       </button>
     </div>
   </div>
-  <div class="w-full">
-    <div class="flex justify-end items-center mb-5">
-      <!-- Contador de Items -->
-      <div class="text-sm font-medium">
-        <span>{{ orders().length }} Items disponibles</span>
-      </div>
+
+  <!-- Loading State -->
+  @if (isLoading()) {
+    <div class="flex justify-center items-center h-64">
+      <mat-spinner diameter="48"></mat-spinner>
     </div>
-    <div class="flex flex-col gap-4">
-      <div class="w-full">
-        <mat-button-toggle-group
-          [value]="selectedFilter"
-          (change)="onFilterChange($event.value)"
-          class="w-full pb-2 md:pb-0 flex md:flex-wrap md:!flex-row !flex-col gap-2 !shadow-none bg-transparent"
-          appearance="legacy"
-        >
-          <!-- Botón Pendiente -->
-          <mat-button-toggle
-            value="pendiente"
-            class="flex items-center justify-between gap-2 rounded-[4px] transition-colors duration-200"
-            [ngClass]="{
-              '!bg-[#3a5a40]/65 !text-white  shadow':
-                selectedFilter === 'pendiente',
-              'border border-gray-200 shadow-md': selectedFilter !== 'pendiente'
-            }"
-          >
-            <mat-icon class="text-base">schedule</mat-icon>
-            <span class="px-2">Pendiente</span>
-            <span>{{ pendingCount }}</span>
-          </mat-button-toggle>
+  }
 
-          <!-- Botón Enviado -->
-          <mat-button-toggle
-            value="enviado"
-            class="flex items-center gap-2 transition-colors rounded-[4px] duration-200"
-            [ngClass]="{
-              '!bg-[#3a5a40]/65 !text-white  shadow':
-                selectedFilter === 'enviado',
-              'border border-gray-200 shadow-md': selectedFilter !== 'enviado'
-            }"
-          >
-            <mat-icon class="text-base">local_shipping</mat-icon>
-            <span class="px-2">Enviado</span>
-            <span>{{ sentCount }}</span>
-          </mat-button-toggle>
+  <!-- Error State -->
+  @if (hasError()) {
+    <div class="flex flex-col items-center justify-center h-64 text-center">
+      <!-- <lucide-icon name="alert-circle" class="w-12 h-12 text-red-500 mb-4"></lucide-icon> -->
+      <p class="text-lg text-gray-700 mb-4">{{ errorMessage() }}</p>
+      <button
+        (click)="loadInitialOrders()"
+        class="px-4 py-2 bg-[#3a5a40]/80 text-white rounded-[4px] shadow hover:bg-[#3a5a40] focus:outline-none transition"
+      >
+        Reintentar
+      </button>
+    </div>
+  }
 
-          <!-- Botón Completado -->
-          <mat-button-toggle
-            value="completado"
-            class="flex items-center gap-2 transition-colors rounded-[4px] duration-200"
-            [ngClass]="{
-              '!bg-[#3a5a40]/65 !text-white shadow':
-                selectedFilter === 'completado',
-              'border border-gray-200 shadow-md':
-                selectedFilter !== 'completado'
-            }"
-          >
-            <mat-icon class="text-base">check_box</mat-icon>
-            <span class="px-2">Completado</span>
-            <span>{{ completedCount }}</span>
-          </mat-button-toggle>
+  <!-- Content -->
+  @if (!isLoading() && !hasError()) {
+    <div class="w-full">
+      <div class="flex justify-end items-center mb-5">
+        <!-- Connection Status -->
+        <div class="flex items-center gap-2 mr-4">
+          <span class="w-2 h-2 rounded-full animate-pulse" [ngClass]="isWebSocketConnected ? 'bg-green-500' : 'bg-red-500'"></span>
+          <span class="text-sm" [ngClass]="isWebSocketConnected ? 'text-green-600' : 'text-red-600'">
+            {{ isWebSocketConnected ? 'Conectado en tiempo real' : 'Desconectado - Reconectando...' }}
+          </span>
+        </div>
+        <!-- Item Counter -->
+        <div class="text-sm font-medium">
+          <span>{{ orders().length }} Items disponibles</span>
+        </div>
+      </div>
 
-          <!-- Botón Cancelado -->
-          <mat-button-toggle
-            value="cancelado"
-            class="flex items-center gap-2 transition-colors rounded-[4px] duration-200"
-            [ngClass]="{
-              '!bg-[#3a5a40]/65 !text-white  shadow':
-                selectedFilter === 'cancelado',
-              'border border-gray-200 shadow-md': selectedFilter !== 'cancelado'
-            }"
+      <div class="flex flex-col gap-4">
+        <div class="w-full">
+          <mat-button-toggle-group
+            [value]="selectedFilter"
+            (change)="onFilterChange($event.value)"
+            class="w-full pb-2 md:pb-0 flex md:flex-wrap md:!flex-row !flex-col gap-2 !shadow-none bg-transparent"
+            appearance="legacy"
           >
-            <mat-icon class="text-base">highlight_off</mat-icon>
-            <span class="px-2">Cancelado</span>
-            <span>{{ canceledCount }}</span>
-          </mat-button-toggle>
+            <!-- Botón Pendiente -->
+            <mat-button-toggle
+              value="pendiente"
+              class="flex items-center justify-between gap-2 rounded-[4px] transition-colors duration-200"
+              [ngClass]="{
+                '!bg-[#3a5a40]/65 !text-white  shadow':
+                  selectedFilter === 'pendiente',
+                'border border-gray-200 shadow-md': selectedFilter !== 'pendiente'
+              }"
+            >
+              <mat-icon class="text-base">schedule</mat-icon>
+              <span class="px-2">Pendiente</span>
+              <span>{{ pendingCount }}</span>
+            </mat-button-toggle>
 
-          <!-- Botón Todos -->
-          <mat-button-toggle
-            value="todos"
-            class="flex items-center gap-2 transition-colors rounded-[4px] duration-200"
-            [ngClass]="{
-              '!bg-[#3a5a40]/65 !text-white  shadow':
-                selectedFilter === 'todos',
-              'border border-gray-200 shadow-md': selectedFilter !== 'todos'
-            }"
-          >
-            <span class="px-2">Todos</span>
-            <span>{{ ordersData.length }}</span>
-          </mat-button-toggle>
-        </mat-button-toggle-group>
+            <!-- Botón Enviado -->
+            <mat-button-toggle
+              value="enviado"
+              class="flex items-center gap-2 transition-colors rounded-[4px] duration-200"
+              [ngClass]="{
+                '!bg-[#3a5a40]/65 !text-white  shadow':
+                  selectedFilter === 'enviado',
+                'border border-gray-200 shadow-md': selectedFilter !== 'enviado'
+              }"
+            >
+              <mat-icon class="text-base">local_shipping</mat-icon>
+              <span class="px-2">Enviado</span>
+              <span>{{ sentCount }}</span>
+            </mat-button-toggle>
 
-        <!-- Contenido filtrado -->
-        <div class="flex flex-col gap-4 my-4">
-          <!-- <ng-container *ngFor="let order of getOrdersByStatus(selectedFilter)">
-            <app-order-card-row
-              [order]="order"
-              (updateStatus)="updateOrder(order.id, $event)"
-            ></app-order-card-row>
-          </ng-container> -->
-          @for (order of orders(); track $index) {
-          <app-order-card-row
-            [order]="order"
-            (updateStatus)="updateOrder(order.id, $event)"
-          ></app-order-card-row>
-          }
+            <!-- Botón Completado -->
+            <mat-button-toggle
+              value="completado"
+              class="flex items-center gap-2 transition-colors rounded-[4px] duration-200"
+              [ngClass]="{
+                '!bg-[#3a5a40]/65 !text-white shadow':
+                  selectedFilter === 'completado',
+                'border border-gray-200 shadow-md':
+                  selectedFilter !== 'completado'
+              }"
+            >
+              <mat-icon class="text-base">check_box</mat-icon>
+              <span class="px-2">Completado</span>
+              <span>{{ completedCount }}</span>
+            </mat-button-toggle>
+
+            <!-- Botón Cancelado -->
+            <mat-button-toggle
+              value="cancelado"
+              class="flex items-center gap-2 transition-colors rounded-[4px] duration-200"
+              [ngClass]="{
+                '!bg-[#3a5a40]/65 !text-white  shadow':
+                  selectedFilter === 'cancelado',
+                'border border-gray-200 shadow-md': selectedFilter !== 'cancelado'
+              }"
+            >
+              <mat-icon class="text-base">highlight_off</mat-icon>
+              <span class="px-2">Cancelado</span>
+              <span>{{ canceledCount }}</span>
+            </mat-button-toggle>
+
+            <!-- Botón Todos -->
+            <mat-button-toggle
+              value="todos"
+              class="flex items-center gap-2 transition-colors rounded-[4px] duration-200"
+              [ngClass]="{
+                '!bg-[#3a5a40]/65 !text-white  shadow':
+                  selectedFilter === 'todos',
+                'border border-gray-200 shadow-md': selectedFilter !== 'todos'
+              }"
+            >
+              <span class="px-2">Todos</span>
+              <span>{{ allOrders().length }}</span>
+            </mat-button-toggle>
+          </mat-button-toggle-group>
+
+          <!-- Orders List -->
+          <div class="flex flex-col gap-4 my-4">
+            @if (orders().length === 0) {
+              <div class="flex flex-col items-center justify-center h-32 text-center">
+                <p class="text-lg text-gray-600">No hay órdenes disponibles</p>
+              </div>
+            } @else {
+              @for (order of orders(); track order.id) {
+                <app-order-card-row
+                  [order]="order"
+                  (updateStatus)="updateOrder(order.id, $event)"
+                ></app-order-card-row>
+              }
+            }
+          </div>
         </div>
       </div>
     </div>
-  </div>
+  }
 </div>

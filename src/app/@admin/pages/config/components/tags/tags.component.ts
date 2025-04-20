@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, FormsModule } from '@angular/forms';
 import { StoreConfigService } from '@apis/store-config.service';
 import { TagConfig } from '@core/models/tag-config.model';
+import { CategoryConfig } from '@core/models/category-config.model';
 import { MessageService } from '@core/services/snackbar.service';
 import { LucideAngularModule, Pencil, Trash2 } from 'lucide-angular';
 
@@ -14,11 +15,11 @@ import { LucideAngularModule, Pencil, Trash2 } from 'lucide-angular';
 })
 export class TagsComponent implements OnInit {
   tags: TagConfig[] = [];
+  categories: CategoryConfig[] = [];
   tagForm: FormGroup;
   editingTag: TagConfig | null = null;
   loading = false;
-  tagTypes = ['flower', 'plant', 'extra'];
-  selectedType = 'all';
+  selectedCategory = 'all';
   isAdding = false;
   error: string | null = null;
 
@@ -31,14 +32,29 @@ export class TagsComponent implements OnInit {
       name: ['', [Validators.required, Validators.pattern(/^[a-zA-Z0-9\s]+$/)]],
       value: ['', Validators.required],
       slug: ['', [Validators.required, Validators.pattern(/^[a-z0-9-]+$/)]],
-      type: ['flower', Validators.required],
+      categoryUuid: ['', Validators.required],
       description: ['', Validators.required],
-      selectedType: ['all']
+      selectedCategory: ['all']
     });
   }
 
   ngOnInit(): void {
+    this.loadCategories();
     this.loadTags();
+  }
+
+  loadCategories(): void {
+    this.loading = true;
+    this.storeConfigService.getCategories().subscribe({
+      next: (categories) => {
+        this.categories = categories;
+        this.loading = false;
+      },
+      error: (error) => {
+        this.messageService.showError('Error loading categories', 'top right');
+        this.loading = false;
+      }
+    });
   }
 
   loadTags(): void {
@@ -94,7 +110,7 @@ export class TagsComponent implements OnInit {
       name: tag.name,
       value: tag.value,
       slug: tag.slug,
-      type: tag.type,
+      categoryUuid: tag.categoryUuid,
       description: tag.description
     });
   }
@@ -117,17 +133,39 @@ export class TagsComponent implements OnInit {
 
   resetForm(): void {
     this.tagForm.reset({
-      type: 'flower'
+      categoryUuid: ''
     });
     this.editingTag = null;
     this.loading = false;
   }
 
-  onTypeChange(): void {
-    if (this.selectedType === 'all') {
+  onCategoryChange(): void {
+    if (this.selectedCategory === 'all') {
       this.loadTags();
     } else {
-      this.tags = this.tags.filter(tag => tag.type === this.selectedType);
+      this.storeConfigService.getTags(this.selectedCategory).subscribe({
+        next: (tags) => {
+          this.tags = tags;
+        },
+        error: (error) => {
+          this.messageService.showError('Error loading tags for category', 'top right');
+        }
+      });
     }
+  }
+
+  updateTag(tag: TagConfig, field: string, event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const updatedTag = { ...tag, [field]: input.value };
+    
+    this.storeConfigService.updateTag(tag.uuid, updatedTag).subscribe({
+      next: () => {
+        this.messageService.showSuccess('Tag updated successfully', 'top right');
+        this.loadTags();
+      },
+      error: (error) => {
+        this.messageService.showError('Error updating tag', 'top right');
+      }
+    });
   }
 } 

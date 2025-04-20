@@ -7,6 +7,7 @@ export const environment = {
   // GOOGLE MAP API KEY
   // LOADER_API_KEY: 'AIzaSyBMsWKVLawIc9JcDQBGZpdwGkIr2XXfmk8',
   api: 'http://localhost:3000/api',
+  wsUrl: 'http://localhost:3000/orders', // Updated WebSocket URL with namespace
 
   // Mercado Pago Configuration
   MERCADOPAGO_PUBLIC_KEY: 'TEST-a363850c-18f9-4a25-8552-da8c34016b7d',

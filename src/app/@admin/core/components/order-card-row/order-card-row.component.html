@@ -66,25 +66,25 @@
       <div class="flex gap-2 items-center">
         <lucide-icon [size]="16" name="user"></lucide-icon>
         <p class="text-base">
-          {{ order.customer ? order.customer.username : "Sin Nombre" }}
+          {{ order.nombre_customer || "Sin Nombre" }}
         </p>
       </div>
       <div class="flex gap-2 items-center">
         <lucide-icon [size]="16" name="mail"></lucide-icon>
         <p class="text-base">
-          {{ order.customer ? order.customer.email : "Sin Email" }}
+          {{ order.customer?.email || "Sin Email" }}
         </p>
       </div>
       <div class="flex gap-2 items-center">
         <lucide-icon [size]="16" name="phone"></lucide-icon>
         <p class="text-base">
-          {{ order.telefono ? order.telefono : "Sin Telefono" }}
+          {{ order.telefono || "Sin Teléfono" }}
         </p>
       </div>
       <div class="flex gap-2 items-center">
         <lucide-icon [size]="16" name="map-pin"></lucide-icon>
         <p class="text-base">
-          {{ order.customer ? order.customer.direccion : "Sin Direccion" }}
+          {{ order.customer?.direccion || "Sin Dirección" }}
         </p>
       </div>
     </div>
@@ -97,42 +97,34 @@
       <div class="flex gap-2 items-center">
         <lucide-icon [size]="16" name="user"></lucide-icon>
         <p class="text-base">
-          {{
-            order.nombreDestinatario
-              ? order.nombreDestinatario
-              : "Sin nombre Destinatario"
-          }}
+          {{ order.nombreDestinatario || "Sin nombre Destinatario" }}
         </p>
       </div>
       <div class="flex gap-2 items-center">
         <lucide-icon [size]="16" name="timer"></lucide-icon>
         <p class="text-base">
-          {{ (order.createdAt | date : "dd/MM/yyyy hh:mm a") ?? "Sin Fecha" }}
+          {{ order.createdAt | date : "dd/MM/yyyy hh:mm a" }}
         </p>
       </div>
       <div class="flex gap-2 items-center">
         <lucide-icon [size]="16" name="info"></lucide-icon>
         <p class="text-base">
-          {{ order.comentarios ? order.comentarios : "Sin Comentarios" }}
+          {{ order.comentarios || "Sin Comentarios" }}
         </p>
-      </div>
-      <div class="flex gap-2 items-center">
-        <lucide-icon [size]="16" name="mail"></lucide-icon>
-        <p class="text-base">juan&#64;eczample.com</p>
       </div>
       <div class="flex gap-2 items-center">
         <lucide-icon [size]="16" name="phone"></lucide-icon>
         <p class="text-base">
-          {{ order.telefonoMovil ? order.telefonoMovil : "Sin Telefono" }}
+          {{ order.telefonoMovil || "Sin Teléfono Móvil" }}
         </p>
       </div>
       <div class="flex gap-2 items-center">
         <lucide-icon [size]="16" name="map-pin"></lucide-icon>
         <p class="text-base">
-          {{ order.direccion ? order.direccion : "Sin Direccion" }} -
-          {{ order.ciudad ? order.ciudad : "Sin ciudad" }} -
-          {{ order.estado ? order.estado : "Sin estado" }} -
-          {{ order.pais ? order.pais : "Sin pais" }}
+          {{ order.direccion || "Sin Dirección" }} -
+          {{ order.ciudad || "Sin ciudad" }} -
+          {{ order.estado || "Sin estado" }} -
+          {{ order.pais || "Sin país" }}
         </p>
       </div>
     </div>
@@ -170,15 +162,19 @@
         <div class="text-sm text-gray-700 space-y-2">
           <div class="flex justify-between">
             <span>Subtotal:</span>
-            <span>${{ order.subtotal }}</span>
+            <span>${{ order.subtotal.toFixed(2) }}</span>
           </div>
           <div class="flex justify-between">
             <span>Envío:</span>
-            <span>${{ order.costoEnvio }}</span>
+            <span>{{ order.costoEnvio === 'gratis' ? 'Gratis' : '$' + order.costoEnvio }}</span>
           </div>
           <div class="flex justify-between">
-            <span>Impuestos:</span>
-            <span>${{ order.metodoEnvio }}</span>
+            <span>Método de Envío:</span>
+            <span>{{ order.metodoEnvio || 'Estándar' }}</span>
+          </div>
+          <div class="flex justify-between">
+            <span>Método de Pago:</span>
+            <span>{{ order.metododepago || 'Web' }}</span>
           </div>
           <div
             class="border-t pt-2 flex justify-between font-semibold text-black"

@@ -215,6 +215,14 @@ export const routes: Routes = [
         title: 'Admin - Messages',
       },
       {
+        path: 'notifications',
+        loadComponent: () =>
+          import('./@admin/pages/notifications/notifications.component').then(
+            m => m.NotificationsComponent
+          ),
+        title: 'Admin - Notifications',
+      },
+      {
         path: 'config',
         loadComponent: () => import('./@admin/pages/config/config.component').then(m => m.ConfigComponent),
         title: 'Admin - Config',
@@ -227,7 +235,7 @@ export const routes: Routes = [
     path: 'mp',
     children: mpRoutes,
   },
-    // @Rutas vacias y rutas comodín
+  // @Rutas vacias y rutas comodín
   {
     path: '',
     redirectTo: '',

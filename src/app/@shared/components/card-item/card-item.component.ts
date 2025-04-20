@@ -9,9 +9,6 @@ import { Store } from '@ngrx/store';
 import * as userActions from '../../store/actions/user.actions';
 import { IProduct } from '@core/interfaces/product';
 
-// Opcional: define la interface para el producto.
-
-
 @Component({
   selector: 'app-card-item',
   standalone: true,
@@ -20,16 +17,13 @@ import { IProduct } from '@core/interfaces/product';
   styleUrls: ['./card-item.component.scss'],
 })
 export class CardItemComponent {
-
-  // Ahora se recibe un único objeto producto.
   @Input() product!: IProduct;
-
-  // Puedes seguir emitiendo eventos, por ejemplo, para la selección de categoría.
   @Output() categorySelected = new EventEmitter<string>();
 
   constructor(private store: Store<AppState>, private _messageService: MessageService) { }
 
   isHovered = false;
+  isImageZoomed = false;
 
   onMouseEnter(): void {
     this.isHovered = true;
@@ -37,6 +31,10 @@ export class CardItemComponent {
 
   onMouseLeave(): void {
     this.isHovered = false;
+  }
+
+  toggleImageZoom() {
+    this.isImageZoomed = !this.isImageZoomed;
   }
 
   addToCart() {

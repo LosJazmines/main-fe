@@ -13,85 +13,79 @@
 
   <div class="space-y-5">
     <!-- Categorías -->
-    <div>
-      <!-- Categorías -->
+    <div class="mb-6">
       <h3 class="text-base font-medium text-white !m-0">Categorías</h3>
       <div class="space-y-1">
         <div
           *ngFor="let category of categories"
-          (click)="selectCategory(category.id)"
+          (click)="selectCategory(category.uuid)"
           [ngClass]="{
-            'bg-[#588157]/80': filters.selectedCategory === category.id
+            'bg-[#588157]/80': filters.selectedCategory === category.uuid
           }"
-          class="text-white/80 cursor-pointer px-4 py-2 rounded-[4px]"
+          class="text-white/80 cursor-pointer px-4 py-2 rounded-[4px] hover:bg-[#588157]/60 transition-colors"
         >
-          {{ category.label }}
+          {{ category.name }}
         </div>
       </div>
     </div>
 
     <hr class="border-white/20 !mt-2" />
 
-    <!-- Tipo de Flores -->
+    <!-- Tags -->
     <div>
-      <h3 class="text-base font-medium text-white !m-0">Tipo de Flores</h3>
-      <div class="space-y-1">
+      <h3 class="text-base font-medium text-white !m-0">Tags</h3>
+      <div *ngIf="!tags?.length" class="text-white/60 text-sm mt-2">
+        No hay tags disponibles
+      </div>
+      <div class="space-y-1 mt-2">
         <div
-          *ngFor="let type of flowerTypes"
-          (click)="selectFlowerType(type.id)"
+          *ngFor="let tag of tags"
+          (click)="selectTag(tag.uuid)"
           [ngClass]="{
-            'bg-[#588157]/80': filters.selectedFlowerType === type.id
+            'bg-[#588157]/80': filters.selectedTag === tag.uuid
           }"
-          class="text-white/80 cursor-pointer px-4 py-2 rounded-[4px]"
+          class="text-white/80 cursor-pointer px-4 py-2 rounded-[4px] hover:bg-[#588157]/60 transition-colors"
         >
-          {{ type.label }}
+          {{ tag.name }}
         </div>
       </div>
     </div>
+
     <hr class="my-6 border-gray-500/50" />
 
     <!-- Precio -->
-    <div>
-      <!-- Filtro de Precio -->
-      <h3 class="text-base font-medium text-white !m-0">Precio</h3>
-      <!-- Lista de precios fijos -->
-      <div class="w-full flex flex-col items-start space-y-2">
-        <div
-          *ngFor="let price of fixedPrices"
-          (click)="selectFixedPrice(price.value)"
-          [ngClass]="{
-            'bg-[#588157]/80': filters.selectedFixedPrice === price.value
-          }"
-          class="w-full text-white/80 cursor-pointer px-4 py-2 rounded-[4px]"
-        >
-          {{ price.label }}
+    <div class="mt-6">
+      <h3 class="text-base font-medium text-white !m-0">Rango de Precio</h3>
+      <div class="mt-4 flex gap-2">
+        <div>
+          <label class="text-white/80 text-sm mb-1 block">Precio Mínimo</label>
+          <input
+            type="number"
+            [(ngModel)]="filters.priceRange.min"
+            (input)="onPriceInput()"
+            placeholder="0"
+            class="w-full bg-white/10 text-white placeholder-white/60 border border-white/20 rounded-[4px] px-3 py-2 focus:outline-none focus:border-white/40"
+          >
         </div>
-      </div>
-      <!-- Inputs personalizados de min y max -->
-      <div class="flex items-center mt-2 space-x-2">
-        <input
-          type="number"
-          [(ngModel)]="filters.customPrice.min"
-          (input)="onCustomPriceInput()"
-          placeholder="Min"
-          class="w-20 p-1 rounded-[4px]"
-        />
-        <lucide-icon
-          name="arrow-left-right"
-          class="text-white"
-        ></lucide-icon>
-        <input
-          type="number"
-          [(ngModel)]="filters.customPrice.max"
-          (input)="onCustomPriceInput()"
-          placeholder="Max"
-          class="w-20 p-1 rounded-[4px]"
-        />
-
-        <div class="w-12 h12 flex items-center justify-center">
-          <lucide-icon name="chevron-right" class="text-white"></lucide-icon>
+        <div>
+          <label class="text-white/80 text-sm mb-1 block">Precio Máximo</label>
+          <input
+            type="number"
+            [(ngModel)]="filters.priceRange.max"
+            (input)="onPriceInput()"
+            placeholder="1000"
+            class="w-full bg-white/10 text-white placeholder-white/60 border border-white/20 rounded-[4px] px-3 py-2 focus:outline-none focus:border-white/40"
+          >
         </div>
       </div>
     </div>
   </div>
+
+  <!-- Botón para limpiar filtros -->
+  <button
+    (click)="clearFilters()"
+    class="mt-6 w-full bg-white/10 text-white hover:bg-white/20 transition-colors rounded-[4px] px-4 py-2"
+  >
+    Borrar filtros
+  </button>
 </div>

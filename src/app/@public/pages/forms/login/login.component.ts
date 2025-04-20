@@ -92,23 +92,19 @@ export default class LoginComponent implements OnInit, OnDestroy {
   private loginUser() {
     if (this.loginGroup.valid) {
       const formData = this.loginGroup.value;
-      // Llamada al servicio de autenticación para registrar al usuario
       this._authService.login(formData.email, formData.password).subscribe({
         next: (response: any) => {
-          const { token, ...res } = response;
-
-          // Almacenar el token
+          // Store token using TokenService
           this._tokenService.setToken(response.token);
 
-          // Establecer el usuario actual en el estado
-          this.store.dispatch(userActions.setCurrentUser({ currentUser: res }));
+          // Store user in state
+          const user = { ...response.user, token: response.token };
+          this.store.dispatch(userActions.setCurrentUser({ currentUser: user }));
 
           this.dialogRef.close();
         },
         error: (error) => {
-          // En caso de error, se maneja aquí
           console.error('Error al Ingresar usuario:', error);
-          // Puedes mostrar un mensaje de error si es necesario
         },
       });
     } else {

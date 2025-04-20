@@ -4,6 +4,7 @@ export interface TagConfig {
   name: string;
   value: string;
   type: 'flower' | 'plant' | 'extra';
+  categoryUuid: string;
   description?: string;
   isActive: boolean;
   createdAt: Date;

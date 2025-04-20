@@ -7,6 +7,7 @@ export interface DeliveryInfo {
   telefonoMovil: string;
   nombre: string;
   metodoEnvio: 'PICKUP' | 'DELIVERY';
+  comentarios?: string;
 }
 
 export interface OrderItem {

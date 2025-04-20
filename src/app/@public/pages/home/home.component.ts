@@ -22,6 +22,8 @@ import { LucideModule } from '@shared/lucide/lucide.module';
 import { filter_home } from '@apis/data/filter';
 import { RouterModule } from '@angular/router';
 import { PublicStoreConfigService } from '../../core/services/store-config.service';
+import { retry, delay, catchError } from 'rxjs/operators';
+import { of } from 'rxjs';
 
 // register Swiper custom elements
 register();
@@ -65,6 +67,9 @@ export default class HomeComponent implements OnInit {
   imgHeader: { url: string; order: number }[] = [];
   loading = true;
   error: string | null = null;
+  retryCount = 0;
+  maxRetries = 3;
+  retryDelay = 2000; // 2 seconds
 
   constructor(
     private _productsService: ProductsService,
@@ -126,23 +131,26 @@ export default class HomeComponent implements OnInit {
   // }
 
   private getProductsFindActive(): void {
-    this._productsService.getProductsFindActive().subscribe({
-
-      next: (response: any) => {
-        // Process the response here
-        // const products = [...response];
-        this.products.set([...response]);
-
-        // If you need to handle the response, you can do so here
-        // For example:
-        // this.products = response.products;
-      },
-      error: (error) => {
-        // In case of error, handle it here
-        console.error('Error fetching products:', error);
-      },
-    });
-
+    this._productsService.getProductsFindActive()
+      .pipe(
+        retry(3),
+        delay(2000),
+        catchError(error => {
+          console.error('Error fetching products:', error);
+          this.error = 'Error loading products. Please try again later.';
+          return of([]);
+        })
+      )
+      .subscribe({
+        next: (response: any) => {
+          this.products.set([...response]);
+          this.error = null;
+        },
+        error: (error) => {
+          console.error('Error fetching products:', error);
+          this.error = 'Error loading products. Please try again later.';
+        },
+      });
   }
 
   // Método para seleccionar una categoría
@@ -172,16 +180,27 @@ export default class HomeComponent implements OnInit {
     this.loading = true;
     this.error = null;
 
-    this.storeConfigService.getHomeBanners().subscribe({
-      next: (banners) => {
-        this.imgHeader = banners.sort((a, b) => a.order - b.order);
-        this.loading = false;
-      },
-      error: (error) => {
-        this.error = 'Error loading banners';
-        this.loading = false;
-        console.error('Error loading banners:', error);
-      }
-    });
+    this.storeConfigService.getHomeBanners()
+      .pipe(
+        retry(3),
+        delay(2000),
+        catchError(error => {
+          console.error('Error loading banners:', error);
+          this.error = 'Error loading banners. Please try again later.';
+          return of([]);
+        })
+      )
+      .subscribe({
+        next: (banners) => {
+          this.imgHeader = banners.sort((a, b) => a.order - b.order);
+          this.loading = false;
+          this.error = null;
+        },
+        error: (error) => {
+          this.error = 'Error loading banners. Please try again later.';
+          this.loading = false;
+          console.error('Error loading banners:', error);
+        }
+      });
   }
 }

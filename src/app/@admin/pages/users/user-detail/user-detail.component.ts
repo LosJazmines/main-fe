@@ -1,23 +1,17 @@
+import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
-import { LucideModule } from '@shared/lucide/lucide.module';
 import { MaterialModule } from '@shared/material/material.module';
+import { ReactiveFormsModule } from '@angular/forms';
+import { LucideModule } from '@shared/lucide/lucide.module';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { UsersService, User } from '@apis/users.service';
+import { MessageService } from '@core/services/snackbar.service';
+import { TypeSnackBarPosition } from '@core/types/snackbar.types';
+import { UserFormComponent } from '@shared/components/user-form/user-form.component';
 
-export interface Contact {
-  name: string;
-  email: string;
+interface UserWithAvatar extends User {
   avatar?: string;
   background?: string;
-  tags?: { id: number; title: string }[];
-  title?: string;
-  company?: string;
-  emails?: { email: string; label?: string }[];
-  phoneNumbers?: { phoneNumber: string; country?: string; label?: string }[];
-  address?: string;
-  birthday?: string;
-  notes?: string;
 }
 
 @Component({
@@ -26,62 +20,101 @@ export interface Contact {
   imports: [
     CommonModule,
     MaterialModule,
-    LucideModule,
-    RouterModule,
     ReactiveFormsModule,
-    FormsModule,
-    ReactiveFormsModule
+    LucideModule,
+    MatDialogModule,
+    UserFormComponent
   ],
   templateUrl: './user-detail.component.html',
   styleUrls: ['./user-detail.component.scss']
 })
 export class UserDetailComponent {
-  @Input() contact: any = {
-    name: 'Juan Pérez',
-    email: 'juan.perez@example.com',
-    avatar: '',
-    background: '',
-    tags: [
-      { id: 1, title: 'VIP' },
-      { id: 2, title: 'Nuevo' }
-    ],
-    title: 'Ingeniero de Software',
-    company: 'Tech Solutions Inc.',
-    emails: [
-      { email: 'juan.perez@example.com', label: 'Personal' },
-      { email: 'contacto@techsolutions.com', label: 'Trabajo' }
-    ],
-    phoneNumbers: [
-      { phoneNumber: '+1 555-1234', country: 'US', label: 'Móvil' },
-      { phoneNumber: '+1 555-5678', country: 'US', label: 'Fijo' }
-    ],
-    address: '123 Main St, Ciudad, País',
-    birthday: '1980-05-15T00:00:00.000Z',
-    notes: '<p>Contacto preferido para proyectos de alto impacto. Disponible en horario de oficina.</p>'
-  };
-  @Output() close: EventEmitter<void> = new EventEmitter();
+  @Input() user: User | null = null;
+  @Output() close = new EventEmitter<void>();
+  @Output() userDeleted = new EventEmitter<string>();
+  @Output() userUpdated = new EventEmitter<User>();
 
-  editMode = false;
+  isLoading = false;
+  error: string | null = null;
 
-  // Métodos para acciones del contacto
-  editContact(contact: Contact): void {
-    console.log('Editar contacto:', contact);
-    this.editMode = true;
+  private dialog = inject(MatDialog);
+  private usersService = inject(UsersService);
+  private messageService = inject(MessageService);
+
+  onFormSubmit(userData: Partial<User>) {
+    if (!this.user?.id) return;
+
+    this.usersService.updateUser(this.user.id, userData).subscribe({
+      next: (updatedUser) => {
+        this.messageService.showSuccess('Usuario actualizado correctamente', 'top center');
+        this.userUpdated.emit(updatedUser);
+        this.close.emit();
+      },
+      error: () => {
+        this.messageService.showError('Error al actualizar el usuario', 'top center');
+      }
+    });
   }
 
-  deleteContact(contact: Contact): void {
-    console.log('Eliminar contacto:', contact);
-    // Lógica de eliminación
-  }
-
-  blockContact(contact: Contact): void {
-    console.log('Bloquear contacto:', contact);
-    // Lógica de bloqueo
-  }
-
-  // Método que se llama al hacer clic en el botón de cierre
-  closeDrawer(): void {
+  onFormCancel() {
     this.close.emit();
   }
 
+  deleteContact(contact: UserWithAvatar): void {
+    if (!contact) return;
+
+    if (confirm('¿Estás seguro de que deseas eliminar este usuario?')) {
+      this.isLoading = true;
+      this.error = null;
+
+      this.usersService.deleteUser(contact.id).subscribe({
+        next: () => {
+          this.messageService.showSuccess('Usuario eliminado correctamente', 'top center');
+          this.userDeleted.emit(contact.id);
+          this.close.emit();
+        },
+        error: (err) => {
+          this.error = 'Error al eliminar el usuario';
+          this.messageService.showError(this.error, 'top center');
+        },
+        complete: () => {
+          this.isLoading = false;
+        }
+      });
+    }
+  }
+
+  blockContact(contact: UserWithAvatar): void {
+    if (!contact) return;
+
+    this.isLoading = true;
+    this.error = null;
+
+    this.usersService.toggleUserStatus(contact.id, !contact.isActive).subscribe({
+      next: (updatedUser: User) => {
+        this.messageService.showSuccess(
+          `Usuario ${updatedUser.isActive ? 'activado' : 'bloqueado'} correctamente`,
+          'top center'
+        );
+        this.userUpdated.emit(updatedUser);
+      },
+      error: (err) => {
+        this.error = 'Error al cambiar el estado del usuario';
+        this.messageService.showError(this.error, 'top center');
+      },
+      complete: () => {
+        this.isLoading = false;
+      }
+    });
+  }
+
+  getFullName(): string {
+    if (!this.user) return '';
+    return this.user.fullName || this.user.username;
+  }
+
+  getInitials(): string {
+    if (!this.user) return '';
+    return this.user.username.charAt(0).toUpperCase();
+  }
 }

@@ -67,7 +67,7 @@ export class AppComponent implements OnInit {
 
   private checkLoginStatus() {
     const token = this._tokenService.getToken();
-    console.log(token);
+    console.log({token});
 
     if (token) {
       this._authService
@@ -79,6 +79,7 @@ export class AppComponent implements OnInit {
 
             // Almacenar el token
             this._tokenService.setToken(response.token);
+            console.log('response', response);
 
             // Establecer el usuario actual en el estado
             this.store.dispatch(

@@ -4,6 +4,9 @@ import { Observable, throwError, BehaviorSubject } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 import { isPlatformBrowser } from '@angular/common';
+import { Store } from '@ngrx/store';
+import { setCurrentUser, clearCurrentUser } from '@shared/store/actions/user.actions';
+import { TokenService } from '@core/services/token.service';
 
 export interface User {
   id: string;
@@ -14,7 +17,10 @@ export interface User {
   address?: string;
   city?: string;
   zipCode?: string;
-  role: string;
+  role?: string;
+  roles?: string[];
+  token?: string;
+  nombre?: string;
 }
 
 export interface AuthResponse {
@@ -32,45 +38,52 @@ export class AuthService {
 
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
-    private _http: HttpClient
+    private _http: HttpClient,
+    private store: Store,
+    private tokenService: TokenService
   ) {
-    // Check if we're in a browser environment before accessing localStorage
     if (isPlatformBrowser(this.platformId)) {
-      // Check if there's a stored user in localStorage
       const storedUser = localStorage.getItem('currentUser');
-      if (storedUser) {
-        this.currentUserSubject.next(JSON.parse(storedUser));
+      const token = this.tokenService.getToken();
+      
+      if (storedUser && token) {
+        try {
+          const user = JSON.parse(storedUser);
+          user.token = token;
+          this.currentUserSubject.next(user);
+          this.store.dispatch(setCurrentUser({ currentUser: user }));
+        } catch (error) {
+          console.error('Error parsing stored user:', error);
+          this.clearStorage();
+        }
+      } else {
+        this.clearStorage();
       }
     }
   }
 
-  private getToken(): string | null {
+  private clearStorage(): void {
     if (isPlatformBrowser(this.platformId)) {
-      return localStorage.getItem('token');
+      localStorage.removeItem('currentUser');
+      this.tokenService.removeToken();
     }
-    return null;
+    this.currentUserSubject.next(null);
+    this.store.dispatch(clearCurrentUser());
   }
 
-  private setToken(token: string): void {
-    if (isPlatformBrowser(this.platformId)) {
-      localStorage.setItem('token', token);
-    }
-  }
-
-  private removeToken(): void {
-    if (isPlatformBrowser(this.platformId)) {
-      localStorage.removeItem('token');
-    }
+  getToken(): string | null {
+    return this.tokenService.getToken();
   }
 
   login(email: string, password: string): Observable<AuthResponse> {
     return this._http.post<AuthResponse>(`${this.urlUsers}/login`, { email, password }).pipe(
-      tap(response => {
-        if (response.user) {
-          if (isPlatformBrowser(this.platformId)) {
-            localStorage.setItem('currentUser', JSON.stringify(response.user));
-          }
-          this.currentUserSubject.next(response.user);
+      tap((response) => {
+        this.tokenService.setToken(response.token);
+        const user = { ...response.user, token: response.token };
+        this.currentUserSubject.next(user);
+        this.store.dispatch(setCurrentUser({ currentUser: user }));
+        if (isPlatformBrowser(this.platformId)) {
+          localStorage.setItem('currentUser', JSON.stringify(user));
         }
       })
     );
@@ -90,10 +103,13 @@ export class AuthService {
     return this._http.post<AuthResponse>(`${this.urlUsers}/register`, userData).pipe(
       tap(response => {
         if (response.user) {
+          this.tokenService.setToken(response.token);
+          const user = { ...response.user, token: response.token };
           if (isPlatformBrowser(this.platformId)) {
-            localStorage.setItem('currentUser', JSON.stringify(response.user));
+            localStorage.setItem('currentUser', JSON.stringify(user));
           }
-          this.currentUserSubject.next(response.user);
+          this.currentUserSubject.next(user);
+          this.store.dispatch(setCurrentUser({ currentUser: user }));
         }
       })
     );
@@ -181,10 +197,7 @@ export class AuthService {
   }
 
   logout(): void {
-    if (isPlatformBrowser(this.platformId)) {
-      localStorage.removeItem('currentUser');
-    }
-    this.currentUserSubject.next(null);
+    this.clearStorage();
   }
 
   getCurrentUser(): User | null {
@@ -192,19 +205,21 @@ export class AuthService {
   }
 
   isLoggedIn(): boolean {
-    return !!this.currentUserSubject.value;
+    return this.tokenService.isAuthenticated();
   }
 
   updateProfile(userData: Partial<User>): Observable<User> {
     return this._http.put<User>(`${this.urlUsers}/profile`, userData).pipe(
       tap(updatedUser => {
         const currentUser = this.currentUserSubject.value;
-        if (currentUser) {
-          const newUser = { ...currentUser, ...updatedUser };
+        const token = this.tokenService.getToken();
+        if (currentUser && token) {
+          const newUser = { ...currentUser, ...updatedUser, token };
           if (isPlatformBrowser(this.platformId)) {
             localStorage.setItem('currentUser', JSON.stringify(newUser));
           }
           this.currentUserSubject.next(newUser);
+          this.store.dispatch(setCurrentUser({ currentUser: newUser }));
         }
       })
     );

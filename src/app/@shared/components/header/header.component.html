@@ -119,6 +119,21 @@
         </button>
       </div>
       } @if(this.currentUser()?.username){
+
+      <!-- <button
+        mat-icon-button
+        class="relative text-black custom-badge"
+        [routerLink]="['/card-order']"
+        routerLinkActive="router-link-active"
+      >
+        <span
+          class="absolute -top-[-9px] right-[10px] transform translate-x-1/2 -translate-y-1/2 text-white text-xs font-semibold px-2 py-0.5 rounded-full bg-[#3a5a40]/80"
+        >
+          {{ shoppingCartLength() }}
+        </span>
+        <lucide-icon [size]="24" name="bell"></lucide-icon>
+      </button> -->
+
       <div class="cursor-pointer group" (click)="openRightDrawer()">
         <!-- Avatar y nombre de usuario -->
         <div

@@ -15,7 +15,7 @@ import {
 import { LucideModule } from '../../lucide/lucide.module';
 import { PipesModule } from '../../../@core/pipes/pipes.module';
 import { MaterialModule } from '../../material/material.module';
-import { Subscription, Observable, Subject, takeUntil, BehaviorSubject } from 'rxjs';
+import { Subscription, Observable, Subject, takeUntil, BehaviorSubject, firstValueFrom } from 'rxjs';
 import { selectShoppingCart } from '../../store/selectors/user.selector';
 import { AppState } from '../../store';
 import { Store } from '@ngrx/store';
@@ -36,6 +36,7 @@ import { selectCanCreateOrder, selectDeliveryInfo, selectDeliveryMethod } from '
 import { OrderService } from '../../services/order.service';
 import { CartService } from '../../services/cart.service';
 import { DeliveryInfo } from '../../models/order.model';
+import { selectCurrentUser } from '../../store/selectors/user.selector';
 
 declare var MercadoPago: any;
 
@@ -286,7 +287,38 @@ export class PurchaseSummaryComponent implements OnInit, OnDestroy {
   }
 
   private async createMercadoPagoOrder(): Promise<void> {
-    throw new Error('Mercado Pago integration not implemented yet');
+    let deliveryInfo: DeliveryInfo | null = null;
+    
+    this.deliveryInfo$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(info => deliveryInfo = info);
+
+    if (!deliveryInfo) {
+      throw new Error('No delivery information available');
+    }
+
+    // Validar stock antes de crear la orden
+    const cartItems = this.cartService.getCartItems();
+    for (const item of cartItems) {
+      const product = await this.productsService.getProductById(item.productId).toPromise() as Product;
+      if (!product || product.stock < item.quantity) {
+        throw new Error(`Stock insuficiente para el producto ${product?.name || item.productId}`);
+      }
+    }
+
+    const order = await this.orderService.createOrder({
+      items: cartItems,
+      deliveryInfo,
+      paymentMethod: this.paymentMethod
+    });
+
+    // Clear cart after successful order creation
+    this.cartService.clearCart();
+    this.dialog.open(OrderSuccessDialogComponent, {
+      data: order,
+      width: '500px',
+      disableClose: true
+    });
   }
 
   private async createWebOrder(): Promise<void> {
@@ -315,7 +347,7 @@ export class PurchaseSummaryComponent implements OnInit, OnDestroy {
       paymentMethod: this.paymentMethod
     });
 
-    this.store.dispatch(clearCart());
+    this.cartService.clearCart();
     this.dialog.open(OrderSuccessDialogComponent, {
       data: order,
       width: '500px',
@@ -327,6 +359,26 @@ export class PurchaseSummaryComponent implements OnInit, OnDestroy {
     this.isLoading = true;
 
     try {
+      // Check if user is authenticated
+      const user = await firstValueFrom(this.store.select(selectCurrentUser));
+      if (!user || !user.id) {
+        // Open login dialog
+        const dialogRef = this.dialog.open(LoginComponent, {
+          width: '400px',
+          disableClose: true
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+          if (result) {
+            // User logged in successfully, retry payment
+            this.pagar();
+          } else {
+            this.messageService.showError('Debes iniciar sesión para realizar una compra', 'bottom center');
+          }
+        });
+        return;
+      }
+
       if (this.paymentMethod === 'mercado-pago') {
         await this.createMercadoPagoOrder();
       } else {
