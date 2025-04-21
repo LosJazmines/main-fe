@@ -29,11 +29,15 @@
   autoplay-delay="5000"
   autoplay-disable-on-interaction="false"
   loop="true"
+  space-between="30"
+  observer="true"
+  observe-parents="true"
+  observer-sliders="true"
 >
   @for (img of images; track $index) {
   <swiper-slide>
     <div class="swiper-slide__container">
-      <img class="swiper-slide__img" [src]="img.url" alt="Banner image" />
+      <img class="swiper-slide__img" [src]="img.url" alt="Banner image" loading="eager" />
     </div>
   </swiper-slide>
   }

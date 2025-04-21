@@ -180,6 +180,8 @@ export default class OnlineStoreComponent implements OnInit {
 
     this.storeConfigService.getStoreBanners().subscribe({
       next: (banners: BannerImage[]) => {
+        console.log(banners);
+        
         this.imgHeader = banners.sort((a: BannerImage, b: BannerImage) => a.order - b.order);
         this.isLoading.set(false);
       },

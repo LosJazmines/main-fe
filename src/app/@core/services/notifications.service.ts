@@ -31,6 +31,14 @@ export class NotificationsService {
       },
       error: (error) => console.error('Error in notification socket:', error)
     });
+
+    // Add admin notifications listener
+    this.wsService.getAdminNotifications().subscribe({
+      next: (notification: Notification) => {
+        this.addNotification(notification);
+      },
+      error: (error) => console.error('Error in admin notification socket:', error)
+    });
   }
 
   getAllNotifications(): Observable<Notification[]> {
@@ -104,5 +112,14 @@ export class NotificationsService {
   clearNotifications() {
     this.notificationsSubject.next([]);
     this.unreadCountSubject.next(0);
+  }
+
+  getAdminNotifications(): Observable<Notification[]> {
+    return this.http.get<Notification[]>(`${this.apiUrl}/admin`).pipe(
+      tap(notifications => {
+        this.notificationsSubject.next(notifications);
+        this.updateUnreadCount();
+      })
+    );
   }
 } 

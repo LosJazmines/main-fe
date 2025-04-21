@@ -9,6 +9,13 @@
         Administra todas las notificaciones del sistema
       </p>
     </div>
+    <!-- Connection Status -->
+    <div class="flex items-center gap-2 mr-4">
+      <span class="w-2 h-2 rounded-full animate-pulse" [ngClass]="isWebSocketConnected ? 'bg-green-500' : 'bg-red-500'"></span>
+      <span class="text-sm" [ngClass]="isWebSocketConnected ? 'text-green-600' : 'text-red-600'">
+        {{ isWebSocketConnected ? 'Conectado en tiempo real' : 'Desconectado - Reconectando...' }}
+      </span>
+    </div>
     <button
       (click)="markAllAsRead()"
       *ngIf="hasUnreadNotifications"

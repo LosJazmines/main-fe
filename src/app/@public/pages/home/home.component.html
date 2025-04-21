@@ -5,23 +5,33 @@
     class="w-full h-full flex justify-center items-center"
   >
     <div class="w-full max-w-[1200px] mx-auto">
-      <div *ngIf="loading" class="w-full aspect-[16/6] flex items-center justify-center bg-gray-100">
+      <div
+        *ngIf="loading"
+        class="w-full aspect-[16/6] flex items-center justify-center bg-gray-100"
+      >
         <p class="text-gray-500">Loading banners...</p>
       </div>
-      
-      <div *ngIf="error" class="w-full aspect-[16/6] flex items-center justify-center bg-red-50">
+
+      <div
+        *ngIf="error"
+        class="w-full aspect-[16/6] flex items-center justify-center bg-red-50"
+      >
         <p class="text-red-500">{{ error }}</p>
       </div>
 
+      @if(!loading && !error && imgHeader.length > 0){
       <div class="w-full aspect-[16/6]">
-        <app-carrousel-swiper 
-          *ngIf="!loading && !error && imgHeader.length > 0"
+        <app-carrousel-swiper
           [images]="imgHeader"
           class="w-full h-full block"
         ></app-carrousel-swiper>
       </div>
+      }
 
-      <div *ngIf="!loading && !error && imgHeader.length === 0" class="w-full aspect-[16/6] flex items-center justify-center bg-gray-100">
+      <div
+        *ngIf="!loading && !error && imgHeader.length === 0"
+        class="w-full aspect-[16/6] flex items-center justify-center bg-gray-100"
+      >
         <p class="text-gray-500">No banners available</p>
       </div>
     </div>

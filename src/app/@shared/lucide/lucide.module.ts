@@ -122,7 +122,8 @@ import {
   ArrowRight,
   ImageUp,
   Folder,
-  Tags
+  Tags,
+  ListFilter
 } from 'lucide-angular';
 
 @NgModule({
@@ -248,7 +249,8 @@ import {
     ArrowRight,
     ImageUp,
     Folder,
-    Tags
+    Tags,
+    ListFilter
   })],
   exports: [LucideAngularModule]
 })

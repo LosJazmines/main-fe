@@ -26,6 +26,7 @@ export class WebSocketService implements OnDestroy {
   private orderUpdates$ = new BehaviorSubject<Order | null>(null);
   private orderStatusChanges$ = new BehaviorSubject<Order | null>(null);
   private notifications$ = new BehaviorSubject<any>(null);
+  private adminNotifications$ = new BehaviorSubject<any>(null);
 
   constructor(
     private store: Store,
@@ -156,7 +157,23 @@ export class WebSocketService implements OnDestroy {
         // Join the notifications room for the current user
         const userId = this.authService.getCurrentUser()?.id;
         if (userId) {
+          console.log('Joining notifications room for user:', userId);
           this.notificationsSocket.emit('joinNotificationsRoom', userId);
+        }
+
+        // Join admin room if user is admin
+        const userRole = this.authService.getCurrentUser()?.role;
+        console.log('Current user role:', userRole);
+        if (userRole === 'admin') {
+          console.log('Joining admin notifications room');
+          this.notificationsSocket.emit('joinAdminRoom');
+          
+          // Add confirmation listener for admin room
+          this.notificationsSocket.on('adminRoomJoined', () => {
+            console.log('Successfully joined admin room');
+          });
+        } else {
+          console.log('User is not admin, skipping admin room');
         }
       });
 
@@ -165,14 +182,40 @@ export class WebSocketService implements OnDestroy {
         this.updateConnectionStatus();
       });
 
-      this.notificationsSocket.on('newNotification', (notification: any) => {
-        console.log('New notification received:', notification);
+      // Update event name from 'newNotification' to 'notification'
+      this.notificationsSocket.on('notification', (notification: any) => {
+        console.log('New notification received (notification event):', notification);
         this.notifications$.next(notification);
       });
 
-      this.notificationsSocket.on('notificationRead', (notificationId: string) => {
-        console.log('Notification marked as read:', notificationId);
+      // Keep listening to 'newNotification' for backward compatibility
+      this.notificationsSocket.on('newNotification', (notification: any) => {
+        console.log('New notification received (newNotification event):', notification);
+        this.notifications$.next(notification);
+      });
+
+      this.notificationsSocket.on('notificationRead', (data: { notificationId: string }) => {
+        console.log('Notification marked as read:', data);
         // Handle notification read event if needed
+      });
+
+      this.notificationsSocket.on('newAdminNotification', (notification: any) => {
+        console.log('New admin notification received:', notification);
+        if (notification) {
+          console.log('Admin notification details:', {
+            type: notification.type,
+            message: notification.message,
+            timestamp: notification.timestamp
+          });
+          this.adminNotifications$.next(notification);
+        } else {
+          console.warn('Received empty admin notification');
+        }
+      });
+
+      // Add error event listener
+      this.notificationsSocket.on('error', (error: any) => {
+        console.error('Notifications socket error:', error);
       });
     }
 
@@ -292,6 +335,10 @@ export class WebSocketService implements OnDestroy {
 
   getNotifications(): Observable<any> {
     return this.notifications$.asObservable();
+  }
+
+  getAdminNotifications(): Observable<any> {
+    return this.adminNotifications$.asObservable();
   }
 
   markNotificationAsRead(notificationId: string) {
