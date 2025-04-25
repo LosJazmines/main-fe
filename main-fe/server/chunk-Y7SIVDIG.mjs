@@ -1,2 +1,0 @@
-import './polyfills.server.mjs';
-var t={production:!1,api:"http://localhost:3000/api",wsUrl:"http://localhost:3000/orders",mp:{OUR_MP_CLIENT_ID:"444977579419473",MP_URL:"https://auth.mercadopago.com.ar/authorization?client_id=OUR_MP_CLIENT_ID&response_type=code&platform_id=mp&state=RANDOM_ID&redirect_uri=http://localhost:4200/a/mp-oauth",MP_URL_FRONT:"https://api.mercadopago.com/oauth/token"}};export{t as a};
