@@ -5,6 +5,8 @@ import { catchError, map, tap } from 'rxjs/operators';
 import { MessageService } from './snackbar.service';
 import { isPlatformBrowser } from '@angular/common';
 import { Inject, PLATFORM_ID } from '@angular/core';
+import { environment } from '../../../environments/environment';
+import { IPaymentConfig } from '../interfaces/payment-config.interface';
 
 export interface MercadoPagoAccount {
   id: number;
@@ -18,7 +20,7 @@ export interface MercadoPagoAccount {
   providedIn: 'root'
 })
 export class MercadoPagoService {
-  private apiUrl = 'https://api.mercadopago.com';
+  private apiUrl = environment.api;
   private accounts: MercadoPagoAccount[] = [];
 
   constructor(
@@ -57,7 +59,7 @@ export class MercadoPagoService {
    * Get all MercadoPago accounts
    */
   getAccounts(): Observable<MercadoPagoAccount[]> {
-    return of(this.accounts);
+    return this.http.get<MercadoPagoAccount[]>(`${this.apiUrl}/mercado-pago/accounts`);
   }
 
   /**
@@ -70,23 +72,23 @@ export class MercadoPagoService {
         if (!isValid) {
           throw new Error('Invalid MercadoPago credentials');
         }
-        
+
         // Add ID if not present
         if (!account.id) {
-          account.id = this.accounts.length > 0 
-            ? Math.max(...this.accounts.map(a => a.id)) + 1 
+          account.id = this.accounts.length > 0
+            ? Math.max(...this.accounts.map(a => a.id)) + 1
             : 1;
         }
-        
+
         // Add to accounts array
         this.accounts.push(account);
         this.saveAccounts();
-        
+
         this.messageService.showInfo(
           'Cuenta de MercadoPago agregada correctamente',
           'top center'
         );
-        
+
         return account;
       }),
       catchError(error => {
@@ -109,21 +111,21 @@ export class MercadoPagoService {
         if (!isValid) {
           throw new Error('Invalid MercadoPago credentials');
         }
-        
+
         const index = this.accounts.findIndex(a => a.id === account.id);
         if (index === -1) {
           throw new Error('Account not found');
         }
-        
+
         // Update account
         this.accounts[index] = account;
         this.saveAccounts();
-        
+
         this.messageService.showInfo(
           'Cuenta de MercadoPago actualizada correctamente',
           'top center'
         );
-        
+
         return account;
       }),
       catchError(error => {
@@ -140,20 +142,7 @@ export class MercadoPagoService {
    * Delete a MercadoPago account
    */
   deleteAccount(id: number): Observable<boolean> {
-    const index = this.accounts.findIndex(a => a.id === id);
-    if (index === -1) {
-      return of(false);
-    }
-    
-    this.accounts.splice(index, 1);
-    this.saveAccounts();
-    
-    this.messageService.showInfo(
-      'Cuenta de MercadoPago eliminada correctamente',
-      'top center'
-    );
-    
-    return of(true);
+    return this.http.delete<boolean>(`${this.apiUrl}/mercado-pago/accounts/${id}`);
   }
 
   /**
@@ -176,5 +165,25 @@ export class MercadoPagoService {
       init_point: 'https://www.mercadopago.com.ar/checkout/v1/redirect?pref_id=mock-preference-id',
       sandbox_init_point: 'https://sandbox.mercadopago.com.ar/checkout/v1/redirect?pref_id=mock-preference-id'
     });
+  }
+
+  // Nuevos métodos para la configuración de pagos
+  getMercadoPagoClientId(): Observable<string> {
+    return this.http.get<string>(`${this.apiUrl}/mercado-pago/client-id`);
+  }
+
+  getPaymentSettings(): Observable<IPaymentConfig[]> {
+    return this.http.get<IPaymentConfig[]>(`${this.apiUrl}/mercado-pago/settings`);
+  }
+
+  setActivePayment(id: number): Observable<void> {
+    return this.http.post<void>(`${this.apiUrl}/mercado-pago/settings/active/${id}`, {});
+  }
+
+  /**
+   * Process OAuth code from MercadoPago
+   */
+  processOAuthCode(code: string, state: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/mercado-pago/oauth/callback`, { code, state });
   }
 } 

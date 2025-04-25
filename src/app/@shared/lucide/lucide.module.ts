@@ -123,7 +123,10 @@ import {
   ImageUp,
   Folder,
   Tags,
-  ListFilter
+  ListFilter,
+  ListFilterPlus,
+  ImagePlus,
+  ImageMinus
 } from 'lucide-angular';
 
 @NgModule({
@@ -250,7 +253,10 @@ import {
     ImageUp,
     Folder,
     Tags,
-    ListFilter
+    ListFilter,
+    ListFilterPlus,
+    ImagePlus,
+    ImageMinus
   })],
   exports: [LucideAngularModule]
 })

@@ -1,17 +1,16 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { AdminHeaderStore } from '../../../@core/store/admin-header.store';
 import { CommonModule } from '@angular/common';
 import { MaterialModule } from '../../../@shared/material/material.module';
 import { LucideModule } from '../../../@shared/lucide/lucide.module';
-import {
-  FormBuilder,
-  FormGroup,
-  FormsModule,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
-import { MercadoPagoService, MercadoPagoAccount } from '../../../@core/services/mercado-pago.service';
-import { finalize } from 'rxjs/operators';
+import { MercadoPagoService } from '../../../@core/services/mercado-pago.service';
+import { finalize, take } from 'rxjs/operators';
+import { environment } from '../../../../environments/environment';
+import { IPaymentConfig } from '../../../@core/interfaces/payment-config.interface';
+import { Subscription } from 'rxjs';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { Store } from '@ngrx/store';
+import { selectCurrentUser } from '@shared/store/selectors/user.selector';
 
 @Component({
   selector: 'app-payments',
@@ -20,91 +19,97 @@ import { finalize } from 'rxjs/operators';
     CommonModule,
     MaterialModule,
     LucideModule,
-    ReactiveFormsModule,
-    FormsModule,
+    ReactiveFormsModule
   ],
   templateUrl: './payments.component.html',
   styleUrl: './payments.component.scss',
 })
-export default class PaymentsComponent implements OnInit {
+export default class PaymentsComponent implements OnInit, OnDestroy {
   private _adminHeaderStore = inject(AdminHeaderStore);
   private _mercadoPagoService = inject(MercadoPagoService);
+  private _store = inject(Store);
+  
   public readonly adminHeaderStore$ = this._adminHeaderStore.getHeaderTitle();
   
-  accounts: MercadoPagoAccount[] = []; // Almacena las cuentas integradas
-  paymentForm: FormGroup;
-  isIntegrated = false; // Estado de la integración
-  submitted = false; // Controla si el formulario ha sido enviado
-  isEdit = false; // Indica si estamos editando
-  editIndex = -1; // Índice de la cuenta a editar
-  isLoading = false; // Estado de carga
+  isLoading = false;
+  paymentSettings: IPaymentConfig[] = [];
+  formActivePayments: FormControl<number | null> = new FormControl(null);
+  private _unsubscribeAll: Subscription = new Subscription();
+  MP_URL: string | null = null;
+  currentUser: any;
 
-  constructor(private fb: FormBuilder) {
-    this.paymentForm = this.fb.group({
-      accessToken: ['', Validators.required],
-      publicKey: ['', Validators.required],
-      storeName: ['', Validators.required],
-      contactEmail: ['', [Validators.required, Validators.email]],
-    });
-  }
+  constructor() {}
   
   ngOnInit(): void {
     this._adminHeaderStore.updateHeaderTitle('Payments');
-    this.loadAccounts();
+    this.loadCurrentUser();
+    this.loadPaymentSettings();
+  }
+
+  ngOnDestroy(): void {
+    this._unsubscribeAll.unsubscribe();
   }
 
   /**
-   * Load all MercadoPago accounts
+   * Load current user from store
    */
-  loadAccounts(): void {
-    this.isLoading = true;
-    this._mercadoPagoService.getAccounts()
-      .pipe(finalize(() => this.isLoading = false))
-      .subscribe(accounts => {
-        this.accounts = accounts;
+  private loadCurrentUser(): void {
+    this._unsubscribeAll.add(
+      this._store.select(selectCurrentUser).subscribe(user => {
+        this.currentUser = user;
+        if (user) {
+          this.getMercadoPagoUrl();
+        }
+      })
+    );
+  }
+
+  /**
+   * Get MercadoPago URL with client ID
+   */
+  getMercadoPagoUrl(): void {
+    const clientId = environment.mp.OUR_MP_CLIENT_ID;
+    const state = crypto.randomUUID();
+    this.MP_URL = environment.mp.MP_URL
+      .replace('OUR_MP_CLIENT_ID', clientId)
+      .replace('RANDOM_ID', state)
+      .replace('PRODUCER_ID', this.currentUser?.id || '');
+  }
+
+  /**
+   * Load payment settings
+   */
+  loadPaymentSettings(): void {
+    this._mercadoPagoService.getPaymentSettings()
+      .pipe(take(1))
+      .subscribe((settings: IPaymentConfig[]) => {
+        this.paymentSettings = settings;
+        if (this.paymentSettings.length === 1) {
+          this.setActivePayment(this.paymentSettings[0]);
+        }
+        const activePayment = this.paymentSettings.find(p => p.active);
+        this.formActivePayments.setValue(activePayment ? activePayment.id : null);
       });
   }
 
   /**
-   * Submit the form to add or update a MercadoPago account
+   * Set active payment configuration
    */
-  onSubmit(): void {
-    if (this.paymentForm.valid) {
-      this.submitted = true;
-      this.isLoading = true;
-      
-      const account: MercadoPagoAccount = this.paymentForm.value;
-      
-      const operation = this.isEdit
-        ? this._mercadoPagoService.updateAccount(account)
-        : this._mercadoPagoService.addAccount(account);
-      
-      operation
-        .pipe(finalize(() => {
-          this.isLoading = false;
-          this.submitted = false;
-        }))
-        .subscribe({
-          next: () => {
-            this.loadAccounts();
-            this.resetForm();
-          },
-          error: (error) => {
-            console.error('Error saving account:', error);
-          }
-        });
-    } else {
-      this.markFormGroupTouched(this.paymentForm);
-    }
+  setActivePayment(payment: IPaymentConfig): void {
+    this._mercadoPagoService.setActivePayment(payment.id)
+      .pipe(take(1))
+      .subscribe(() => {
+        this.formActivePayments.setValue(payment.id);
+      });
   }
 
   /**
-   * Edit an existing account
+   * Redirect to MercadoPago OAuth flow
    */
-  onEdit(account: MercadoPagoAccount, index: number): void {
-    this.isEdit = true;
-    this.editIndex = index;
-    this.paymentForm.patchValue(account);
+  redirectToMercadoPago(): void {
+    if (this.MP_URL) {
+      window.location.href = this.MP_URL;
+    }
   }
 
   /**
@@ -117,38 +122,9 @@ export default class PaymentsComponent implements OnInit {
         .pipe(finalize(() => this.isLoading = false))
         .subscribe(success => {
           if (success) {
-            this.loadAccounts();
+            this.loadPaymentSettings();
           }
         });
     }
-  }
-
-  /**
-   * Open dialog to add a new account
-   */
-  openDialogAddProduct(): void {
-    this.resetForm();
-  }
-
-  /**
-   * Reset the form
-   */
-  resetForm(): void {
-    this.paymentForm.reset();
-    this.isEdit = false;
-    this.editIndex = -1;
-    this.submitted = false;
-  }
-
-  /**
-   * Mark all form controls as touched to trigger validation
-   */
-  private markFormGroupTouched(formGroup: FormGroup): void {
-    Object.values(formGroup.controls).forEach(control => {
-      control.markAsTouched();
-      if (control instanceof FormGroup) {
-        this.markFormGroupTouched(control);
-      }
-    });
   }
 }

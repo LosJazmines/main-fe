@@ -10,29 +10,25 @@ export const environment = {
   wsUrl: 'http://localhost:3000/orders', // Updated WebSocket URL with namespace
 
   // Mercado Pago Configuration
-  MERCADOPAGO_PUBLIC_KEY: 'TEST-a363850c-18f9-4a25-8552-da8c34016b7d',
-  OUR_MP_CLIENT_ID: '1949839050774723',
-  
-  // URLs de redirección para pruebas
-  MP_SUCCESS_URL: 'http://localhost:4200/payment/success',
-  MP_FAILURE_URL: 'http://localhost:4200/payment/failure',
-  MP_PENDING_URL: 'http://localhost:4200/payment/pending',
-  MP_NOTIFICATION_URL: 'http://localhost:3000/api/mercado-pago/notifications',
-  
-  // New Relic Configuration
-  newRelic: {
-    enabled: false,
-    apiKey: '',
-    applicationId: '',
-    licenseKey: ''
-  },
-  
-  /* NAHUEL MP */
-  // mp :{
-  //   OUR_MP_CLIENT_ID: '3562869133871743',
-  //   MP_URL: `https://auth.mercadopago.com.ar/authorization?client_id=OUR_MP_CLIENT_ID&response_type=code&platform_id=mp&state=RANDOM_ID&redirect_uri=https://titanesdelticket.com/o/mp-oauth`,
-  //   MP_URL_FRONT: 'https://api.mercadopago.com/oauth/token'
-  // }
+  // MERCADOPAGO_PUBLIC_KEY: 'TEST-a363850c-18f9-4a25-8552-da8c34016b7d',
+  // OUR_MP_CLIENT_ID: '444977579419473',
+  // ACCESS_TOKEN: 'TEST-44497757941947-012917-5e99c6dc33b21b77449e3fc36f5378d-28493664',
+
+  // URLs de redirección
+  // MP_SUCCESS_URL: 'http://localhost:4200/admin/payments/success',
+  // MP_FAILURE_URL: 'http://localhost:4200/admin/payments/failure',
+  // MP_PENDING_URL: 'http://localhost:4200/admin/payments/pending',
+  // MP_NOTIFICATION_URL: 'http://localhost:3000/api/mercado-pago/notifications',
+  // MP_REDIRECT_URI: 'http://localhost:4200/admin/payments/callback',
+
+
+
+  /* LUCA MP */
+  mp: {
+    OUR_MP_CLIENT_ID: '444977579419473',
+    MP_URL: `https://auth.mercadopago.com.ar/authorization?client_id=OUR_MP_CLIENT_ID&response_type=code&platform_id=mp&state=RANDOM_ID&redirect_uri=http://localhost:4200/a/mp-oauth`,
+    MP_URL_FRONT: 'https://api.mercadopago.com/oauth/token'
+  }
 };
 
 /*

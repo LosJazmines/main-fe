@@ -20,7 +20,7 @@ function loadMercadoPago(): Promise<void> {
       resolve();
       return;
     }
-    
+
     const script = document.createElement('script');
     script.src = 'https://sdk.mercadopago.com/js/v2';
     script.onload = () => resolve();
@@ -53,7 +53,7 @@ export class MercadoPagoService {
     private http: HttpClient,
     @Inject(PLATFORM_ID) private platformId: Object,
     private router: Router
-  ) {}
+  ) { }
 
   private async initMercadoPago(): Promise<void> {
     if (!isPlatformBrowser(this.platformId)) {
@@ -67,7 +67,7 @@ export class MercadoPagoService {
 
     try {
       await loadMercadoPago();
-      this.mp = new MercadoPago(environment.MERCADOPAGO_PUBLIC_KEY, {
+      this.mp = new MercadoPago(environment.mp.OUR_MP_CLIENT_ID, {
         locale: 'es-AR',
         advancedFraudPrevention: true
       });
@@ -136,10 +136,10 @@ export class MercadoPagoService {
         }
 
         // Validar productos
-        const invalidProducts = data.productos.filter(p => 
+        const invalidProducts = data.productos.filter(p =>
           !p.unit_price || p.unit_price <= 0 || !p.quantity || p.quantity <= 0
         );
-        
+
         if (invalidProducts.length > 0) {
           console.error('Productos inválidos:', invalidProducts);
           return throwError(() => new Error('Hay productos con precios o cantidades inválidas'));
@@ -150,7 +150,7 @@ export class MercadoPagoService {
           'Accept': 'application/json'
         });
 
-        return this.http.post(`${this.apiUrl}/preference`, data, { 
+        return this.http.post(`${this.apiUrl}/preference`, data, {
           headers,
           observe: 'response'
         }).pipe(
@@ -200,7 +200,7 @@ export class MercadoPagoService {
   }
 
   getPublicKey(): string {
-    return environment.MERCADOPAGO_PUBLIC_KEY;
+    return environment.mp.OUR_MP_CLIENT_ID;
   }
 
   createCardPayment(cardData: any): Observable<any> {

@@ -209,6 +209,12 @@ export const routes: Routes = [
         title: 'Admin - Payments',
       },
       {
+        path: 'mp-oauth',
+        loadComponent: () =>
+          import('./@admin/pages/payments/mp-oauth/mp-oauth.component'),
+        title: 'Admin - Mercado Pago OAuth',
+      },
+      {
         path: 'messages',
         loadComponent: () =>
           import('./@admin/pages/messages/messages.component'),
