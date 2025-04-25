@@ -1,0 +1,1 @@
+import{m as r,n as o}from"./chunk-EWYMWOI3.js";var t=o("currentUser"),n=r(t,e=>e.currentUser?e.currentUser:null),l=r(t,e=>e.shoppingCart?e.shoppingCart:null),p=r(t,e=>e),s=r(n,e=>e?Array.isArray(e.roles)?e.roles:e.role?[e.role]:[]:[]),i=r(s,e=>e.includes("ADMIN"));export{n as a,l as b,i as c};

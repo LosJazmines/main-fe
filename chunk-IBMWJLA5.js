@@ -1,0 +1,1 @@
+import{a,b as r,c as i,d}from"./chunk-TKMMNMX2.js";import{c as t}from"./chunk-W7KOHNRA.js";var p={headerTitle:""},T=r({providedIn:"root"},d(p),i(S=>{var e=S,{headerTitle:o}=e,l=t(e,["headerTitle"]);return{getHeaderTitle(){return o},updateHeaderTitle(n){a(l,{headerTitle:n})}}}));export{T as a};
