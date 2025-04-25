@@ -1,0 +1,76 @@
+export const COLORS_DATA = [
+    // Colores vivos
+    { uuid: '...', slug: 'color-rojo', name: 'Rojo', value: 'rojo', hex: '#FF0000', type: 'vivo' },
+    { uuid: '...', slug: 'color-naranja', name: 'Naranja', value: 'naranja', hex: '#FFA500', type: 'vivo' },
+    { uuid: '...', slug: 'color-amarillo', name: 'Amarillo', value: 'amarillo', hex: '#FFFF00', type: 'vivo' },
+    { uuid: '...', slug: 'color-verde', name: 'Verde', value: 'verde', hex: '#228B22', type: 'vivo' },
+    { uuid: '...', slug: 'color-azul', name: 'Azul', value: 'azul', hex: '#0000FF', type: 'vivo' },
+    { uuid: '...', slug: 'color-violeta', name: 'Violeta', value: 'violeta', hex: '#8A2BE2', type: 'vivo' },
+    { uuid: '...', slug: 'color-fucsia', name: 'Fucsia', value: 'fucsia', hex: '#FF00FF', type: 'vivo' },
+    { uuid: '...', slug: 'color-lima', name: 'Lima', value: 'lima', hex: '#00FF00', type: 'vivo' },
+    { uuid: '...', slug: 'color-turquesa', name: 'Turquesa', value: 'turquesa', hex: '#40E0D0', type: 'vivo' },
+    { uuid: '...', slug: 'color-cyan', name: 'Cyan', value: 'cyan', hex: '#00FFFF', type: 'vivo' },
+    { uuid: '...', slug: 'color-magenta', name: 'Magenta', value: 'magenta', hex: '#FF00AA', type: 'vivo' },
+    { uuid: '...', slug: 'color-vermilion', name: 'Vermilion', value: 'vermilion', hex: '#E34234', type: 'vivo' },
+
+    // Colores pastel
+    { uuid: '...', slug: 'color-rosa', name: 'Rosa', value: 'rosa', hex: '#FFC0CB', type: 'pastel' },
+    { uuid: '...', slug: 'color-lila', name: 'Lila', value: 'lila', hex: '#C8A2C8', type: 'pastel' },
+    { uuid: '...', slug: 'color-celeste', name: 'Celeste', value: 'celeste', hex: '#87CEEB', type: 'pastel' },
+    { uuid: '...', slug: 'color-verde-menta', name: 'Verde Menta', value: 'verde-menta', hex: '#98FF98', type: 'pastel' },
+    { uuid: '...', slug: 'color-durazno', name: 'Durazno', value: 'durazno', hex: '#FFE5B4', type: 'pastel' },
+    { uuid: '...', slug: 'color-coral', name: 'Coral', value: 'coral', hex: '#F88379', type: 'pastel' },
+    { uuid: '...', slug: 'color-lavanda', name: 'Lavanda', value: 'lavanda', hex: '#E6E6FA', type: 'pastel' },
+    { uuid: '...', slug: 'color-amarillo-pastel', name: 'Amarillo Pastel', value: 'amarillo-pastel', hex: '#FFFACD', type: 'pastel' },
+    { uuid: '...', slug: 'color-azul-bebé', name: 'Azul Bebé', value: 'azul-bebe', hex: '#89CFF0', type: 'pastel' },
+    { uuid: '...', slug: 'color-rosa-pálido', name: 'Rosa Pálido', value: 'rosa-palido', hex: '#FADADD', type: 'pastel' },
+    { uuid: '...', slug: 'color-verde-agua', name: 'Verde Agua', value: 'verde-agua', hex: '#AFEEEE', type: 'pastel' },
+    { uuid: '...', slug: 'color-malva', name: 'Malva', value: 'malva', hex: '#E0B0FF', type: 'pastel' },
+
+    // Colores neutros
+    { uuid: '...', slug: 'color-blanco', name: 'Blanco', value: 'blanco', hex: '#FFFFFF', type: 'neutro' },
+    { uuid: '...', slug: 'color-gris', name: 'Gris', value: 'gris', hex: '#808080', type: 'neutro' },
+    { uuid: '...', slug: 'color-beige', name: 'Beige', value: 'beige', hex: '#F5F5DC', type: 'neutro' },
+    { uuid: '...', slug: 'color-marfil', name: 'Marfil', value: 'marfil', hex: '#FFFFF0', type: 'neutro' },
+    { uuid: '...', slug: 'color-gris-claro', name: 'Gris Claro', value: 'gris-claro', hex: '#D3D3D3', type: 'neutro' },
+    { uuid: '...', slug: 'color-crema', name: 'Crema', value: 'crema', hex: '#FFFDD0', type: 'neutro' },
+    { uuid: '...', slug: 'color-taupe', name: 'Taupe', value: 'taupe', hex: '#483C32', type: 'neutro' },
+    { uuid: '...', slug: 'color-gris-perla', name: 'Gris Perla', value: 'gris-perla', hex: '#E8ECEF', type: 'neutro' },
+    { uuid: '...', slug: 'color-marron-claro', name: 'Marrón Claro', value: 'marron-claro', hex: '#D2B48C', type: 'neutro' },
+    { uuid: '...', slug: 'color-almendra', name: 'Almendra', value: 'almendra', hex: '#EFDECD', type: 'neutro' },
+
+    // Colores oscuros
+    { uuid: '...', slug: 'color-negro', name: 'Negro', value: 'negro', hex: '#000000', type: 'oscuro' },
+    { uuid: '...', slug: 'color-bordo', name: 'Bordó', value: 'bordo', hex: '#800000', type: 'oscuro' },
+    { uuid: '...', slug: 'color-verde-oscuro', name: 'Verde Oscuro', value: 'verde-oscuro', hex: '#006400', type: 'oscuro' },
+    { uuid: '...', slug: 'color-azul-marino', name: 'Azul Marino', value: 'azul-marino', hex: '#000080', type: 'oscuro' },
+    { uuid: '...', slug: 'color-gris-oscuro', name: 'Gris Oscuro', value: 'gris-oscuro', hex: '#333333', type: 'oscuro' },
+    { uuid: '...', slug: 'color-morado-oscuro', name: 'Morado Oscuro', value: 'morado-oscuro', hex: '#4B0082', type: 'oscuro' },
+    { uuid: '...', slug: 'color-cafe', name: 'Café', value: 'cafe', hex: '#3C2F2F', type: 'oscuro' },
+    { uuid: '...', slug: 'color-antracita', name: 'Antracita', value: 'antracita', hex: '#2F2F2F', type: 'oscuro' },
+    { uuid: '...', slug: 'color-azul-petroleo', name: 'Azul Petróleo', value: 'azul-petroleo', hex: '#004953', type: 'oscuro' },
+    { uuid: '...', slug: 'color-vino', name: 'Vino', value: 'vino', hex: '#722F37', type: 'oscuro' },
+
+    // Colores metálicos
+    { uuid: '...', slug: 'color-dorado', name: 'Dorado', value: 'dorado', hex: '#FFD700', type: 'metalico' },
+    { uuid: '...', slug: 'color-plateado', name: 'Plateado', value: 'plateado', hex: '#C0C0C0', type: 'metalico' },
+    { uuid: '...', slug: 'color-cobre', name: 'Cobre', value: 'cobre', hex: '#B87333', type: 'metalico' },
+    { uuid: '...', slug: 'color-bronce', name: 'Bronce', value: 'bronce', hex: '#CD7F32', type: 'metalico' },
+    { uuid: '...', slug: 'color-oro-rosa', name: 'Oro Rosa', value: 'oro-rosa', hex: '#F7CAC9', type: 'metalico' },
+    { uuid: '...', slug: 'color-acero', name: 'Acero', value: 'acero', hex: '#71797E', type: 'metalico' },
+    { uuid: '...', slug: 'color-platino', name: 'Platino', value: 'platino', hex: '#E5E4E2', type: 'metalico' },
+    { uuid: '...', slug: 'color-latón', name: 'Latón', value: 'laton', hex: '#B5A642', type: 'metalico' },
+    { uuid: '...', slug: 'color-titanio', name: 'Titanio', value: 'titanio', hex: '#878681', type: 'metalico' },
+
+    // Colores tierra
+    { uuid: '...', slug: 'color-marron', name: 'Marrón', value: 'marron', hex: '#A52A2A', type: 'natural' },
+    { uuid: '...', slug: 'color-tierra', name: 'Tierra', value: 'tierra', hex: '#E2725B', type: 'natural' },
+    { uuid: '...', slug: 'color-terracota', name: 'Terracota', value: 'terracota', hex: '#E2725B', type: 'natural' },
+    { uuid: '...', slug: 'color-caqui', name: 'Caqui', value: 'caqui', hex: '#C3B091', type: 'natural' },
+    { uuid: '...', slug: 'color-oliva', name: 'Oliva', value: 'oliva', hex: '#808000', type: 'natural' },
+    { uuid: '...', slug: 'color-siena', name: 'Siena', value: 'siena', hex: '#882D17', type: 'natural' },
+    { uuid: '...', slug: 'color-ocra', name: 'Ocra', value: 'ocra', hex: '#CC7722', type: 'natural' },
+    { uuid: '...', slug: 'color-mostaza', name: 'Mostaza', value: 'mostaza', hex: '#FFDB58', type: 'natural' },
+    { uuid: '...', slug: 'color-arcilla', name: 'Arcilla', value: 'arcilla', hex: '#B66D4A', type: 'natural' },
+    { uuid: '...', slug: 'color-musgo', name: 'Musgo', value: 'musgo', hex: '#8A9A5B', type: 'natural' }
+];

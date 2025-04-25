@@ -1,0 +1,28 @@
+<div class="payment-error-container">
+  <mat-card class="error-card">
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon color="warn">error_outline</mat-icon>
+        Error en el Pago
+      </mat-card-title>
+    </mat-card-header>
+    
+    <mat-card-content>
+      <div class="error-message">
+        {{ errorMessage }}
+      </div>
+      
+      <div class="error-details" *ngIf="errorDetails">
+        <p *ngIf="errorDetails.paymentId">ID de Pago: {{ errorDetails.paymentId }}</p>
+        <p *ngIf="errorDetails.status">Estado: {{ errorDetails.status }}</p>
+      </div>
+    </mat-card-content>
+
+    <mat-card-actions align="end">
+      <button mat-stroked-button color="primary" (click)="goBack()">
+        <mat-icon>arrow_back</mat-icon>
+        Volver al Inicio
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</div> 

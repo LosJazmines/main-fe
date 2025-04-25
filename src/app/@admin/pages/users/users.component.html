@@ -1,121 +1,150 @@
-<div class="p-6 bg-gray-100 min-h-full">
-  <!-- Título -->
-  <h1 class="text-2xl font-semibold text-gray-700 mb-6">Gestión de Usuarios</h1>
+<div class="h-full inset-0 flex flex-col min-w-0 overflow-hidden">
+  <mat-drawer-container
+    class="flex-auto h-full bg-card dark:bg-transparent"
+    (backdropClick)="onBackdropClicked()"
+  >
+    <!-- Drawer (Detalle del Usuario) -->
+    <mat-drawer
+      #drawer
+      class="w-full md:w-160 dark:bg-gray-900"
+      [mode]="drawerMode"
+      [opened]="isDrawerOpen"
+      [position]="'end'"
+      [disableClose]="true"
+    >
+      <app-user-detail
+        [user]="selectedUser"
+        (close)="closeDrawer()"
+      ></app-user-detail>
+    </mat-drawer>
 
-  <!-- Estadísticas -->
-  <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-    <div class="bg-white p-4 rounded-lg shadow flex items-center gap-4">
-      <div class="text-blue-500">
-        <mat-icon class="text-4xl">person</mat-icon>
+    <!-- Contenido Principal -->
+    <mat-drawer-content class="flex flex-col">
+      <!-- Header / Filtros -->
+      <div class="flex flex-col lg:flex-row justify-between items-center mb-4 gap-4 px-4">
+        <h1 class="text-3xl mb-6 text-[#3a5a40] !font-playfair text-start w-full">
+          Usuarios
+        </h1>
+        <div class="w-full flex flex-col lg:flex-row items-center gap-4">
+          <app-search-moderno-reactive
+            [inputPlaceholder]="'Buscar por email o nombre'"
+            (search)="handleSearch($event)"
+            class="w-full lg:w-[400px]"
+          >
+          </app-search-moderno-reactive>
+          <button
+            (click)="openDialogAddUser()"
+            class="w-full lg:w-max px-4 py-2 bg-[#3a5a40]/80 text-white rounded-[4px] shadow hover:bg-[#3a5a40]/80 focus:outline-none transition flex items-center gap-2"
+          >
+            <lucide-icon name="plus" class="w-5 h-5"></lucide-icon>
+            Agregar Usuario
+          </button>
+        </div>
       </div>
-      <div>
-        <p class="text-lg font-semibold">Usuarios Activos</p>
-        <p class="text-gray-500">{{ activeUsers }}</p>
-      </div>
-    </div>
 
-    <div class="bg-white p-4 rounded-lg shadow flex items-center gap-4">
-      <div class="text-green-500">
-        <mat-icon class="text-4xl">person_add</mat-icon>
-      </div>
-      <div>
-        <p class="text-lg font-semibold">Nuevos Usuarios</p>
-        <p class="text-gray-500">{{ newUsers }}</p>
-      </div>
-    </div>
-
-    <div class="bg-white p-4 rounded-lg shadow flex items-center gap-4">
-      <div class="text-red-500">
-        <mat-icon class="text-4xl">person_off</mat-icon>
-      </div>
-      <div>
-        <p class="text-lg font-semibold">Usuarios Inactivos</p>
-        <p class="text-gray-500">{{ inactiveUsers }}</p>
-      </div>
-    </div>
-
-    <div class="bg-white p-4 rounded-lg shadow flex items-center gap-4">
-      <div class="text-purple-500">
-        <mat-icon class="text-4xl">groups</mat-icon>
-      </div>
-      <div>
-        <p class="text-lg font-semibold">Total Usuarios</p>
-        <p class="text-gray-500">{{ totalUsers }}</p>
-      </div>
-    </div>
-  </div>
-
-  <!-- Filtros y Lista -->
-  <div class="bg-white p-6 rounded-lg shadow">
-    <!-- Filtros -->
-    <div class="flex justify-between items-center mb-4">
-      <div class="flex gap-4">
-        <!-- Filtro por estado -->
+      <!-- Filtros de Estado -->
+      <div class="px-4 mb-4">
         <mat-form-field>
           <mat-label>Estado</mat-label>
-          <mat-select
-            [(value)]="selectedStatus"
-            (selectionChange)="applyFilters()"
-          >
-            <mat-option *ngFor="let status of statuses" [value]="status">{{
-              status
-            }}</mat-option>
+          <mat-select [(value)]="selectedStatus" (selectionChange)="applyFilters()">
+            <mat-option *ngFor="let status of statuses" [value]="status">
+              {{ status }}
+            </mat-option>
           </mat-select>
-        </mat-form-field>
-
-        <!-- Filtro por búsqueda -->
-        <mat-form-field class="w-64">
-          <mat-label>Buscar Usuario</mat-label>
-          <input
-            matInput
-            placeholder="Nombre, correo..."
-            [(ngModel)]="searchQuery"
-            (input)="applyFilters()"
-          />
         </mat-form-field>
       </div>
 
-      <!-- Botón Agregar Usuario -->
-      <button mat-raised-button color="primary" (click)="addUser()">
-        <mat-icon>person_add</mat-icon>
-        Agregar Usuario
-      </button>
-    </div>
+      <!-- Lista de Usuarios -->
+      <div class="px-4">
+        <div class="grid grid-cols-1 gap-4">
+          <div
+            *ngFor="let user of filteredUsers"
+            class="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 cursor-pointer border border-gray-100"
+            (click)="openDrawer(user)"
+          >
+            <div class="p-3">
+              <div class="flex items-center justify-between mb-2">
+                <div class="flex items-center gap-2">
+                  <div
+                    class="w-8 h-8 bg-[#3a5a40]/80 rounded-full flex items-center justify-center text-white font-bold hover:bg-opacity-100 transition-all duration-300"
+                  >
+                    <span class="text-sm">{{ user.username | slice:0:1 }}</span>
+                  </div>
+                  <div>
+                    <h3 class="!mb-0 font-medium text-gray-900 text-sm">
+                      {{ user.fullName || user.username }}
+                    </h3>
+                    <p class="!mb-0 text-xs text-gray-500">{{ user.email }}</p>
+                  </div>
+                </div>
+                <span
+                  class="px-1.5 py-0.5 text-xs rounded-full"
+                  [ngClass]="{
+                    'bg-green-100 text-green-800': user.isActive,
+                    'bg-red-100 text-red-800': !user.isActive
+                  }"
+                >
+                  {{ user.isActive ? 'Activo' : 'Inactivo' }}
+                </span>
+              </div>
+              
+              <div class="flex items-center justify-between border-t pt-2">
+                <span class="text-xs text-gray-500">{{ user.roles[0] }}</span>
+                <div class="flex items-center gap-1">
+                  <button
+                    mat-icon-button
+                    class="!text-[#3a5a40]/80 hover:bg-[#3a5a40]/10 !w-8 !h-8"
+                    (click)="openDrawer(user)"
+                  >
+                    <lucide-icon name="eye" class="w-4 h-4"></lucide-icon>
+                  </button>
+                  <button
+                    mat-icon-button
+                    [color]="user.isActive ? 'warn' : 'primary'"
+                    class="hover:bg-red-100 !w-8 !h-8"
+                    (click)="toggleUserStatus(user); $event.stopPropagation()"
+                  >
+                    <lucide-icon [name]="user.isActive ? 'user-x' : 'user-check'" class="w-4 h-4"></lucide-icon>
+                  </button>
+                  <button
+                    mat-icon-button
+                    color="warn"
+                    class="hover:bg-red-100 !w-8 !h-8"
+                    (click)="removeUser(user); $event.stopPropagation()"
+                  >
+                    <lucide-icon name="trash-2" class="w-4 h-4"></lucide-icon>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
 
-    <!-- Lista de Usuarios -->
-    <table class="min-w-full text-left">
-      <thead>
-        <tr class="border-b bg-gray-50">
-          <th class="px-4 py-2">Nombre</th>
-          <th class="px-4 py-2">Correo</th>
-          <th class="px-4 py-2">Estado</th>
-          <th class="px-4 py-2">Acciones</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr
-          *ngFor="let user of filteredUsers"
-          class="border-b hover:bg-gray-50"
+        <!-- Paginación -->
+        <div class="mt-4" *ngIf="totalUsers > pageSize">
+          <mat-paginator
+            [length]="totalUsers"
+            [pageSize]="pageSize"
+            [pageSizeOptions]="[5, 10, 25, 100]"
+            (page)="onPageChange($event)"
+          >
+          </mat-paginator>
+        </div>
+
+        <!-- Loading State -->
+        <div *ngIf="loading" class="flex justify-center items-center p-4">
+          <mat-spinner diameter="40"></mat-spinner>
+        </div>
+
+        <!-- Empty State -->
+        <div
+          *ngIf="!loading && filteredUsers.length === 0"
+          class="flex flex-col items-center justify-center p-8 text-gray-500"
         >
-          <td class="px-4 py-2">{{ user.name }}</td>
-          <td class="px-4 py-2">{{ user.email }}</td>
-          <td class="px-4 py-2">
-            <span
-              [ngClass]="{
-                'text-green-500': user.status === 'Activo',
-                'text-red-500': user.status === 'Inactivo'
-              }"
-            >
-              {{ user.status }}
-            </span>
-          </td>
-          <td class="px-4 py-2">
-            <button mat-button color="warn" (click)="removeUser(user)">
-              Eliminar
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+          <lucide-icon name="users" class="w-12 h-12 mb-4"></lucide-icon>
+          <p class="text-lg">No se encontraron usuarios</p>
+        </div>
+      </div>
+    </mat-drawer-content>
+  </mat-drawer-container>
 </div>

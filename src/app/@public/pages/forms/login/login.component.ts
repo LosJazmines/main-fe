@@ -21,20 +21,19 @@ import * as userActions from '../../../../@shared/store/actions/user.actions';
 import { MessageService } from '../../../../@core/services/snackbar.service';
 import { LucideModule } from '@shared/lucide/lucide.module';
 import CheckoutComponent from '../checkout/checkout.component';
-import { GoogleSigninButtonModule, SocialAuthService } from '@abacritt/angularx-social-login';
+import { environment } from '../../../../../environments/environment';
 import { Subscription } from 'rxjs';
-declare const google: any; // o usa window.google
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, RouterModule, MaterialModule, ReactiveFormsModule, LucideModule, GoogleSigninButtonModule],
+  imports: [CommonModule, RouterModule, MaterialModule, ReactiveFormsModule, LucideModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
   animations: [Animations],
 })
 export default class LoginComponent implements OnInit, OnDestroy {
-  @ViewChild('googleBtnWrapper') googleBtnWrapper!: ElementRef;
+  @ViewChild('googleBtn') googleBtn!: ElementRef;
 
   loginGroup!: FormGroup;
   hide = true;
@@ -46,9 +45,6 @@ export default class LoginComponent implements OnInit, OnDestroy {
   constructor(
     private _fb: FormBuilder,
     public dialogRef: DialogRef<string>,
-    // private _dialog: Dialog,
-    // @Inject(DIALOG_DATA) public data: any,
-    private socialAuthService: SocialAuthService,
     @Inject(PLATFORM_ID) private platformId: Object,
     private _authService: AuthService,
     private store: Store,
@@ -61,7 +57,9 @@ export default class LoginComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    // this._unsuscribeAll.unsubscribe();
+    if (this._unsuscribeAll) {
+      this._unsuscribeAll.unsubscribe();
+    }
   }
 
   private initGroupLogin() {
@@ -71,43 +69,21 @@ export default class LoginComponent implements OnInit, OnDestroy {
     });
   }
 
-  googleSubscribe() {
-    this._unsuscribeAll = this.socialAuthService.authState.subscribe((user) => {
-      const payload = {
-        email: user.email.toLowerCase(),
-        provider: 'google',
-        token: user.idToken,
-      };
-
-      this._unsuscribeAll = this._authService
-        .login(payload)
-        .subscribe((response: any) => {
-          console.log('response', response);
-          
-          const { user, ...res } = response.results;
-
-          if (isPlatformBrowser(this.platformId)) {
-            localStorage.setItem('user', JSON.stringify(res));
-          }
-
-
-          this.store.dispatch(
-            userActions.setCurrentUser({ currentUser: user })
-          );
-
-          if (isPlatformBrowser(this.platformId)) {
-            const redirectUrl = localStorage.getItem('redirectUrl');
-
-            // if (redirectUrl) {
-            //   localStorage.removeItem('redirectUrl');
-            //   this.router.navigateByUrl(redirectUrl);
-            // }
-          }
-          this.dialogRef.close();
-        });
-    });
+  redirectToGoogleAuth() {
+    try {
+      // Redirect to the backend's Google auth endpoint
+      console.log('Redirecting to Google auth endpoint:', `${environment.api}/auth/google`);
+      window.location.href = `${environment.api}/auth/google`;
+    } catch (error) {
+      console.error('Error redirecting to Google auth:', error);
+      this._messageService.showError(
+        'Error al iniciar sesión con Google. Por favor, intente de nuevo.',
+        'top right',
+        5000,
+        'Aceptar'
+      );
+    }
   }
-
 
   submitEvent() {
     this.loginUser();
@@ -116,31 +92,19 @@ export default class LoginComponent implements OnInit, OnDestroy {
   private loginUser() {
     if (this.loginGroup.valid) {
       const formData = this.loginGroup.value;
-      // Llamada al servicio de autenticación para registrar al usuario
-      this._authService.login(formData).subscribe({
+      this._authService.login(formData.email, formData.password).subscribe({
         next: (response: any) => {
-          const { token, ...res } = response;
-
-          // Almacenar el token
+          // Store token using TokenService
           this._tokenService.setToken(response.token);
 
-          // Establecer el usuario actual en el estado
-          this.store.dispatch(userActions.setCurrentUser({ currentUser: res }));
+          // Store user in state
+          const user = { ...response.user, token: response.token };
+          this.store.dispatch(userActions.setCurrentUser({ currentUser: user }));
 
-          // this._messageService.showError(
-          //   'Correo o contraseña incorrectos. Por favor, intenta de nuevo.',
-          //   'top right',
-          //   5000,
-          //   'Aceptar'
-          // );
           this.dialogRef.close();
-
-          // Puedes agregar un mensaje de éxito o redirigir al usuario a otra página
         },
         error: (error) => {
-          // En caso de error, se maneja aquí
           console.error('Error al Ingresar usuario:', error);
-          // Puedes mostrar un mensaje de error si es necesario
         },
       });
     } else {

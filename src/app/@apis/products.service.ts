@@ -1,6 +1,15 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment.dev';
+import { Observable } from 'rxjs';
+
+export interface ProductFilters {
+  category?: string;
+  tag?: string;
+  minPrice?: number;
+  maxPrice?: number;
+  order?: 'ascendente' | 'descendente' | 'mayorValor' | 'menorValor';
+}
 
 @Injectable({
   providedIn: 'root',
@@ -8,18 +17,64 @@ import { environment } from '../../environments/environment.dev';
 export class ProductsService {
   urlProducts: string = `${environment.api}/product`;
 
-  constructor(private _http: HttpClient) {}
-  // Método para obtener todos los productos
-  getAllProducts() {
+  constructor(private _http: HttpClient) { }
+
+  getProductsFindActive(filters?: ProductFilters): Observable<any> {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
     });
-    return this._http.get(`${this.urlProducts}`, {
+
+    let params = new HttpParams();
+    
+    if (filters) {
+      if (filters.category) {
+        params = params.set('category', filters.category);
+      }
+      if (filters.tag) {
+        params = params.set('tag', filters.tag);
+      }
+      if (filters.minPrice !== undefined && filters.minPrice !== null) {
+        params = params.set('minPrice', filters.minPrice.toString());
+      }
+      if (filters.maxPrice !== undefined && filters.maxPrice !== null) {
+        params = params.set('maxPrice', filters.maxPrice.toString());
+      }
+    }
+
+    return this._http.get(`${this.urlProducts}/active`, {
       headers: headers,
+      params: params
     });
   }
 
-  // Método para obtener un producto por su ID
+  getAllProducts(filters?: ProductFilters) {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+    });
+
+    let params = new HttpParams();
+    
+    if (filters) {
+      if (filters.category) {
+        params = params.set('category', filters.category);
+      }
+      if (filters.tag) {
+        params = params.set('tag', filters.tag);
+      }
+      if (filters.minPrice !== undefined && filters.minPrice !== null) {
+        params = params.set('minPrice', filters.minPrice.toString());
+      }
+      if (filters.maxPrice !== undefined && filters.maxPrice !== null) {
+        params = params.set('maxPrice', filters.maxPrice.toString());
+      }
+    }
+
+    return this._http.get(`${this.urlProducts}`, {
+      headers: headers,
+      params: params
+    });
+  }
+
   getProductById(productId: string) {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
@@ -57,13 +112,17 @@ export class ProductsService {
   // }
 
   // Método para actualizar un producto existente
+  // updateProduct(productId: string, productData: any) {
+  //   const headers = new HttpHeaders({
+  //     'Content-Type': 'application/json',
+  //   });
+  //   return this._http.put(`${this.urlProducts}/${productId}`, productData, {
+  //     headers: headers,
+  //   });
+  // }
+
   updateProduct(productId: string, productData: any) {
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-    });
-    return this._http.put(`${this.urlProducts}/${productId}`, productData, {
-      headers: headers,
-    });
+    return this._http.patch(`${this.urlProducts}/${productId}`, productData);
   }
 
   // Método mejorado para buscar productos con filtros dinámicos
@@ -101,5 +160,9 @@ export class ProductsService {
     return this._http.delete(`${this.urlProducts}/${productId}`, {
       headers: headers,
     });
+  }
+
+  deleteImage(productId: string, imageId: string) {
+    return this._http.delete(`${this.urlProducts}/${productId}/images/${imageId}`);
   }
 }

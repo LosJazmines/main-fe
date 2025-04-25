@@ -22,6 +22,7 @@ import { ProductCardAddComponent } from '../../../@admin/core/components/product
 import * as userActions from '../../../@shared/store/actions/user.actions';
 import { ProductsService } from '../../../@apis/products.service';
 import { PurchaseSummaryComponent } from '../../../@shared/components/purchase-summary/purchase-summary.component';
+import { CartItem } from '@shared/models/order.model';
 
 @Component({
   selector: 'app-card-order',
@@ -85,7 +86,7 @@ export class CardOrderComponent implements OnInit, OnDestroy {
           this.shoppingCartLength.set(shoppingCart.length);
 
           // Mapear cantidades desde el carrito
-          this.quantities = shoppingCart.reduce((acc, item) => {
+          this.quantities = shoppingCart.reduce((acc: { [key: string]: number }, item: CartItem) => {
             acc[item.id] = item.quantity;
             return acc;
           }, {} as { [key: string]: number });

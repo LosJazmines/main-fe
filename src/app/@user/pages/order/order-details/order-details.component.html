@@ -1,0 +1,259 @@
+<div
+  class="max-w-[1200px] mx-auto py-4 min-h-[calc(100vh-325px)] lg:min-h-[calc(100vh-305px)]"
+>
+  <!-- Breadcrumb -->
+  <div class="px-4 lg:px-8 mb-4">
+    <nav class="flex items-center gap-2 text-sm text-gray-600">
+      <a
+        routerLink="/perfile"
+        class="hover:text-gray-900 flex items-center gap-1"
+      >
+        <lucide-icon name="arrow-left" class="w-4 h-4"></lucide-icon>
+        Mi Perfil
+      </a>
+      <span>/</span>
+      <span class="text-gray-900"
+        >Detalles de Orden #{{ order?.orderNumber }}</span
+      >
+    </nav>
+  </div>
+
+  <div class="p-4 lg:p-8 custom-height flex flex-col gap-4">
+    <div
+      class="w-full h-full flex flex-col lg:flex-row justify-center items-start gap-4"
+    >
+      <!-- Detalles de la orden -->
+      <div
+        class="w-full h-full lg:w-[410px] overflow-hidden flex flex-col gap-2 bg-white rounded-[4px] shadow p-4"
+      >
+        <div class="border-b border-black/10 w-full flex-1">
+          <h2 class="text-2xl font-bold text-gray-800">Detalles</h2>
+        </div>
+
+        <div class="min-h-[143px] w-full flex-1 border-b border-black/10">
+          <div class="w-full flex-1 flex flex-col">
+            <div class="flex items-center gap-2 mb-2">
+              <p class="text-black text-base !m-0">Transacción Detalles</p>
+            </div>
+            <div class="text-gray-600 text-sm">
+              <div class="flex items-center gap-2 mb-2">
+                <lucide-icon
+                  name="calendar"
+                  class="w-4 h-4 text-gray-600"
+                ></lucide-icon>
+                <p class="!m-0">
+                  Fecha: {{ order?.createdAt | date : "dd/MM/yyyy" }}
+                </p>
+              </div>
+              <div class="flex items-center gap-2 mb-2">
+                <lucide-icon
+                  name="check"
+                  class="w-4 h-4 text-gray-600"
+                ></lucide-icon>
+                <p class="!m-0">
+                  Estado: {{ getStatusText(order?.status || "") }}
+                </p>
+              </div>
+              <div class="flex items-center gap-2 mb-2">
+                <lucide-icon
+                  name="credit-card"
+                  class="w-4 h-4 text-gray-600"
+                ></lucide-icon>
+                <p class="!m-0">Medio de pago: {{ order?.paymentMethod }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="min-h-[143px] w-full flex-1">
+          <div class="w-full flex-1 flex flex-col">
+            <div class="flex items-center gap-2 mb-2">
+              <p class="text-black text-base !m-0">Envío Detalles</p>
+            </div>
+            <div class="text-gray-600 text-sm">
+              <div class="flex items-center gap-2 mb-2">
+                <lucide-icon
+                  name="map-pin"
+                  class="w-4 h-4 text-gray-600"
+                ></lucide-icon>
+                <p class="!m-0">Dirección: {{ order?.direccion }}</p>
+              </div>
+              <div class="flex items-center gap-2 mb-2">
+                <lucide-icon
+                  name="user"
+                  class="w-4 h-4 text-gray-600"
+                ></lucide-icon>
+                <p class="!m-0">
+                  Destinatario: {{ order?.nombreDestinatario }}
+                </p>
+              </div>
+              <div class="flex items-center gap-2 mb-2">
+                <lucide-icon
+                  name="phone"
+                  class="w-4 h-4 text-gray-600"
+                ></lucide-icon>
+                <p class="!m-0">Teléfono: {{ order?.telefonoMovil }}</p>
+              </div>
+              <div class="flex items-center gap-2 mb-2">
+                <lucide-icon
+                  name="messages-square"
+                  class="w-4 h-4 text-gray-600"
+                ></lucide-icon>
+                <p class="!m-0">Comentarios: {{ order?.comentarios }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Lista de productos -->
+      <div class="w-full flex flex-col gap-4 flex-1 lg:px-4 pb-4">
+        <div
+          class="grid grid-cols-5 w-full items-center text-center gap-4 border-b border-black/10 py-2"
+        >
+          <div class="w-[60px] hidden lg:block"></div>
+          <h2 class="text-lg font-semibold text-gray-800">Productos</h2>
+          <h2 class="text-lg font-semibold text-gray-800 hidden lg:block">
+            Cantidad
+          </h2>
+          <h2 class="text-lg font-semibold text-gray-800 hidden lg:block">
+            Precio
+          </h2>
+          <h2 class="text-lg font-semibold text-gray-800 hidden lg:block">
+            Total
+          </h2>
+        </div>
+
+        <div class="w-full flex flex-col min-h-[288px] bg-black/1 gap-2">
+          <div
+            *ngFor="let item of order?.items"
+            class="grid grid-cols-3 lg:grid-cols-5 w-full items-center gap-4 bg-[#3a5a40]/10 rounded-[4px] shadow-sm hover:shadow-md transition-shadow p-3"
+          >
+            <!-- Imagen -->
+            <div
+              class="w-[60px] h-[60px] rounded-[4px] overflow-hidden shadow-sm bg-white flex-shrink-0 border border-[#3a5a40]/20"
+            >
+              <img
+                *ngIf="item.product?.images && item.product.images[0]?.url"
+                [src]="item.product.images[0].url"
+                [alt]="item.product.name"
+                class="w-full h-full object-cover"
+              />
+              <div
+                *ngIf="!item.product?.images || !item.product.images[0]?.url"
+                class="w-full h-full flex items-center justify-center bg-gray-50"
+              >
+                <lucide-icon
+                  name="image-up"
+                  class="w-6 h-6 text-[#3a5a40]/70"
+                ></lucide-icon>
+              </div>
+            </div>
+
+            <!-- Nombre del producto -->
+            <div class="flex items-center gap-2 col-span-2 lg:col-span-1">
+              <lucide-icon
+                name="package"
+                class="w-4 h-4 text-[#3a5a40]"
+              ></lucide-icon>
+              <p class="!m-0 text-sm font-medium text-gray-900 line-clamp-2">
+                {{ item.product.name }}
+              </p>
+            </div>
+
+            <!-- Cantidad -->
+            <div class="flex items-center gap-2 justify-center">
+              <lucide-icon
+                name="layers"
+                class="w-4 h-4 text-[#3a5a40]"
+              ></lucide-icon>
+              <p class="!m-0 text-sm font-semibold text-gray-900">
+                {{ item.quantity }}
+              </p>
+            </div>
+
+            <!-- Precio unitario -->
+            <div class="flex items-center gap-2 justify-center">
+              <lucide-icon
+                name="tag"
+                class="w-4 h-4 text-[#3a5a40]"
+              ></lucide-icon>
+              <p class="!m-0 text-sm font-semibold text-gray-900">
+                {{ item.price | number : "1.2-2" }}
+              </p>
+            </div>
+
+            <!-- Total -->
+            <div
+              class="flex items-center gap-2 justify-center col-start-3 lg:col-auto"
+            >
+              <lucide-icon
+                name="receipt"
+                class="w-4 h-4 text-[#3a5a40]"
+              ></lucide-icon>
+              <p class="!m-0 text-base font-bold text-[#3a5a40]">
+                {{ item.price * item.quantity | number : "1.2-2" }}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Resumen -->
+        <div
+          class="flex flex-col justify-between items-center gap-2 text-gray-800 border-t border-black/10 pt-2"
+        >
+          <div class="w-full flex items-center gap-2 opacity-75">
+            <lucide-icon
+              name="truck"
+              class="w-5 h-5 text-[#3a5a40]"
+            ></lucide-icon>
+            <p class="!m-0 text-base text-[#3a5a40] font-bold">
+              Costo de envío
+            </p>
+          </div>
+
+          <p
+            *ngIf="order?.costoEnvio === 'gratis'"
+            class="!m-0 text-green-600 font-semibold flex items-center gap-1"
+          >
+            <lucide-icon
+              name="badge-check"
+              class="w-4 h-4 text-green-600"
+            ></lucide-icon>
+            Envío Gratis
+          </p>
+
+          <p
+            *ngIf="order?.costoEnvio && order?.costoEnvio !== 'gratis'"
+            class="w-full !m-0 font-semibold flex justify-between items-center gap-1"
+          >
+            Total del envío:
+            <span class="text-blue-600"
+              >${{ order?.costoEnvio | number : "1.2-2" }}</span
+            >
+          </p>
+        </div>
+
+        <div
+          class="w-full flex justify-end items-center text-center gap-4 border-t border-black/10 py-4"
+        >
+          <div
+            class="max-w-[280px] flex items-center gap-4 justify-between p-4 bg-[#3a5a40]/5 rounded-lg shadow-sm border border-[#3a5a40]/10"
+          >
+            <p class="text-lg !m-0 font-bold text-[#3a5a40]">Total:</p>
+            <div class="flex items-center gap-2">
+              <lucide-icon
+                name="receipt"
+                [size]="24"
+                class="text-[#3a5a40]"
+              ></lucide-icon>
+              <p class="!m-0 text-xl font-extrabold text-[#3a5a40]">
+                ${{ order?.total | number : "1.2-2" }}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

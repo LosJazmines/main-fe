@@ -1,0 +1,100 @@
+<div
+  class="min-w-[400px] min-h-[320px] w-full h-full flex flex-col rounded-[4px] bg-gray-100 overflow-auto"
+>
+  <div class="relative w-full h-14 flex items-center justify-center p-4">
+    <h2 class="!text-xl md:!text-2xl !font-playfair text-[#3a5a40] !m-0">
+      Editar Galeria
+    </h2>
+    <div
+      (click)="closeImageEditor()"
+      class="cursor-pointer absolute z-10 top-2 right-2 w-8 h-8 flex items-center justify-center bg-[#3a5a40]/50 hover:shadow-white hover:bg-[#3a5a40]/80 rounded-full"
+    >
+      <lucide-icon name="x" class="w-4 h-4 text-white"></lucide-icon>
+    </div>
+  </div>
+
+  <div
+    class="w-full h-full flex flex-col md:flex-row items-center justify-center gap-2 px-8 pb-8 pt-4 overflow-auto"
+  >
+    @if (isLoading()) {
+      <app-loader></app-loader>
+    } @else {
+      @for (gallery of gallerys(); track $index) {
+      <div class="w-[192px] h-[341px] flex flex-col items-center relative">
+        <!-- Contenedor de imagen con funcionalidad de subida -->
+        <div
+          class="w-[192px] h-[341px] border border-[#3a5a40]/50 rounded overflow-hidden"
+        >
+          <img class="w-full h-full object-cover" [src]="gallery.url" />
+          <!-- Input file oculto para subir imagen -->
+          <input
+            matTooltip="clickear para Agregar Imagen"
+            matTooltipClass="!text-[#3a5a40] !bg-[#3a5a40]/50"
+            type="file"
+            accept="image/*"
+            (change)="onImageUpload($event)"
+            class="absolute inset-0 opacity-0 cursor-pointer"
+          />
+          <div
+            [matMenuTriggerFor]="menu"
+            class="cursor-pointer absolute z-10 top-2 right-2 w-8 h-8 flex items-center justify-center bg-[#3a5a40]/50 hover:shadow-white hover:bg-[#3a5a40]/80 rounded-full"
+          >
+            <lucide-icon
+              name="ellipsis-vertical"
+              class="w-4 h-4 text-white"
+            ></lucide-icon>
+          </div>
+        </div>
+      </div>
+      } @empty {
+      <div class="w-[192px] h-[341px] flex flex-col items-center relative">
+        <div
+          class="w-[192px] h-[341px] border border-[#3a5a40]/50 rounded overflow-hidden"
+        >
+          <div class="w-full h-full flex flex-col justify-center items-center">
+            <lucide-icon
+              name="image"
+              class="w-6 h-6 mb-4 text-[#3a5a40]"
+            ></lucide-icon>
+            <p class="text-[#3a5a40] text-center">
+              ¡Agrega una imagen para destacar tu producto!
+            </p>
+          </div>
+          <!-- Input file oculto para subir imagen -->
+          <input
+            matTooltip="clickear para Agregar Imagen"
+            matTooltipClass="!text-[#3a5a40] !bg-[#3a5a40]/50"
+            type="file"
+            accept="image/*"
+            (change)="onImageUpload($event)"
+            class="absolute inset-0 opacity-0 cursor-pointer"
+          />
+        </div>
+      </div>
+      }
+    }
+  </div>
+</div>
+
+<mat-menu
+  #menu="matMenu"
+  xPosition="before"
+  class="!bg-[#3a5a40]/90 !text-white mt-2"
+>
+  <button
+    mat-menu-item
+    (click)="deleteImage(gallerys()[0].id)"
+  >
+    <div class="flex gap-2 items-center !text-white">
+      <lucide-icon size="16" name="trash-2"></lucide-icon>
+      <span>Eliminar</span>
+    </div>
+  </button>
+
+  <button mat-menu-item>
+    <div class="flex gap-2 items-center !text-white">
+      <lucide-icon name="download" size="16"></lucide-icon>
+      <span>Descargar</span>
+    </div>
+  </button>
+</mat-menu>

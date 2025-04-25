@@ -8,7 +8,7 @@ import {
   RightSidebarState,
 } from '../components/sidebars/right-sidebar/store/reducers/right-sidebar.reducer';
 
-import { userReducer, UserState } from './reducers/user.reducer';
+import { userReducer, State as UserState } from './reducers/user.reducer';
 import { leftSidebarFilterReducer, LeftSidebarFiltersState } from '@shared/components/sidebars/left-sidebar-filters/store/reducers/left-sidebar-filters.reducer';
 
 export interface AppState {

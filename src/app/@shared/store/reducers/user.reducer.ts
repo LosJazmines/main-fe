@@ -1,9 +1,13 @@
 import { createReducer, on } from '@ngrx/store';
 import * as userActions from '../actions/user.actions';
+import { DeliveryInfo } from '../../models/order.model';
+import { User } from '@apis/auth.service';
 
-export interface UserState {
-  currentUser: any;
+export interface State {
   shoppingCart: any[];
+  currentUser: User | null;
+  deliveryInfo: DeliveryInfo | null;
+  // Add other user state properties as needed
 }
 
 // Función segura para obtener el carrito desde localStorage
@@ -14,16 +18,31 @@ const getShoppingCartFromStorage = (): any[] => {
   return [];
 };
 
-const initialState: UserState = {
-  currentUser: null,
-  shoppingCart: getShoppingCartFromStorage(), // 🔥 Recuperamos el carrito de forma segura
+// Función segura para obtener el usuario desde localStorage
+const getCurrentUserFromStorage = (): User | null => {
+  if (typeof window !== 'undefined') {
+    const storedUser = localStorage.getItem('currentUser');
+    const storedToken = localStorage.getItem('token');
+    if (storedUser && storedToken) {
+      const user = JSON.parse(storedUser);
+      user.token = storedToken;
+      return user;
+    }
+  }
+  return null;
+};
+
+export const initialState: State = {
+  shoppingCart: getShoppingCartFromStorage(),
+  currentUser: getCurrentUserFromStorage(),
+  deliveryInfo: null
 };
 
 export const userReducer = createReducer(
   initialState,
 
   /* Set Current User */
-  on(userActions.setCurrentUser, (state, action): UserState => {
+  on(userActions.setCurrentUser, (state, action): State => {
     return {
       ...state,
       currentUser: action.currentUser,
@@ -111,6 +130,14 @@ export const userReducer = createReducer(
   }),
 
   on(userActions.clearShoppingCart, (state) => {
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('shoppingCart');
+    }
+
+    return { ...state, shoppingCart: [] };
+  }),
+
+  on(userActions.clearCart, (state) => {
     if (typeof window !== 'undefined') {
       localStorage.removeItem('shoppingCart');
     }

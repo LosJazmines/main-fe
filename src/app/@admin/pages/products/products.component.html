@@ -1,158 +1,664 @@
-<div class="p-6 bg-gray-100 min-h-full">
+<div class="min-h-full">
   <!-- Header -->
-  <div class="flex justify-between items-center mb-6">
-    <h1 class="text-2xl font-semibold text-gray-700">Productos</h1>
-    <button
-      (click)="openDialogAddProduct()"
-      class="bg-black text-white px-4 py-2 rounded-lg flex items-center gap-2"
+  <div
+    class="flex flex-col lg:flex-row justify-between items-center mb-4 gap-4"
+  >
+    <h1 class="text-3xl mb-6 text-[#3a5a40] font-playfair text-start w-full">
+      Productos
+    </h1>
+    <div
+      class="w-full flex flex-col lg:flex-row justify-end items-center gap-4"
     >
-      <lucide-icon name="plus" class="w-5 h-5"></lucide-icon>
-      Agregar Producto
+      <button
+        (click)="createEmptyProduct()"
+        class="w-full max-w-[200px] flex-1 lg:w-max px-4 py-2 bg-[#3a5a40]/80 text-white rounded-[4px] shadow hover:bg-[#3a5a40]/90 focus:outline-none transition flex items-center justify-center gap-2"
+      >
+        <lucide-icon name="plus" class="w-5 h-5"></lucide-icon>
+        Agregar Producto
+      </button>
+    </div>
+  </div>
+  <div class="flex flex-col lg:flex-row items-center justify-end gap-4 mb-4">
+    <app-search-moderno-reactive
+      [inputPlaceholder]="'Buscar por Dirección o Nombre del destinatario'"
+      (search)="handleSearch($event)"
+      class="w-full lg:w-[400px]"
+    ></app-search-moderno-reactive>
+    <button
+      (click)="openFilterDialog()"
+      disabled
+      class="w-full max-w-[120px] flex-1 lg:w-max px-4 py-2 bg-[#3a5a40]/80 text-white rounded-[4px] shadow hover:bg-[#3a5a40]/90 disabled:opacity-30 disabled:cursor-not-allowed focus:outline-none transition flex items-center justify-center gap-2"
+    >
+      <lucide-icon name="ListFilterPlus" class="w-5 h-5"></lucide-icon>
+      Filtros
     </button>
   </div>
+  <!-- Filtros activos -->
+  @if (currentFilters.selectedCategory || currentFilters.selectedTag ||
+  currentFilters.minPrice || currentFilters.maxPrice || currentFilters.active
+  !== null) {
+  <div class="flex flex-wrap items-center gap-2 mb-4">
+    <span class="text-sm text-gray-600">Filtros activos:</span>
 
-  <!-- <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-    <div class="bg-white p-4 rounded-lg shadow flex items-center gap-4">
-      <div class="text-green-500 w-6 h-6">
-        <mat-icon>inventory</mat-icon>
-      </div>
-      <div>
-        <p class="text-lg font-semibold">Total Productos</p>
-        <p class="text-gray-500">{{ totalProducts }}</p>
-      </div>
-    </div>
-
-    <div class="bg-white p-4 rounded-lg shadow flex items-center gap-4">
-      <div class="text-blue-500 w-6 h-6">
-        <mat-icon>sell</mat-icon>
-      </div>
-      <div>
-        <p class="text-lg font-semibold">Productos Vendidos</p>
-        <p class="text-gray-500">{{ totalSold }}</p>
-      </div>
-    </div>
-
-    <div class="bg-white p-4 rounded-lg shadow flex items-center gap-4">
-      <div class="text-red-500 w-6 h-6">
-        <mat-icon>warning</mat-icon>
-      </div>
-      <div>
-        <p class="text-lg font-semibold">Sin Stock</p>
-        <p class="text-gray-500">{{ outOfStock }}</p>
-      </div>
-    </div>
-
-    <div class="bg-white p-4 rounded-lg shadow flex items-center gap-4">
-      <div class="text-orange-500 w-6 h-6">
-        <mat-icon>error_outline</mat-icon>
-      </div>
-      <div>
-        <p class="text-lg font-semibold">Stock < 5</p>
-        <p class="text-gray-500">{{ lowStock }}</p>
-      </div>
-    </div>
-  </div>
-
-  <div class="bg-white shadow rounded-lg p-6 mb-6">
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-      <div>
-        <label class="text-gray-500 block mb-1">Categoría</label>
-        <select
-          class="w-full p-2 border rounded-lg"
-          [(ngModel)]="selectedCategory"
-          (change)="applyFilters()"
-        >
-          <option value="">Todas</option>
-          <option value="flores">Flores</option>
-          <option value="plantas">Plantas</option>
-          <option value="macetas">Macetas</option>
-          <option value="fertilizantes">Fertilizantes</option>
-        </select>
-      </div>
-      <div>
-        <label class="text-gray-500 block mb-1">Precio Mínimo</label>
-        <input
-          type="number"
-          class="w-full p-2 border rounded-lg"
-          placeholder="0"
-          [(ngModel)]="minPrice"
-          (input)="applyFilters()"
-        />
-      </div>
-      <div>
-        <label class="text-gray-500 block mb-1">Precio Máximo</label>
-        <input
-          type="number"
-          class="w-full p-2 border rounded-lg"
-          placeholder="0"
-          [(ngModel)]="maxPrice"
-          (input)="applyFilters()"
-        />
-      </div>
-    </div>
-  </div> -->
-  <div class="flex justify-end items-center mb-5">
-    <!-- Filtro de Ordenación -->
-    <!-- <div class="flex items-center space-x-4">
-      <label for="orderBy" class="text-sm font-medium">Ordenar por:</label>
-      <select
-        id="orderBy"
-        [(ngModel)]="selectedOrder"
-        (change)="applyFilter()"
-        class="border p-2 rounded-md text-sm"
+    @if (currentFilters.selectedCategory) {
+    <div
+      class="flex items-center gap-1 bg-[#3a5a40]/10 px-2 py-1 rounded-[4px]"
+    >
+      <span class="text-sm text-[#3a5a40]">
+        Categoría: {{ getCategoryName(currentFilters.selectedCategory) }}
+      </span>
+      <button
+        (click)="removeCategoryFilter()"
+        class="text-[#3a5a40] hover:text-[#3a5a40]/80"
       >
-        <option value="ascendente">Ascendente</option>
-        <option value="descendente">Descendente</option>
-        <option value="mayorValor">Mayor Valor</option>
-        <option value="menorValor">Menor Valor</option>
-      </select>
-    </div> -->
+        <lucide-icon name="x" class="w-4 h-4"></lucide-icon>
+      </button>
+    </div>
+    } @if (currentFilters.selectedTag) {
+    <div
+      class="flex items-center gap-1 bg-[#3a5a40]/10 px-2 py-1 rounded-[4px]"
+    >
+      <span class="text-sm text-[#3a5a40]">
+        Etiqueta: {{ getTagName(currentFilters.selectedTag) }}
+      </span>
+      <button
+        (click)="removeTagFilter()"
+        class="text-[#3a5a40] hover:text-[#3a5a40]/80"
+      >
+        <lucide-icon name="x" class="w-4 h-4"></lucide-icon>
+      </button>
+    </div>
+    } @if (currentFilters.minPrice || currentFilters.maxPrice) {
+    <div
+      class="flex items-center gap-1 bg-[#3a5a40]/10 px-2 py-1 rounded-[4px]"
+    >
+      <span class="text-sm text-[#3a5a40]">
+        Precio: {{ currentFilters.minPrice || "0" }} -
+        {{ currentFilters.maxPrice || "∞" }}
+      </span>
+      <button
+        (click)="removePriceFilter()"
+        class="text-[#3a5a40] hover:text-[#3a5a40]/80"
+      >
+        <lucide-icon name="x" class="w-4 h-4"></lucide-icon>
+      </button>
+    </div>
+    } @if (currentFilters.active !== null) {
+    <div
+      class="flex items-center gap-1 bg-[#3a5a40]/10 px-2 py-1 rounded-[4px]"
+    >
+      <span class="text-sm text-[#3a5a40]">
+        Estado: {{ currentFilters.active ? "Activo" : "Inactivo" }}
+      </span>
+      <button
+        (click)="removeActiveFilter()"
+        class="text-[#3a5a40] hover:text-[#3a5a40]/80"
+      >
+        <lucide-icon name="x" class="w-4 h-4"></lucide-icon>
+      </button>
+    </div>
+    }
 
-    <!-- Contador de Items -->
-    <div class="text-sm font-medium">
-      <span>{{ productsOne().length }} Items disponibles</span>
+    <button
+      (click)="clearFilters()"
+      class="text-sm text-[#3a5a40] hover:underline"
+    >
+      Limpiar todos
+    </button>
+  </div>
+  }
+
+  <!-- Tabla de productos -->
+  <div class="overflow-x-auto">
+    <div class="grid">
+      <!-- Encabezado -->
+      <div
+        class="inventory-grid z-10 sticky top-0 grid gap-4 py-4 px-6 md:px-4 shadow text-md text-white bg-gray-50/20 dark:bg-[#3a5a40]/75"
+        matSort
+        matSortDisableClear
+      >
+        <div></div>
+        <div class="hidden md:block" [mat-sort-header]="'sku'">SKU</div>
+        <div [mat-sort-header]="'name'">Nombre</div>
+        <div class="hidden sm:block" [mat-sort-header]="'price'">Precio</div>
+        <div class="hidden lg:block" [mat-sort-header]="'stock'">Stock</div>
+        <div class="hidden lg:block" [mat-sort-header]="'active'">Activo</div>
+        <div class="hidden sm:block">Detalles</div>
+      </div>
+
+      <!-- Filas de productos -->
+      <ng-container *ngIf="products$ | async as products">
+        <ng-container *ngIf="products.length > 0; else noProducts">
+          <ng-container
+            *ngFor="let product of products; let i = index; trackBy: trackByFn"
+          >
+            <div
+              class="inventory-grid grid items-center gap-4 py-3 px-6 md:px-4 border-b"
+            >
+              <!-- Imagen -->
+              <div class="flex items-center">
+                <div
+                  class="relative flex items-center justify-center w-12 h-12 rounded-[4px] overflow-hidden border"
+                >
+                  <img
+                    class="w-full h-full object-cover"
+                    *ngIf="(product.images?.length ?? 0) > 0"
+                    [alt]="'Product thumbnail image'"
+                    [src]="product.images[0]?.url ?? ''"
+                  />
+                  <div
+                    class="flex items-center justify-center w-full h-full text-xs font-semibold uppercase"
+                    *ngIf="!product.images?.length"
+                  >
+                    <lucide-icon
+                      name="image-plus"
+                      class="w-6 h-6 text-[#3a5a40]/80"
+                    ></lucide-icon>
+                  </div>
+                </div>
+              </div>
+              <!-- SKU -->
+              <div class="hidden md:block truncate">
+                {{ product.sku }}
+              </div>
+              <!-- Name -->
+              <div class="truncate">
+                {{ product.name }}
+              </div>
+              <!-- Price -->
+              <div class="hidden sm:block">
+                {{ product.price | currency : "ARS" : "symbol" : "1.2-2" }}
+              </div>
+              <!-- Stock -->
+              <div class="hidden lg:flex items-center">
+                <div class="min-w-4">{{ product.stock }}</div>
+                <!-- Indicadores de stock -->
+                <div
+                  class="flex items-end ml-2 w-1 h-4 bg-red-200 rounded overflow-hidden"
+                  *ngIf="product.stock < 20"
+                >
+                  <div class="flex w-full h-1/3 bg-red-600"></div>
+                </div>
+                <div
+                  class="flex items-end ml-2 w-1 h-4 bg-orange-200 rounded overflow-hidden"
+                  *ngIf="product.stock >= 20 && product.stock < 30"
+                >
+                  <div class="flex w-full h-2/4 bg-orange-400"></div>
+                </div>
+                <div
+                  class="flex items-end ml-2 w-1 h-4 bg-green-100 rounded overflow-hidden"
+                  *ngIf="product.stock >= 30"
+                >
+                  <div class="flex w-full h-full bg-green-400"></div>
+                </div>
+              </div>
+              <!-- Estado (Active) -->
+              <div class="hidden lg:block">
+                <ng-container *ngIf="product.active; else notActive">
+                  <lucide-icon
+                    class="text-green-400 icon-size-5"
+                    name="check"
+                  ></lucide-icon>
+                </ng-container>
+                <ng-template #notActive>
+                  <lucide-icon
+                    class="text-red-400 icon-size-5"
+                    name="x"
+                  ></lucide-icon>
+                </ng-template>
+              </div>
+              <!-- Botón de detalles -->
+              <div>
+                <button
+                  class="min-w-10 min-h-7 h-7 px-2 leading-6"
+                  mat-icon-button
+                  (click)="toggleDetails(product.id)"
+                >
+                  <lucide-icon
+                    class="!text-[#3a5a40]"
+                    [name]="
+                      selectedProduct?.id === product.id
+                        ? 'chevron-up'
+                        : 'chevron-down'
+                    "
+                  ></lucide-icon>
+                </button>
+              </div>
+            </div>
+            <!-- Fila de detalles (formulario de edición) -->
+            <div class="grid" *ngIf="selectedProduct?.id === product.id">
+              <ng-container
+                *ngTemplateOutlet="
+                  rowDetailsTemplate;
+                  context: { $implicit: product, index: i }
+                "
+              ></ng-container>
+            </div>
+          </ng-container>
+        </ng-container>
+      </ng-container>
+
+      <!-- Template cuando no hay productos -->
+      <ng-template #noProducts>
+        <div
+          class="p-8 sm:p-16 border-t text-4xl font-semibold tracking-tight text-center"
+        >
+          There are no products!
+        </div>
+      </ng-template>
     </div>
   </div>
-  <!-- Tabla de Productos -->
-  <div class="bg-white shadow rounded-lg p-6">
-    <app-products-table [products]="this.productsOne()"></app-products-table>
-    <!-- <table class="table-auto w-full border-collapse">
-      <thead>
-        <tr class="bg-gray-200 text-gray-600 text-sm uppercase text-left">
-          <th class="p-3">ID</th>
-          <th class="p-3">Nombre</th>
-          <th class="p-3">Categoría</th>
-          <th class="p-3">Precio</th>
-          <th class="p-3">Stock</th>
-          <th class="p-3">Acciones</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr
-          *ngFor="let product of productsOne(); let i = index"
-          class="border-t hover:bg-gray-50"
+
+  <!-- Plantilla de detalles del producto -->
+  <ng-template #rowDetailsTemplate let-product let-index="index">
+    <div class="shadow-lg overflow-hidden mb-8">
+      <form [formGroup]="selectedProductForm" class="flex flex-col w-full">
+        <div class="flex flex-col sm:flex-row p-8">
+          <!-- Imágenes y estado -->
+          <div class="flex flex-col items-center sm:items-start mb-8 sm:mb-0">
+            <div class="flex flex-col items-center relative">
+              <!-- Contenedor de imagen con funcionalidad de subida -->
+              <div
+                class="w-32 h-44 border border-[#3a5a40]/50 rounded overflow-hidden"
+              >
+                <ng-container
+                  *ngIf="
+                    selectedProductForm.get('images')?.value?.length;
+                    else noImage
+                  "
+                >
+                  <img
+                    class="w-full h-full object-cover"
+                    [src]="
+                      selectedProductForm.get('images')?.value[
+                        selectedProductForm.get('currentImageIndex')?.value
+                      ].url
+                    "
+                  />
+                </ng-container>
+                <ng-template #noImage>
+                  <div
+                    class="w-full h-full flex flex-col justify-center items-center"
+                  >
+                    <lucide-icon
+                      name="image-up"
+                      class="w-6 h-6 mb-4 text-[#3a5a40]"
+                    ></lucide-icon>
+                    <p class="text-[#3a5a40] text-center">
+                      ¡Agrega una imagen para destacar tu producto!
+                    </p>
+                  </div>
+                </ng-template>
+                <!-- Input file oculto para subir imagen -->
+                <input
+                  #fileInput
+                  matTooltip="clickear para Agregar Imagen"
+                  matTooltipClass="!text-[#3a5a40] !bg-[#3a5a40]/50"
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  (change)="onImageUpload($event)"
+                  class="absolute inset-0 opacity-0 cursor-pointer"
+                />
+                <div
+                  (click)="openImageEditor(product)"
+                  class="cursor-pointer absolute z-10 -top-2 -right-2 w-8 h-8 flex items-center justify-center bg-[#3a5a40]/50 hover:shadow-white hover:bg-[#3a5a40]/80 rounded-full"
+                >
+                  <lucide-icon
+                    name="pencil"
+                    class="w-4 h-4 text-white"
+                  ></lucide-icon>
+                </div>
+              </div>
+
+              <!-- Controles para cambiar de imagen -->
+              <div
+                class="flex items-center mt-2 whitespace-nowrap z-10"
+                *ngIf="selectedProductForm.get('images')?.value?.length"
+              >
+                <button
+                  type="button"
+                  class="w-8 h-8 flex items-center justify-center bg-[#3a5a40]/50 hover:shadow-white hover:bg-[#3a5a40]/80 rounded-full"
+                  (click)="cycleImages(false)"
+                >
+                  <lucide-icon
+                    name="chevron-left"
+                    class="w-4 h-4 text-white"
+                  ></lucide-icon>
+                </button>
+                <span class="font-sm mx-2">
+                  {{
+                    (selectedProductForm.get("currentImageIndex")?.value || 0) +
+                      1
+                  }}
+                  of {{ selectedProductForm.get("images")?.value?.length || 0 }}
+                </span>
+                <button
+                  type="button"
+                  class="w-8 h-8 flex items-center justify-center bg-[#3a5a40]/50 hover:shadow-white hover:bg-[#3a5a40]/80 rounded-full"
+                  (click)="cycleImages(true)"
+                >
+                  <lucide-icon
+                    name="chevron-right"
+                    class="w-4 h-4 text-white"
+                  ></lucide-icon>
+                </button>
+              </div>
+              <button
+                type="button"
+                class="mt-4 px-4 py-2 bg-[#3a5a40]/80 text-white rounded-[4px] shadow hover:bg-[#3a5a40]/90 focus:outline-none transition flex items-center justify-center gap-2"
+                (click)="fileInput.click()"
+              >
+                Agregar
+                <lucide-icon name="image-up"></lucide-icon>
+              </button>
+            </div>
+            <div class="flex flex-col mt-8">
+              <span class="font-semibold mb-2">Visible en tienda</span>
+              <mat-slide-toggle
+                formControlName="active"
+                class="custom-slide-toggle"
+                (change)="onToggleActive($event)"
+              >
+                {{
+                  selectedProductForm.get("active")?.value
+                    ? "Habilitado"
+                    : "Deshabilitado"
+                }}
+              </mat-slide-toggle>
+            </div>
+          </div>
+
+          <!-- Detalles del producto -->
+          <div class="flex flex-auto flex-wrap">
+            <!-- Columna 1: Datos generales -->
+            <div class="flex flex-col w-full lg:w-2/4 sm:pl-8">
+              <div class="mb-4">
+                <label
+                  for="name"
+                  class="block text-sm font-medium text-gray-700"
+                  >Nombre</label
+                >
+                <input
+                  id="name"
+                  type="text"
+                  formControlName="name"
+                  placeholder="Name"
+                  class="p-2 w-full border border-gray-300 rounded-[4px] focus:outline-none focus:ring-2 focus:ring-[#A2E100]/20"
+                />
+              </div>
+              <div class="flex gap-4">
+                <div class="mb-4 flex-1">
+                  <label
+                    for="sku"
+                    class="block text-sm font-medium text-gray-700"
+                    >SKU</label
+                  >
+                  <input
+                    id="sku"
+                    type="text"
+                    formControlName="sku"
+                    placeholder="SKU"
+                    class="p-2 w-full border border-gray-300 rounded-[4px] focus:outline-none focus:ring-2 focus:ring-[#A2E100]/20"
+                  />
+                </div>
+                <div class="mb-4 flex-1">
+                  <label
+                    for="barcode"
+                    class="block text-sm font-medium text-gray-700"
+                    >Código de barras</label
+                  >
+                  <input
+                    id="barcode"
+                    type="text"
+                    formControlName="barcode"
+                    placeholder="Barcode"
+                    class="p-2 w-full border border-gray-300 rounded-[4px] focus:outline-none focus:ring-2 focus:ring-[#A2E100]/20"
+                  />
+                </div>
+              </div>
+              <div class="flex gap-4">
+                <div class="mb-2 w-full">
+                  <label
+                    for="category"
+                    class="block text-sm font-medium text-gray-700"
+                    >Categoría</label
+                  >
+                  <!-- Reemplazamos el select por nuestro custom-select -->
+                  <app-custom-select
+                    [options]="categoriesOptions"
+                    placeholder="agregar categoría"
+                    (selectionChange)="
+                      selectedProductForm.get('category')?.setValue($event.id)
+                    "
+                  ></app-custom-select>
+                </div>
+              </div>
+              <div class="mb-2 flex-1">
+                <div class="mb-4">
+                  <label class="block text-sm font-medium text-gray-700"
+                    >Etiquetas</label
+                  >
+                  <!-- Componente custom select para tags -->
+                  <app-custom-select
+                    [options]="tagsOptions"
+                    placeholder="agregar etiqueta"
+                    (selectionChange)="onTagSelectionChange($event)"
+                    (close)="showTagSelector = false"
+                  ></app-custom-select>
+                </div>
+                <!-- Lista de tags seleccionados -->
+                <div class="flex flex-wrap gap-2 mt-2">
+                  <ng-container
+                    *ngFor="
+                      let tag of selectedProductForm.get('tags')?.value;
+                      trackBy: trackByFn
+                    "
+                  >
+                    <div
+                      class="flex items-center bg-[#3a5a40]/60 rounded-[4px] px-2 py-1"
+                    >
+                      <span class="text-sm text-white">{{ tag.name }}</span>
+                      <!-- Botón para remover el tag -->
+                      <button
+                        type="button"
+                        (click)="removeTag(tag)"
+                        class="ml-2 text-red-500"
+                      >
+                        <lucide-icon name="x" class="w-4 h-4"></lucide-icon>
+                      </button>
+                    </div>
+                  </ng-container>
+                </div>
+              </div>
+
+              <div class="mb-4">
+                <label
+                  for="description"
+                  class="block text-sm font-medium text-gray-700"
+                  >Descripción</label
+                >
+                <textarea
+                  id="description"
+                  formControlName="description"
+                  placeholder="Descripción"
+                  class="p-2 w-full border border-gray-300 rounded-[4px] focus:outline-none focus:ring-2 focus:ring-[#A2E100]/20 resize-none h-32"
+                ></textarea>
+              </div>
+            </div>
+
+            <!-- Columna 3: Peso y Tags -->
+            <div class="flex flex-col w-full lg:w-1/4 sm:pl-8">
+              <!-- <div class="mb-4">
+                <label
+                  for="weight"
+                  class="block text-sm font-medium text-gray-700"
+                  >Peso</label
+                >
+                <div class="flex">
+                  <input
+                    id="weight"
+                    type="text"
+                    formControlName="weight"
+                    placeholder="Weight"
+                    class="p-2 w-full border border-gray-300 rounded-l-[4px] focus:outline-none focus:ring-2 focus:ring-[#A2E100]/20"
+                  />
+                  <span
+                    class="inline-flex items-center px-3 border border-l-0 border-gray-300 rounded-r-[4px] bg-gray-50"
+                    >lbs.</span
+                  >
+                </div>
+              </div> -->
+              <div class="flex flex-col">
+                <div class="mb-4 flex-1">
+                  <label
+                    for="stock"
+                    class="block text-sm font-medium text-gray-700"
+                    >Stock</label
+                  >
+                  <input
+                    id="stock"
+                    type="number"
+                    formControlName="stock"
+                    placeholder="Stock"
+                    class="p-2 w-full border border-gray-300 rounded-[4px] focus:outline-none focus:ring-2 focus:ring-[#A2E100]/20"
+                  />
+                </div>
+                <div class="mb-4 flex-1">
+                  <label
+                    for="maxPurchasePerUser"
+                    class="block text-sm font-medium text-gray-700"
+                    >Compra Máxima</label
+                  >
+                  <input
+                    id="maxPurchasePerUser"
+                    type="number"
+                    formControlName="maxPurchasePerUser"
+                    placeholder="Compra Máxima"
+                    class="p-2 w-full border border-gray-300 rounded-[4px] focus:outline-none focus:ring-2 focus:ring-[#A2E100]/20"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <!-- Columna 2: Precios y costos -->
+            <div class="flex flex-col w-full lg:w-1/4 sm:pl-8">
+              <div class="mb-4">
+                <label
+                  for="cost"
+                  class="block text-sm font-medium text-gray-700"
+                  >Costo</label
+                >
+                <div class="flex">
+                  <span
+                    class="inline-flex items-center px-3 border border-r-0 border-gray-300 rounded-l-[4px] bg-gray-50"
+                    >$</span
+                  >
+                  <input
+                    id="cost"
+                    type="text"
+                    formControlName="cost"
+                    placeholder="Cost"
+                    class="p-2 w-full border border-gray-300 rounded-r-[4px] focus:outline-none focus:ring-2 focus:ring-[#A2E100]/20"
+                  />
+                </div>
+              </div>
+              <div class="mb-4">
+                <label
+                  for="basePrice"
+                  class="block text-sm font-medium text-gray-700"
+                  >Precio base</label
+                >
+                <div class="flex">
+                  <span
+                    class="inline-flex items-center px-3 border border-r-0 border-gray-300 rounded-l-[4px] bg-gray-50"
+                    >$</span
+                  >
+                  <input
+                    id="basePrice"
+                    type="text"
+                    formControlName="basePrice"
+                    placeholder="Base Price"
+                    class="p-2 w-full border border-gray-300 rounded-r-[4px] focus:outline-none focus:ring-2 focus:ring-[#A2E100]/20"
+                  />
+                </div>
+              </div>
+              <div class="mb-4">
+                <label
+                  for="taxPercent"
+                  class="block text-sm font-medium text-gray-700"
+                  >Impuesto</label
+                >
+                <div class="flex">
+                  <input
+                    id="taxPercent"
+                    type="number"
+                    formControlName="taxPercent"
+                    placeholder="Tax"
+                    class="p-2 w-full border border-gray-300 rounded-l-[4px] focus:outline-none focus:ring-2 focus:ring-[#A2E100]/20"
+                  />
+                  <span
+                    class="inline-flex items-center px-3 border border-l-0 border-gray-300 rounded-r-[4px] bg-gray-50"
+                    >%</span
+                  >
+                </div>
+              </div>
+              <div class="mb-4">
+                <label
+                  for="price"
+                  class="block text-sm font-medium text-gray-700"
+                  >Precio</label
+                >
+                <div class="flex">
+                  <input
+                    id="price"
+                    type="text"
+                    formControlName="price"
+                    placeholder="Price"
+                    class="p-2 w-full border border-gray-300 rounded-l-[4px] focus:outline-none focus:ring-2 focus:ring-[#A2E100]/20"
+                    readonly
+                  />
+                  <span
+                    class="inline-flex items-center px-3 border border-l-0 border-gray-300 rounded-r-[4px] bg-gray-50"
+                    >$</span
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Acciones del formulario -->
+        <div
+          class="flex items-center justify-between w-full border-t px-8 py-4"
         >
-          <td class="p-3">#{{ product.orderNumber }}</td>
-          <td class="p-3">{{ product.name }}</td>
-          <td class="p-3">{{ product.category }}</td>
-          <td class="p-3">{{ product.price | currency }}</td>
-          <td class="p-3">{{ product.stock }}</td>
-          <td class="p-3">
+          <button
+            type="button"
+            class="px-4 py-2 bg-red-500/80 text-white rounded-[4px]"
+            (click)="deleteSelectedProduct()"
+          >
+            Eliminar
+          </button>
+          <div class="flex items-center">
             <button
-              class="bg-blue-500 text-white px-3 py-1 rounded text-sm"
-              (click)="editProduct(product)"
+              type="button"
+              class="min-w-[97px] px-4 py-2 bg-[#3a5a40]/80 text-white rounded-[4px] shadow hover:bg-[#3a5a40]/80 focus:outline-none transition flex items-center justify-center disabled:bg-[#3a5a40]/40"
+              (click)="
+                index === 0 && isNewProduct
+                  ? saveProduct()
+                  : updateSelectedProduct()
+              "
+              [disabled]="isLoading"
             >
-              Editar
+              @if (isLoading) {
+              <app-loader [size]="'15px'"></app-loader>
+              } @else {
+              {{ index === 0 && isNewProduct ? "Crear" : "Actualizar" }}
+              }
             </button>
-            <button
-              class="bg-red-500 text-white px-3 py-1 rounded text-sm"
-              (click)="deleteProduct(product)"
-            >
-              Eliminar
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table> -->
-  </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </ng-template>
 </div>

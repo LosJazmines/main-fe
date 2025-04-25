@@ -6,6 +6,8 @@ import { Router, RouterModule } from '@angular/router';
 import { PersonalDataEditComponent } from '../forms/personal-data-edit/personal-data-edit.component';
 import { MyAddressesEditComponent } from '../forms/my-addresses-edit/my-addresses-edit.component';
 import { Dialog } from '@angular/cdk/dialog';
+import { OrdersService } from '@core/services/orders.service';
+import { Order } from '@core/models/order.model';
 
 @Component({
   selector: 'app-profile',
@@ -17,9 +19,26 @@ import { Dialog } from '@angular/cdk/dialog';
 export class ProfileComponent {
   _router = inject(Router);
   _dialog = inject(Dialog);
+  ordersService = inject(OrdersService);
+  orders: Order[] = [];
 
-  toGoToOrderDetail() {
-    this._router.navigate(['/order/1']);
+  constructor() {
+    this.loadOrders();
+  }
+
+  loadOrders() {
+    this.ordersService.getOrders().subscribe({
+      next: (orders: Order[]) => {
+        this.orders = orders;
+      },
+      error: (error: Error) => {
+        console.error('Error loading orders:', error);
+      }
+    });
+  }
+
+  toGoToOrderDetail(orderId: string) {
+    this._router.navigate(['/orders', orderId]);
   }
 
   openDialogMyAddressesEdit(): void {

@@ -9,6 +9,8 @@ import { Store } from '@ngrx/store';
 import { selectIsRightSidebarOpen } from './@shared/components/sidebars/right-sidebar/store/selectors/right-sidebar.selectors';
 import { selectIsLeftSidebarOpen } from './@shared/components/sidebars/left-sidebar/store/selectors/left-sidebar.selectors';
 import { toggleLeftSidebar } from './@shared/components/sidebars/left-sidebar/store/actions/left-sidebar.actions';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ToastrModule } from 'ngx-toastr';
 
 import { toggleRightSidebar } from './@shared/components/sidebars/right-sidebar/store/actions/right-sidebar.actions';
 import { LeftSidebarFiltersComponent } from './@shared/components/sidebars/left-sidebar-filters/left-sidebar-filters.component';
@@ -17,6 +19,7 @@ import { TokenService } from './@core/services/token.service';
 import * as userActions from './@shared/store/actions/user.actions';
 import { toggleLeftSidebarFilters } from '@shared/components/sidebars/left-sidebar-filters/store/actions/left-sidebar-filters.actions';
 import { selectIsLeftSidebarFiltersOpen } from '@shared/components/sidebars/left-sidebar-filters/store/selectors/left-sidebar-filters.selectors';
+import { SplashScreenComponent } from '@shared/components/splash-screen/splash-screen.component';
 
 @Component({
   selector: 'app-root',
@@ -28,6 +31,7 @@ import { selectIsLeftSidebarFiltersOpen } from '@shared/components/sidebars/left
     RightSidebarComponent,
     LeftSidebarComponent,
     LeftSidebarFiltersComponent,
+    SplashScreenComponent
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
@@ -63,7 +67,7 @@ export class AppComponent implements OnInit {
 
   private checkLoginStatus() {
     const token = this._tokenService.getToken();
-    console.log(token);
+    console.log({token});
 
     if (token) {
       this._authService
@@ -75,6 +79,7 @@ export class AppComponent implements OnInit {
 
             // Almacenar el token
             this._tokenService.setToken(response.token);
+            console.log('response', response);
 
             // Establecer el usuario actual en el estado
             this.store.dispatch(

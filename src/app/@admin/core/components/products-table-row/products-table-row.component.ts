@@ -6,6 +6,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { LucideModule } from '../../../../@shared/lucide/lucide.module';
 import { SearchModernoReactiveModule } from '../search-moderno-reactive/search-moderno-reactive.module';
 import { MatMenuTrigger } from '@angular/material/menu';
+import { ProductStateComponent } from './product-state/product-state.component';
+import { ProductTypesComponent } from './product-types/product-types.component';
 
 @Component({
   selector: 'app-products-table-row',
@@ -17,6 +19,8 @@ import { MatMenuTrigger } from '@angular/material/menu';
     ReactiveFormsModule,
     LucideModule,
     SearchModernoReactiveModule,
+    ProductStateComponent,
+    ProductTypesComponent
   ],
   templateUrl: './products-table-row.component.html',
   styleUrl: './products-table-row.component.scss',

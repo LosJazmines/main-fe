@@ -1,0 +1,44 @@
+<div class="min-w-[360px] bg-white overflow-hidden">
+  <!-- Header con fondo -->
+  <div class="relative h-32 bg-[#3a5a40]/20 backdrop-blur-md">
+    <!-- Botón de cierre -->
+    <div class="absolute top-2 right-2">
+      <button
+        mat-icon-button
+        aria-label="menu"
+        (click)="close.emit()"
+        class="!text-white"
+      >
+        <lucide-icon name="x"></lucide-icon>
+      </button>
+    </div>
+  </div>
+  <!-- Contenido principal -->
+  <div class="p-4">
+    <div class="flex items-center justify-between mb-6">
+      <div class="flex items-center gap-3">
+        <div
+          class="w-10 h-10 bg-[#3a5a40]/80 rounded-full flex items-center justify-center text-white font-bold"
+        >
+          <span>{{ getInitials() }}</span>
+        </div>
+        <div>
+          <h2 class="text-lg font-medium text-gray-900">{{ user?.username }}</h2>
+          <p class="text-sm text-gray-500">{{ user?.email }}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- User Form -->
+    <app-user-form
+      [user]="user"
+      (formSubmit)="onFormSubmit($event)"
+      (formCancel)="close.emit()"
+    ></app-user-form>
+
+    <!-- Error message -->
+    <div *ngIf="error" class="mt-4 p-2 bg-red-100 text-red-700 rounded text-center">
+      {{ error }}
+    </div>
+  </div>
+</div>

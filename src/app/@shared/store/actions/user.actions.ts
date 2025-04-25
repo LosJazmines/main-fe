@@ -28,3 +28,5 @@ export const decreaseQuantity = createAction(
   '[User] Decrease Quantity',
   props<{ productId: string }>()
 );
+
+export const clearCart = createAction('[User] Clear Cart');

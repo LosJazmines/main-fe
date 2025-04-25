@@ -1,4 +1,21 @@
-<div class="container">
+<app-header></app-header>
+<div
+  class="max-w-[1200px] mx-auto h-full min-h-[calc(100vh-60px)] flex justify-between gap-4"
+>
+  <div
+    class="min-w-[250px] min-h-full hidden lg:block pt-2 bg-[#3a5a40]/80 !text-white"
+  >
+    <app-menu
+      [items]="menuItems"
+      [userRole]="userRole"
+      [onItemClick]="closeLeftDrawer.bind(this)"
+    ></app-menu>
+  </div>
+  <div class="w-full min-h-full px-4 xl:px-0">
+    <router-outlet></router-outlet>
+  </div>
+</div>
+<!-- <div class="container">
   <app-sidebar
     [isHiddenHeader]="true"
     [headerTitle]="'Nombre de la Organizadora'"
@@ -14,10 +31,10 @@
   </app-sidebar>
 
   <div class="rigth">
-    <app-header></app-header>
+    <apph-eader></apph-eader>
 
     <div class="conten">
       <router-outlet></router-outlet>
     </div>
   </div>
-</div>
+</div> -->

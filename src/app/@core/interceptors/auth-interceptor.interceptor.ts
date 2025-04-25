@@ -1,45 +1,50 @@
-import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
+import { HttpInterceptorFn, HttpRequest, HttpHandlerFn, HttpErrorResponse } from '@angular/common/http';
 import { inject } from '@angular/core';
+import { TokenService } from '../services/token.service';
 import { catchError, throwError } from 'rxjs';
-import { Router } from '@angular/router';
 
-export const authInterceptor: HttpInterceptorFn = (req, next) => {
+export const authInterceptor: HttpInterceptorFn = (req: HttpRequest<unknown>, next: HttpHandlerFn) => {
+  const tokenService = inject(TokenService);
 
-    // const _authStorage = inject(AuthStorageService);
-  
-    // const authService = inject(AuthService);
+  // Skip token for public endpoints
+  if (isPublicEndpoint(req.url)) {
+    return next(req);
+  }
 
-    const _router = inject(Router);
+  // Get token safely
+  const token = tokenService.getToken();
+  if (!token) {
+    return next(req);
+  }
 
-
-
-    const idToken = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijc3NDdkNTdmLTZiNDUtNDNjZS1hODQwLWVjMTFmNTQzZDVlMSIsImlhdCI6MTcxMDk4NzQ2MCwiZXhwIjoxNzExMDczODYwfQ.hQkFR59U6sBcqc_mviugpciSkym2mfDkN-wkbJqjFZI'
-
-    let newReq = req.clone();
-
-    if (idToken) {
-        newReq = req.clone({
-            headers: req.headers.set('Authorization', idToken),
-        });
+  // Clone request and add token
+  const authReq = req.clone({
+    setHeaders: {
+      Authorization: `Bearer ${token}`
     }
+  });
 
-
-    return next(newReq).pipe(
-      catchError((error) =>
-      {
-          // Catch "401 Unauthorized" responses
-          if ( error instanceof HttpErrorResponse && error.status === 401 )
-          {
-              // Sign out
-            //   authService.signOut();
-            //   _authStorage.singOut();
-              _router.navigate(['/sign-in']);
-
-              // Reload the app
-              location.reload();
-          }
-
-          return throwError(error);
-      }),
+  return next(authReq).pipe(
+    catchError((error: HttpErrorResponse) => {
+      if (error.status === 401) {
+        tokenService.removeToken();
+      }
+      return throwError(() => error);
+    })
   );
 };
+
+function isPublicEndpoint(url: string): boolean {
+  const publicEndpoints = [
+    '/api/public/store/categories',
+    '/api/public/store/tags',
+    '/api/public/store/categories/:uuid/tags',
+    '/api/public/store/config',
+    '/auth/login',
+    '/auth/register'
+  ];
+  return publicEndpoints.some(endpoint => {
+    const pattern = endpoint.replace(':uuid', '[^/]+');
+    return new RegExp(pattern).test(url);
+  });
+}

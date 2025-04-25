@@ -1,82 +1,143 @@
-<div class="w-full lg:w-[360px] bg-white rounded-[4px] shadow-lg">
-  <div
-    class="w-full h-full flex flex-col p-4"
-    [ngClass]="{
-      'min-h-[147px]': shoppingCart().length === 0,
-      'min-h-[295px]': shoppingCart().length !== 0
-    }"
-  >
-    <div class="w-full h-full">
-      <div class="border-b border-black/10">
-        <h2
-          class="text-2xl font-bold pb-4 !font-playfair"
-          [ngClass]="{
-            'text-black/30': shoppingCart().length === 0,
-            'text-gray-800': shoppingCart().length !== 0
-          }"
-        >
-          Resumen de Compra
-        </h2>
-      </div>
-      @if (shoppingCart().length !== 0 ) {
-      <div class="p-2">
-        <div class="flex gap-2 justify-between items-center">
-          <p class="pb-2 text-base font-semibold font-sans text-gray-800">
-            Productos <span>({{ totalCantidadProductos() }})</span>
-          </p>
-          <p class="pb-2 text-base font-semibold font-sans text-gray-800">
-            ${{ totalPrecioCarrito() | number : "1.2-2" }}
-          </p>
+<!-- Mensaje de carrito vacío -->
+@if (!shoppingCart() || shoppingCart().length === 0) {
+  <div class="w-full lg:w-[360px] bg-white rounded-[4px] shadow-lg">
+    <div class="w-full h-full flex flex-col p-4 min-h-[147px]">
+      <div class="w-full h-full">
+        <div class="border-b border-black/10">
+          <h2 class="text-2xl font-bold pb-4 !font-playfair text-black/30">
+            Resumen de compra
+          </h2>
         </div>
-        <div class="flex gap-2 justify-between items-center">
-          <p class="pb-2 text-base font-semibold font-sans text-gray-800">
-            Envío
-          </p>
-          <p class="pb-2 text-base font-semibold font-sans text-gray-800">-</p>
-        </div>
-        <div class="flex gap-2 justify-between items-center mt-4">
-          <p class="pb-2 text-base font-semibold font-sans text-gray-800">
-            Total :
-          </p>
-          <p class="pb-2 text-base font-semibold font-sans text-gray-800">
-            ${{ totalCarrito() | number : "1.2-2" }}
-          </p>
+        <div class="h-full p-2 flex flex-col gap-2">
+          <div class="flex items-center gap-3">
+            <!-- <i-lucide name="shopping-cart" class="w-16 h-16 text-black/30"></i-lucide> -->
+            <div>
+              <p class="text-base font-semibold text-black/30">
+                Aquí verás los importes de tu compra una vez que agregues productos.
+              </p>
+            </div>
+          </div>
+          <!-- <a routerLink="/tienda" class="text-[#3a5a40] hover:underline text-sm">Descubrir productos</a> -->
         </div>
       </div>
-      } @else {
-      <div class="h-full p-2 flex justify-center items-center">
-        <p class="text-base font-semibold font-sans text-black/30">
-          Aquí verás los importes de tu compra una vez que agregues productos.
-        </p>
-      </div>
-      }
     </div>
-    @if (shoppingCart().length !== 0 ) {
-    <div
-      class="w-full h-full flex-1 flex flex-col gap-4 justify-between items-end"
-    >
-      @if( !IsButtom() ) {
-      <button
-        (click)="onContinuarCompra()"
-        type="submit"
-        class="text-[16px] bg-[#3a5a40]/80 text-white rounded-[4px] border-none hover:bg-[#3a5a40]/90 transition duration-300 shadow-md flex items-center justify-center w-full py-2"
-      >
-        Continuar compra
-      </button>
-      } @if (IsButtom()) {
-      <button
-        class="bg-[#009ee3] hover:bg-[#008cba] active:bg-[#007bb5] cursor-pointer text-white text-[16px] border-none rounded-[4px] transition-colors duration-300 shadow-md flex items-center justify-center w-full py-2"
-        (click)="pagar()"
-      >
-        <img
-          class="w-8 h-8 mr-4"
-          src="../../../../assets/icons/mercado-pago.svg"
-          alt="Mercado Pago"
-        />
-        Pagar con Mercado Pago
-      </button>
-      }
-    </div>
-    }
   </div>
-</div>
+} @else {
+  <div class="w-full lg:w-[360px] bg-white rounded-[4px] shadow-lg">
+    <div
+      class="w-full h-full flex flex-col p-4"
+      [ngClass]="{
+        'min-h-[147px]': shoppingCart().length === 0,
+        'min-h-[295px]': shoppingCart().length !== 0
+      }"
+    >
+      <div class="w-full h-full">
+        <div class="border-b border-black/10">
+          <h2
+            class="text-2xl font-bold pb-4 !font-playfair"
+            [ngClass]="{
+              'text-black/30': shoppingCart().length === 0,
+              'text-gray-800': shoppingCart().length !== 0
+            }"
+          >
+            Resumen de Compra
+          </h2>
+        </div>
+
+        @if (shoppingCart().length === 0) {
+          <div class="h-full p-2 flex justify-center items-center">
+            <p class="text-base font-semibold font-sans text-black/30">
+              Aquí verás los importes de tu compra una vez que agregues productos.
+            </p>
+          </div>
+        } @else {
+          <div class="p-2">
+            <!-- Productos y total -->
+            <div class="flex gap-2 justify-between items-center">
+              <p class="pb-2 text-base font-semibold font-sans text-gray-800">
+                Productos <span>({{ totalCantidadProductos() }})</span>
+              </p>
+              <p class="pb-2 text-base font-semibold font-sans text-gray-800">
+                ${{ totalPrecioCarrito() | number : "1.2-2" }}
+              </p>
+            </div>
+
+            <!-- Envío -->
+            <div class="flex gap-2 justify-between items-center">
+              <p class="pb-2 text-base font-semibold font-sans text-gray-800">
+                Envío
+              </p>
+              <p class="pb-2 text-base font-semibold font-sans text-gray-800">-</p>
+            </div>
+
+            <!-- Total -->
+            <div class="flex gap-2 justify-between items-center mt-4">
+              <p class="pb-2 text-base font-semibold font-sans text-gray-800">
+                Total :
+              </p>
+              <p class="pb-2 text-base font-semibold font-sans text-gray-800">
+                ${{ totalCarrito() | number : "1.2-2" }}
+              </p>
+            </div>
+
+            @if (IsButtom()) {
+              <!-- Método de pago -->
+              <div class="flex flex-col gap-2 mt-4">
+                <label class="text-gray-700 font-medium">Método de pago</label>
+                <div class="flex flex-col gap-2">
+                  <label class="flex items-center gap-2 p-2 border rounded cursor-pointer">
+                    <input type="radio" [(ngModel)]="paymentMethod" value="mercado-pago" name="paymentMethod">
+                    <img src="assets/icons/mercado-pago.svg" alt="Mercado Pago" class="h-6">
+                    <span>Pagar con Mercado Pago</span>
+                  </label>
+                  <label class="flex items-center gap-2 p-2 border rounded cursor-pointer">
+                    <input type="radio" [(ngModel)]="paymentMethod" value="web" name="paymentMethod">
+                    <i-lucide name="credit-card"></i-lucide>
+                    <span>Pagar más tarde</span>
+                  </label>
+                </div>
+              </div>
+
+              <!-- Botones de pago -->
+              <div class="w-full mt-4">
+                @if (paymentMethod === 'mercado-pago') {
+                  <button
+                    class="bg-[#009ee3] hover:bg-[#008cba] active:bg-[#007bb5] cursor-pointer text-white text-[16px] border-none rounded-[4px] transition-colors duration-300 shadow-md flex items-center justify-center w-full py-2"
+                    (click)="pagar()"
+                    [disabled]="!(canCreateOrder$ | async)"
+                  >
+                    <img
+                      class="w-8 h-8 mr-4"
+                      src="../../../../assets/icons/mercado-pago.svg"
+                      alt="Mercado Pago"
+                    />
+                    Pagar con Mercado Pago
+                  </button>
+                } @else {
+                  <button
+                    class="text-[16px] bg-[#3a5a40]/80 text-white rounded-[4px] border-none hover:bg-[#3a5a40]/90 transition duration-300 shadow-md flex items-center justify-center w-full py-2"
+                    (click)="pagar()"
+                    [disabled]="!(canCreateOrder$ | async)"
+                  >
+                    Crear Orden
+                  </button>
+                }
+              </div>
+            } @else {
+              <!-- Botón continuar compra -->
+              <div class="w-full mt-4">
+                <button
+                  (click)="onContinuarCompra()"
+                  type="submit"
+                  class="text-[16px] bg-[#3a5a40]/80 text-white rounded-[4px] border-none hover:bg-[#3a5a40]/90 transition duration-300 shadow-md flex items-center justify-center w-full py-2"
+                >
+                  Continuar compra
+                </button>
+              </div>
+            }
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+}

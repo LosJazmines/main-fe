@@ -127,6 +127,7 @@ export class AddOrderComponent implements OnInit {
   }
 
   onStep3Completed(destinatarioData: any) {
+    console.log('Comentario recibido en step3:', destinatarioData.comentarios);
     console.log({ destinatarioData });
 
     this.orderData.update((prev) => ({
@@ -140,8 +141,11 @@ export class AddOrderComponent implements OnInit {
       comentarios: destinatarioData.comentarios,
       latitud: destinatarioData.latitud,
       longitud: destinatarioData.longitud,
+      metodoEnvio: destinatarioData.metodoEnvio || 'DELIVERY',
+      costoEnvio: 'gratis'
     }));
 
+    console.log('Comentario guardado en orderData:', this.orderData().comentarios);
     console.log({ orderData3: this.orderData() });
     this.goToStep(3);
   }
@@ -183,17 +187,19 @@ export class AddOrderComponent implements OnInit {
       pais: this.orderData().pais,
       telefono: this.orderData().telefono,
       telefonoMovil: this.orderData().telefonoMovil,
-      comentarios: this.orderData().comentarios,
+      comentarios: this.orderData().comentarios || null,
       latitud: this.orderData().latitud,
       longitud: this.orderData().longitud,
       costoEnvio: this.orderData().costoEnvio,
       metodoEnvio: this.orderData().metodoEnvio,
+      metododepago: this.orderData().metododepago
     };
 
+    console.log('Comentario en el body de la orden:', body.comentarios);
     console.log('Orden finalizada:', body);
-    // Aquí puedes hacer la petición HTTP para enviar la orden
-    this.orderService.createOrder(body).subscribe(
-      (response) => {
+    
+    this.orderService.createOrder(body).subscribe({
+      next: (response) => {
         console.log('Respuesta de la creación de la orden:', response);
         this._messageService.showInfo(
           'Orden creada exitosamente',
@@ -203,16 +209,17 @@ export class AddOrderComponent implements OnInit {
         this.dialogRef.close({ success: true });
         this.isLoading.set(false);
       },
-      (error) => {
-        console.error('Error al crear producto:', error);
+      error: (error) => {
+        console.error('Error al crear la orden:', error);
+        const errorMessage = error.message || 'Error al crear la orden';
         this._messageService.showError(
-          'Error al crear producto',
+          errorMessage,
           'bottom right',
           5000
         );
         this.isLoading.set(false);
       }
-    );
+    });
   }
   // Función para cerrar el modal
   closeModal() {

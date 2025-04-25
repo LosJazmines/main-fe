@@ -7,7 +7,7 @@
 >
   <div class="content mx-4 xl:m-0">
     <div class="logo-container">
-      <div class="flex md:hidden justify-end">
+      <div class="flex lg:hidden justify-end">
         <button
           mat-icon-button
           aria-label="menu"
@@ -21,7 +21,7 @@
         <p class="text-start font-playfair text-2xl">Los Jazmines</p>
       </div> -->
       <app-logo></app-logo>
-      <div class="hidden md:flex justify-start items-center">
+      <div class="hidden lg:flex justify-start items-center">
         <div class="link-container">
           <div class="">
             <button
@@ -119,6 +119,21 @@
         </button>
       </div>
       } @if(this.currentUser()?.username){
+
+      <!-- <button
+        mat-icon-button
+        class="relative text-black custom-badge"
+        [routerLink]="['/card-order']"
+        routerLinkActive="router-link-active"
+      >
+        <span
+          class="absolute -top-[-9px] right-[10px] transform translate-x-1/2 -translate-y-1/2 text-white text-xs font-semibold px-2 py-0.5 rounded-full bg-[#3a5a40]/80"
+        >
+          {{ shoppingCartLength() }}
+        </span>
+        <lucide-icon [size]="24" name="bell"></lucide-icon>
+      </button> -->
+
       <div class="cursor-pointer group" (click)="openRightDrawer()">
         <!-- Avatar y nombre de usuario -->
         <div

@@ -1,0 +1,825 @@
+<div class="max-w-7xl mx-auto md:mb-20 mb-10">
+  <h1 class="text-3xl mb-6 text-[#3a5a40] !font-playfair">
+    Store Configuration
+  </h1>
+
+  <div class="text-center p-8 bg-white rounded-lg shadow-sm" *ngIf="loading">
+    <p class="text-gray-600">Loading configuration...</p>
+  </div>
+
+  <div class="text-center p-8 bg-white rounded-lg shadow-sm" *ngIf="error">
+    <p class="text-red-500">{{ error }}</p>
+  </div>
+
+  <div class="grid gap-8" *ngIf="!loading && !error">
+    <!-- Tabs Navigation -->
+    <div class="bg-white p-4 rounded-lg shadow-sm">
+      <div class="border-b border-gray-200">
+        <nav class="-mb-px flex space-x-8" aria-label="Tabs">
+          <button
+            (click)="activeTab = 'banners'"
+            [class]="[
+              activeTab === 'banners'
+                ? 'border-[#3a5a40] text-[#3a5a40]'
+                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300',
+              'whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm flex items-center gap-2'
+            ]"
+          >
+            <lucide-icon name="image" class="w-5 h-5"></lucide-icon>
+            Banners
+          </button>
+          <button
+            (click)="activeTab = 'categories'"
+            [class]="[
+              activeTab === 'categories'
+                ? 'border-[#3a5a40] text-[#3a5a40]'
+                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300',
+              'whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm flex items-center gap-2'
+            ]"
+          >
+            <lucide-icon name="folder" class="w-5 h-5"></lucide-icon>
+            Categories
+          </button>
+          <button
+            (click)="activeTab = 'tags'"
+            [class]="[
+              activeTab === 'tags'
+                ? 'border-[#3a5a40] text-[#3a5a40]'
+                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300',
+              'whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm flex items-center gap-2'
+            ]"
+          >
+            <lucide-icon name="tags" class="w-5 h-5"></lucide-icon>
+            Tags
+          </button>
+        </nav>
+      </div>
+    </div>
+
+    <!-- Banners Section -->
+    <section class="bg-white p-6 rounded-lg shadow-sm" *ngIf="activeTab === 'banners'">
+      <h2 class="text-2xl font-semibold text-gray-700 mb-6">Banners</h2>
+
+      <div class="mb-8">
+        <h3 class="text-xl font-medium text-gray-600 mb-4">Home Banners</h3>
+        <div
+          class="relative w-full h-[400px] mb-4 rounded-lg overflow-hidden bg-gray-100"
+        >
+          <div class="relative h-full flex items-center justify-center">
+            <div
+              class="absolute inset-0 flex items-center justify-center"
+              *ngIf="!storeConfig?.homeBannerImages?.length"
+            >
+              <p class="text-gray-500">No banners uploaded yet</p>
+            </div>
+            <div
+              class="relative h-full w-full flex items-center justify-center"
+              *ngIf="storeConfig?.homeBannerImages?.length"
+            >
+              <div class="relative w-full h-full flex items-center justify-center">
+                <img
+                  [src]="storeConfig?.homeBannerImages?.[currentBannerIndex]?.url"
+                  [alt]="'Banner ' + (currentBannerIndex + 1)"
+                  class="max-w-full max-h-full w-auto h-auto object-contain"
+                />
+              </div>
+              <div class="absolute top-0 right-0 p-2 bg-black/50">
+                <div class="relative">
+                  <button
+                    (click)="toggleBannerMenu()"
+                    class="p-2 text-white hover:text-amber-300"
+                  >
+                    <lucide-icon
+                      name="more-vertical"
+                      class="w-5 h-5"
+                    ></lucide-icon>
+                  </button>
+                  <div
+                    class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10"
+                    *ngIf="showBannerMenu"
+                  >
+                    <div class="py-1">
+                      <button
+                        (click)="handleBannerDelete('home', storeConfig?.homeBannerImages?.[currentBannerIndex]?.url || '')"
+                        class="flex items-center w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50"
+                      >
+                        <lucide-icon
+                          name="trash-2"
+                          class="w-4 h-4 mr-2"
+                        ></lucide-icon>
+                        Delete Banner
+                      </button>
+                      <button
+                        (click)="moveBanner('home', currentBannerIndex, 'left')"
+                        class="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                      >
+                        <lucide-icon
+                          name="arrow-left"
+                          class="w-4 h-4 mr-2"
+                        ></lucide-icon>
+                        Move Left
+                      </button>
+                      <button
+                        (click)="
+                          moveBanner('home', currentBannerIndex, 'right')
+                        "
+                        class="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                      >
+                        <lucide-icon
+                          name="arrow-right"
+                          class="w-4 h-4 mr-2"
+                        ></lucide-icon>
+                        Move Right
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="absolute bottom-0 left-0 right-0 p-4 bg-black/50 flex justify-between items-center"
+              >
+                <span class="text-white text-sm"
+                  >Banner {{ currentBannerIndex + 1 }} of
+                  {{ storeConfig?.homeBannerImages?.length || 0 }}</span
+                >
+                <div class="flex gap-2">
+                  <button
+                    (click)="prevBanner()"
+                    [disabled]="currentBannerIndex === 0"
+                    class="p-2 text-white hover:text-amber-300 disabled:opacity-50"
+                  >
+                    <lucide-icon
+                      name="arrow-left"
+                      class="w-5 h-5"
+                    ></lucide-icon>
+                  </button>
+                  <button
+                    (click)="nextBanner()"
+                    [disabled]="
+                      currentBannerIndex ===
+                      (storeConfig?.homeBannerImages?.length || 0) - 1
+                    "
+                    class="p-2 text-white hover:text-amber-300 disabled:opacity-50"
+                  >
+                    <lucide-icon
+                      name="arrow-right"
+                      class="w-5 h-5"
+                    ></lucide-icon>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="mt-4">
+          <div class="mb-4 p-4 bg-gray-50 rounded-lg">
+            <h4 class="text-sm font-medium text-gray-700 mb-2">
+              📐 Tamaño de imagen recomendado:
+            </h4>
+            <div class="text-sm text-gray-600 space-y-1">
+              <p class="font-medium">1920 x 800 px</p>
+              <p class="text-xs text-gray-500">Este tamaño asegura una visualización óptima en:</p>
+              <ul class="text-xs text-gray-500 list-disc list-inside ml-2">
+                <li>Desktop: Se mostrará en su tamaño completo</li>
+                <li>Tablet: Se ajustará automáticamente manteniendo la calidad</li>
+                <li>Mobile: Se adaptará sin perder definición</li>
+              </ul>
+            </div>
+            <p class="text-xs text-gray-500 mt-2">
+              🖼️ Formato: JPG, PNG, o WebP | Resolución: 72 dpi
+            </p>
+          </div>
+          <input
+            type="file"
+            (change)="handleBannerUpload($event, 'home')"
+            accept="image/*"
+            class="hidden"
+            #homeFileInput
+          />
+          <button
+            type="button"
+            class="w-full px-4 py-2 bg-[#3a5a40]/80 text-white rounded-[4px] shadow hover:bg-[#3a5a40]/90 focus:outline-none transition flex items-center justify-center gap-2"
+            (click)="homeFileInput.click()"
+          >
+            Subir banner principal
+            <lucide-icon name="image-up" class="w-5 h-5"></lucide-icon>
+          </button>
+        </div>
+      </div>
+
+      <div>
+        <h3 class="text-xl font-medium text-gray-600 mb-4">Store Banners</h3>
+        <div class="relative w-full h-[200px] mb-4 rounded-lg overflow-hidden bg-gray-100">
+          <div class="relative h-full flex items-center justify-center">
+            <div
+              class="absolute inset-0 flex items-center justify-center"
+              *ngIf="!storeConfig?.storeBannerImages?.length"
+            >
+              <p class="text-gray-500">No banners uploaded yet</p>
+            </div>
+            <div
+              class="relative h-full w-full flex items-center justify-center"
+              *ngIf="storeConfig?.storeBannerImages?.length"
+            >
+              <div class="relative w-full h-full flex items-center justify-center">
+                <img
+                  [src]="storeConfig?.storeBannerImages?.[currentStoreBannerIndex]?.url"
+                  [alt]="'Banner ' + (currentStoreBannerIndex + 1)"
+                  class="max-w-full max-h-full w-auto h-auto object-contain"
+                />
+              </div>
+              <div class="absolute top-0 right-0 p-2 bg-black/50">
+                <div class="relative">
+                  <button
+                    (click)="toggleStoreBannerMenu()"
+                    class="p-2 text-white hover:text-amber-300"
+                  >
+                    <lucide-icon name="more-vertical" class="w-5 h-5"></lucide-icon>
+                  </button>
+                  <div class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10" *ngIf="showStoreBannerMenu">
+                    <div class="py-1">
+                      <button
+                        (click)="handleBannerDelete('store', storeConfig?.storeBannerImages?.[currentStoreBannerIndex]?.url || '')"
+                        class="flex items-center w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50"
+                      >
+                        <lucide-icon name="trash-2" class="w-4 h-4 mr-2"></lucide-icon>
+                        Delete Banner
+                      </button>
+                      <button
+                        (click)="moveBanner('store', currentStoreBannerIndex, 'left')"
+                        class="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                      >
+                        <lucide-icon name="arrow-left" class="w-4 h-4 mr-2"></lucide-icon>
+                        Move Left
+                      </button>
+                      <button
+                        (click)="moveBanner('store', currentStoreBannerIndex, 'right')"
+                        class="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                      >
+                        <lucide-icon name="arrow-right" class="w-4 h-4 mr-2"></lucide-icon>
+                        Move Right
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="absolute bottom-0 left-0 right-0 p-4 bg-black/50 flex justify-between items-center">
+                <span class="text-white text-sm">
+                  Banner {{ currentStoreBannerIndex + 1 }} of {{ storeConfig?.storeBannerImages?.length || 0 }}
+                </span>
+                <div class="flex gap-2">
+                  <button
+                    (click)="prevStoreBanner()"
+                    [disabled]="currentStoreBannerIndex === 0"
+                    class="p-2 text-white hover:text-amber-300 disabled:opacity-50"
+                  >
+                    <lucide-icon name="arrow-left" class="w-5 h-5"></lucide-icon>
+                  </button>
+                  <button
+                    (click)="nextStoreBanner()"
+                    [disabled]="currentStoreBannerIndex === (storeConfig?.storeBannerImages?.length || 0) - 1"
+                    class="p-2 text-white hover:text-amber-300 disabled:opacity-50"
+                  >
+                    <lucide-icon name="arrow-right" class="w-5 h-5"></lucide-icon>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="mt-4">
+          <div class="mb-4 p-4 bg-gray-50 rounded-lg">
+            <h4 class="text-sm font-medium text-gray-700 mb-2">
+              📐 Tamaño de imagen recomendado:
+            </h4>
+            <div class="text-sm text-gray-600 space-y-1">
+              <p class="font-medium">1200 x 200 px</p>
+              <p class="text-xs text-gray-500">Este tamaño es ideal para banners de tienda:</p>
+              <ul class="text-xs text-gray-500 list-disc list-inside ml-2">
+                <li>Perfecto para secciones de tienda y categorías</li>
+                <li>Se adapta bien a todos los dispositivos</li>
+                <li>Mantiene una buena relación calidad/tamaño</li>
+              </ul>
+            </div>
+            <p class="text-xs text-gray-500 mt-2">
+              🖼️ Formato: JPG, PNG, o WebP | Resolución: 72 dpi
+            </p>
+          </div>
+          <input
+            type="file"
+            (change)="handleBannerUpload($event, 'store')"
+            accept="image/*"
+            class="hidden"
+            #storeFileInput
+          />
+          <button
+            type="button"
+            class="w-full px-4 py-2 bg-[#3a5a40]/80 text-white rounded-[4px] shadow hover:bg-[#3a5a40]/90 focus:outline-none transition flex items-center justify-center gap-2"
+            (click)="storeFileInput.click()"
+          >
+            Subir banner de tienda
+            <lucide-icon name="image-up" class="w-5 h-5"></lucide-icon>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Categories Section -->
+    <section class="bg-white p-6 rounded-lg shadow-sm" *ngIf="activeTab === 'categories'">
+      <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-semibold text-gray-700">Categories</h2>
+        <div class="flex items-center gap-4">
+          <div class="flex items-center gap-2">
+            <label class="text-sm font-medium text-gray-700">Show:</label>
+            <select 
+              [(ngModel)]="showActiveCategories"
+              (change)="loadData()"
+              class="p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#3a5a40]/50"
+            >
+              <option [ngValue]="true">Active</option>
+              <option [ngValue]="false">Inactive</option>
+            </select>
+          </div>
+          <button
+            (click)="showNewCategoryDialog = true"
+            class="bg-[#3a5a40]/80 text-white px-4 py-2 rounded hover:bg-[#3a5a40]/90 transition-colors flex items-center gap-2"
+          >
+            <lucide-icon name="plus" class="w-5 h-5"></lucide-icon>
+            New Category
+          </button>
+        </div>
+      </div>
+      
+      <!-- Search Input -->
+      <div class="mb-6">
+        <div class="relative">
+          <input
+            type="text"
+            [(ngModel)]="categorySearchQuery"
+            (ngModelChange)="onCategorySearchChange()"
+            placeholder="Search categories by name, slug, or value..."
+            class="w-full p-3 pl-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#3a5a40]/50 focus:border-transparent"
+          />
+          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <lucide-icon name="search" class="w-5 h-5 text-gray-400"></lucide-icon>
+          </div>
+        </div>
+      </div>
+      
+      <div class="grid grid-cols-1 gap-4">
+        <div
+          *ngFor="let category of paginatedCategories"
+          class="group p-6 border border-gray-200 rounded-lg hover:border-[#3a5a40]/50 transition-colors bg-white shadow-sm"
+        >
+          <div class="flex flex-col">
+            <div class="flex justify-between items-start mb-4">
+              <div class="flex flex-col gap-1">
+                <div class="flex items-center gap-3">
+                  <span class="font-medium text-xl text-gray-800">{{ category.name }}</span>
+                  <span class="text-sm px-2 py-1 bg-gray-100 rounded-full text-gray-600">
+                    Category
+                  </span>
+                </div>
+                <div class="flex items-center gap-2 text-sm text-gray-500">
+                  <lucide-icon name="hash" class="w-4 h-4"></lucide-icon>
+                  <span>Slug: {{ category.slug }}</span>
+                </div>
+              </div>
+              <div class="flex items-center gap-3">
+                <div class="flex items-center gap-2">
+                  <span class="text-sm text-gray-500">Status:</span>
+                  <button
+                    (click)="toggleCategoryActive(category)"
+                    class="p-2 rounded-full transition-colors"
+                    [class.bg-green-100]="category.isActive"
+                    [class.bg-gray-100]="!category.isActive"
+                    title="Toggle active status"
+                  >
+                    <lucide-icon 
+                      [name]="category.isActive ? 'check' : 'x'" 
+                      class="w-4 h-4"
+                      [class.text-green-500]="category.isActive"
+                      [class.text-gray-500]="!category.isActive"
+                    ></lucide-icon>
+                  </button>
+                </div>
+                <div class="flex gap-2">
+                  <button
+                    (click)="editCategory(category)"
+                    class="p-2 text-amber-600 hover:text-amber-700 transition-colors rounded-full hover:bg-amber-50"
+                    title="Edit category"
+                  >
+                    <lucide-icon name="pencil" class="w-5 h-5"></lucide-icon>
+                  </button>
+                  <button
+                    (click)="deleteCategory(category.uuid)"
+                    class="p-2 text-red-600 hover:text-red-700 transition-colors rounded-full hover:bg-red-50"
+                    title="Delete category"
+                  >
+                    <lucide-icon name="trash-2" class="w-5 h-5"></lucide-icon>
+                  </button>
+                </div>
+              </div>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-4 mt-4">
+              <div class="flex items-center gap-2 p-3 bg-gray-50 rounded-lg">
+                <lucide-icon name="tag" class="w-5 h-5 text-gray-500"></lucide-icon>
+                <div class="flex flex-col">
+                  <span class="text-xs text-gray-500">Value</span>
+                  <span class="text-sm font-medium text-gray-700">{{ category.value || 'No value' }}</span>
+                </div>
+              </div>
+              <div class="flex items-center gap-2 p-3 bg-gray-50 rounded-lg">
+                <lucide-icon name="info" class="w-5 h-5 text-gray-500"></lucide-icon>
+                <div class="flex flex-col">
+                  <span class="text-xs text-gray-500">ID</span>
+                  <span class="text-sm font-medium text-gray-700">{{ category.uuid }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Empty State -->
+        <div
+          *ngIf="!paginatedCategories?.length"
+          class="col-span-full p-8 text-center bg-gray-50 rounded-lg"
+        >
+          <lucide-icon name="folder-open" class="w-12 h-12 mx-auto text-gray-400 mb-4"></lucide-icon>
+          <h3 class="text-lg font-medium text-gray-700 mb-2">
+            {{ categorySearchQuery ? 'No categories found' : 'No categories yet' }}
+          </h3>
+          <p class="text-gray-500 mb-4">
+            {{ categorySearchQuery ? 'Try adjusting your search' : 'Start by creating your first category' }}
+          </p>
+          <button
+            (click)="showNewCategoryDialog = true"
+            class="bg-[#3a5a40]/80 text-white px-4 py-2 rounded hover:bg-[#3a5a40]/90 transition-colors flex items-center gap-2 mx-auto"
+          >
+            <lucide-icon name="plus" class="w-5 h-5"></lucide-icon>
+            Create Category
+          </button>
+        </div>
+      </div>
+
+      <!-- Pagination -->
+      <div class="mt-6 flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <span class="text-sm text-gray-700">Show</span>
+          <select
+            [(ngModel)]="categoriesPerPage"
+            (change)="onCategoriesPerPageChange()"
+            class="p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#3a5a40]/50"
+          >
+            <option value="4">4</option>
+            <option value="8">8</option>
+            <option value="12">12</option>
+            <option value="16">16</option>
+          </select>
+          <span class="text-sm text-gray-700">per page</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <button
+            (click)="prevCategoriesPage()"
+            [disabled]="currentCategoriesPage === 1"
+            class="p-2 rounded-md border border-gray-300 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <lucide-icon name="chevron-left" class="w-5 h-5"></lucide-icon>
+          </button>
+          <span class="text-sm text-gray-700">
+            Page {{ currentCategoriesPage }} of {{ totalCategoriesPages }}
+          </span>
+          <button
+            (click)="nextCategoriesPage()"
+            [disabled]="currentCategoriesPage === totalCategoriesPages"
+            class="p-2 rounded-md border border-gray-300 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <lucide-icon name="chevron-right" class="w-5 h-5"></lucide-icon>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tags Section -->
+    <section class="bg-white p-6 rounded-lg shadow-sm" *ngIf="activeTab === 'tags'">
+      <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-semibold text-gray-700">Tags</h2>
+        <div class="flex items-center gap-4">
+          <div class="flex items-center gap-2">
+            <label class="text-sm font-medium text-gray-700">Show:</label>
+            <select 
+              [(ngModel)]="showActiveTags"
+              (change)="loadData()"
+              class="p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#3a5a40]/50"
+            >
+              <option [ngValue]="true">Active</option>
+              <option [ngValue]="false">Inactive</option>
+            </select>
+          </div>
+          <div class="flex items-center gap-2">
+            <label class="text-sm font-medium text-gray-700">Type:</label>
+            <select 
+              [(ngModel)]="selectedTagType"
+              (change)="onTagTypeChange(selectedTagType)"
+              class="p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#3a5a40]/50"
+            >
+              <option value="all">All</option>
+              <option value="flower">Flower</option>
+              <option value="plant">Plant</option>
+              <option value="extra">Extra</option>
+            </select>
+          </div>
+          <button
+            (click)="showNewTagDialog = true"
+            class="bg-[#3a5a40]/80 text-white px-4 py-2 rounded hover:bg-[#3a5a40]/90 transition-colors flex items-center gap-2"
+          >
+            <lucide-icon name="plus" class="w-5 h-5"></lucide-icon>
+            New Tag
+          </button>
+        </div>
+      </div>
+
+      <!-- Search Input -->
+      <div class="mb-6">
+        <div class="relative">
+          <input
+            type="text"
+            [(ngModel)]="searchQuery"
+            (ngModelChange)="onSearchChange()"
+            placeholder="Search tags by name, slug, or value..."
+            class="w-full p-3 pl-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#3a5a40]/50 focus:border-transparent"
+          />
+          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <lucide-icon name="search" class="w-5 h-5 text-gray-400"></lucide-icon>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 gap-4">
+        <div
+          *ngFor="let tag of paginatedTags"
+          class="group p-6 border border-gray-200 rounded-lg hover:border-[#3a5a40]/50 transition-colors bg-white shadow-sm"
+        >
+          <div class="flex flex-col">
+            <div class="flex justify-between items-start mb-4">
+              <div class="flex flex-col gap-1">
+                <div class="flex items-center gap-3">
+                  <span class="font-medium text-xl text-gray-800">{{ tag.name }}</span>
+                  <span class="text-sm px-2 py-1 bg-gray-100 rounded-full text-gray-600">
+                    {{ tag.type }}
+                  </span>
+                </div>
+                <div class="flex items-center gap-2 text-sm text-gray-500">
+                  <lucide-icon name="hash" class="w-4 h-4"></lucide-icon>
+                  <span>Slug: {{ tag.slug }}</span>
+                </div>
+              </div>
+              <div class="flex items-center gap-3">
+                <div class="flex items-center gap-2">
+                  <span class="text-sm text-gray-500">Status:</span>
+                  <button
+                    (click)="toggleTagActive(tag)"
+                    class="p-2 rounded-full transition-colors"
+                    [class.bg-green-100]="tag.isActive"
+                    [class.bg-gray-100]="!tag.isActive"
+                    title="Toggle active status"
+                  >
+                    <lucide-icon 
+                      [name]="tag.isActive ? 'check' : 'x'" 
+                      class="w-4 h-4"
+                      [class.text-green-500]="tag.isActive"
+                      [class.text-gray-500]="!tag.isActive"
+                    ></lucide-icon>
+                  </button>
+                </div>
+                <div class="flex gap-2">
+                  <button
+                    (click)="editTag(tag)"
+                    class="p-2 text-amber-600 hover:text-amber-700 transition-colors rounded-full hover:bg-amber-50"
+                    title="Edit tag"
+                  >
+                    <lucide-icon name="pencil" class="w-5 h-5"></lucide-icon>
+                  </button>
+                  <button
+                    (click)="deleteTag(tag.uuid)"
+                    class="p-2 text-red-600 hover:text-red-700 transition-colors rounded-full hover:bg-red-50"
+                    title="Delete tag"
+                  >
+                    <lucide-icon name="trash-2" class="w-5 h-5"></lucide-icon>
+                  </button>
+                </div>
+              </div>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-4 mt-4">
+              <div class="flex items-center gap-2 p-3 bg-gray-50 rounded-lg">
+                <lucide-icon name="tag" class="w-5 h-5 text-gray-500"></lucide-icon>
+                <div class="flex flex-col">
+                  <span class="text-xs text-gray-500">Value</span>
+                  <span class="text-sm font-medium text-gray-700">{{ tag.value || 'No value' }}</span>
+                </div>
+              </div>
+              <div class="flex items-center gap-2 p-3 bg-gray-50 rounded-lg">
+                <lucide-icon name="info" class="w-5 h-5 text-gray-500"></lucide-icon>
+                <div class="flex flex-col">
+                  <span class="text-xs text-gray-500">ID</span>
+                  <span class="text-sm font-medium text-gray-700">{{ tag.uuid }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Empty State -->
+        <div
+          *ngIf="!paginatedTags?.length"
+          class="col-span-full p-8 text-center bg-gray-50 rounded-lg"
+        >
+          <lucide-icon name="tags" class="w-12 h-12 mx-auto text-gray-400 mb-4"></lucide-icon>
+          <h3 class="text-lg font-medium text-gray-700 mb-2">
+            {{ searchQuery ? 'No tags found' : 'No tags yet' }}
+          </h3>
+          <p class="text-gray-500 mb-4">
+            {{ searchQuery ? 'Try adjusting your search' : 'Start by creating your first tag' }}
+          </p>
+          <button
+            (click)="showNewTagDialog = true"
+            class="bg-[#3a5a40]/80 text-white px-4 py-2 rounded hover:bg-[#3a5a40]/90 transition-colors flex items-center gap-2 mx-auto"
+          >
+            <lucide-icon name="plus" class="w-5 h-5"></lucide-icon>
+            Create Tag
+          </button>
+        </div>
+      </div>
+
+      <!-- Pagination -->
+      <div class="mt-6 flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <span class="text-sm text-gray-700">Show</span>
+          <select
+            [(ngModel)]="tagsPerPage"
+            (change)="onTagsPerPageChange()"
+            class="p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#3a5a40]/50"
+          >
+            <option value="4">4</option>
+            <option value="8">8</option>
+            <option value="12">12</option>
+            <option value="16">16</option>
+          </select>
+          <span class="text-sm text-gray-700">per page</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <button
+            (click)="prevTagsPage()"
+            [disabled]="currentTagsPage === 1"
+            class="p-2 rounded-md border border-gray-300 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <lucide-icon name="chevron-left" class="w-5 h-5"></lucide-icon>
+          </button>
+          <span class="text-sm text-gray-700">
+            Page {{ currentTagsPage }} of {{ totalTagsPages }}
+          </span>
+          <button
+            (click)="nextTagsPage()"
+            [disabled]="currentTagsPage === totalTagsPages"
+            class="p-2 rounded-md border border-gray-300 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <lucide-icon name="chevron-right" class="w-5 h-5"></lucide-icon>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- New Tag Dialog -->
+    <div
+      class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center"
+      *ngIf="showNewTagDialog"
+    >
+      <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="text-xl font-semibold text-gray-700">{{ editingTag ? 'Edit Tag' : 'New Tag' }}</h3>
+          <button
+            (click)="showNewTagDialog = false"
+            class="text-gray-500 hover:text-gray-700"
+          >
+            <lucide-icon name="x" class="w-5 h-5"></lucide-icon>
+          </button>
+        </div>
+
+        <form [formGroup]="tagForm" (ngSubmit)="onSubmit()" class="space-y-4">
+          <div class="flex flex-col">
+            <label class="block text-sm font-medium text-gray-700 mb-1">Name *</label>
+            <input
+              type="text"
+              formControlName="name"
+              class="w-full p-2 border rounded transition-colors"
+              [ngClass]="{
+                'border-red-500': tagForm.get('name')?.invalid && tagForm.get('name')?.touched
+              }"
+              placeholder="Tag name"
+            />
+            <p
+              class="text-red-500 text-sm mt-1"
+              *ngIf="tagForm.get('name')?.invalid && tagForm.get('name')?.touched"
+            >
+              Name is required
+            </p>
+          </div>
+
+          <div class="flex flex-col">
+            <label class="block text-sm font-medium text-gray-700 mb-1">Category *</label>
+            <select
+              formControlName="categoryUuid"
+              class="w-full p-2 border rounded transition-colors"
+              [ngClass]="{
+                'border-red-500': tagForm.get('categoryUuid')?.invalid && tagForm.get('categoryUuid')?.touched
+              }"
+            >
+              <option value="">Select a category</option>
+              <option *ngFor="let category of categories" [value]="category.uuid">
+                {{ category.name }}
+              </option>
+            </select>
+            <p
+              class="text-red-500 text-sm mt-1"
+              *ngIf="tagForm.get('categoryUuid')?.invalid && tagForm.get('categoryUuid')?.touched"
+            >
+              Category is required
+            </p>
+          </div>
+
+          <div class="flex justify-end gap-3 mt-6">
+            <button
+              type="button"
+              (click)="showNewTagDialog = false"
+              class="px-4 py-2 text-gray-700 bg-gray-100 rounded hover:bg-gray-200 transition-colors"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              [disabled]="tagForm.invalid || loading"
+              class="px-4 py-2 text-white bg-[#3a5a40]/80 rounded hover:bg-[#3a5a40]/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {{ editingTag ? 'Update' : 'Create' }} Tag
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- New Category Dialog -->
+    <div
+      class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center"
+      *ngIf="showNewCategoryDialog"
+    >
+      <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="text-xl font-semibold text-gray-700">New Category</h3>
+          <button
+            (click)="showNewCategoryDialog = false"
+            class="text-gray-500 hover:text-gray-700"
+          >
+            <lucide-icon name="x" class="w-5 h-5"></lucide-icon>
+          </button>
+        </div>
+
+        <form [formGroup]="categoryForm" (ngSubmit)="onSubmitCategory()" class="space-y-4">
+          <div class="flex flex-col">
+            <label class="block text-sm font-medium text-gray-700 mb-1">Name *</label>
+            <input
+              type="text"
+              formControlName="name"
+              class="w-full p-2 border rounded transition-colors"
+              [ngClass]="{
+                'border-red-500': categoryForm.get('name')?.invalid && categoryForm.get('name')?.touched
+              }"
+              placeholder="Category name"
+            />
+            <p class="text-red-500 text-sm mt-1" *ngIf="categoryForm.get('name')?.invalid && categoryForm.get('name')?.touched">
+              Name is required
+            </p>
+          </div>
+
+          <div class="flex justify-end gap-2 mt-4">
+            <button
+              type="button"
+              (click)="showNewCategoryDialog = false"
+              class="px-4 py-2 border border-gray-300 rounded hover:bg-gray-50 transition-colors"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              [disabled]="categoryForm.invalid || loading"
+              class="bg-[#3a5a40]/80 text-white px-4 py-2 rounded hover:bg-[#3a5a40]/90 transition-colors disabled:opacity-50"
+            >
+              Create Category
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

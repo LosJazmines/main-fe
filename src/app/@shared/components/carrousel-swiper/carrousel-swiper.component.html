@@ -49,7 +49,7 @@
   navigation="false"
   pagination="true"
   pagination-clickable="true"
-  effect="fade"
+  effect="coverflow"
   grab-cursor="true"
   centered-slides="true"
   slides-per-view="auto"
@@ -63,9 +63,9 @@
   space-between="10"
   loop="true"
 >
-  @for (img of imgHeader; track $index) {
+  @for (img of images; track img.order) {
   <swiper-slide>
-    <img class="swiper-slide__img" [src]="img.img_url" alt="" srcset="" />
+    <img class="swiper-slide__img" [src]="img.url" alt="Banner image" />
   </swiper-slide>
   }
 </swiper-container>

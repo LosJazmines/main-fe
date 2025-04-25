@@ -123,6 +123,7 @@
         </div>
         <div class="w-full h-full flex flex-col min-h-[288px] bg-black/1 gap-2">
           <div
+            *ngFor="let order of orders"
             class="w-full lg:h-[60px] bg-white border border-gray-200 rounded-lg shadow-md flex flex-col lg:gap-4 lg:flex-row items-center justify-between px-4 py-2"
           >
             <div
@@ -134,7 +135,7 @@
                 class="w-5 h-5 text-gray-700"
               ></lucide-icon>
               <p class="text-lg font-bold text-gray-800">Orden:</p>
-              <p class="text-lg font-semibold text-gray-700">#123</p>
+              <p class="text-lg font-semibold text-gray-700">#{{ order.orderNumber }}</p>
             </div>
 
             <div
@@ -145,7 +146,7 @@
                 class="w-full lg:w-auto flex items-center gap-2 text-gray-600"
               >
                 <lucide-icon name="calendar" class="w-5 h-5"></lucide-icon>
-                <p class="text-base font-medium">12 / 02 / 2023</p>
+                <p class="text-base font-medium">{{ order.createdAt | date:'dd/MM/yyyy' }}</p>
               </div>
 
               <!-- Hora -->
@@ -153,7 +154,7 @@
                 class="w-full lg:w-auto flex items-center gap-2 text-gray-600"
               >
                 <lucide-icon name="clock" class="w-5 h-5"></lucide-icon>
-                <p class="text-base font-medium">14:30</p>
+                <p class="text-base font-medium">{{ order.createdAt | date:'HH:mm' }}</p>
               </div>
 
               <!-- Botón para ver detalles -->
@@ -161,7 +162,7 @@
                 class="hidden lg:block p-2 rounded-full bg-[#3a5a40]/70 hover:bg-gray-200 transition"
                 type="button"
                 aria-label="Ver detalles"
-                (click)="toGoToOrderDetail()"
+                (click)="toGoToOrderDetail(order.id)"
               >
                 <lucide-icon
                   name="eye"
@@ -170,7 +171,7 @@
               </button>
 
               <button
-                (click)="toGoToOrderDetail()"
+                (click)="toGoToOrderDetail(order.id)"
                 type="submit"
                 class="w-full flex justify-center items-center gap-2 lg:hidden px-4 py-2 bg-[#3a5a40]/70 text-white rounded-[4px] shadow hover:bg-[#A2E100]/20 focus:outline-none transition"
               >

@@ -1,10 +1,14 @@
 import { Routes } from '@angular/router';
 import { mpRoutes } from '@public-pages/mp/mp.routes';
+import { AppResolver } from './@core/resolvers/app.resolver';
 
 export const routes: Routes = [
   // @Rutas Public
   {
     path: '',
+    resolve: {
+      appData: AppResolver
+    },
     loadComponent: () => import('./@public/pages/public.component'),
     title: 'LosJazmines',
     children: [
@@ -66,6 +70,12 @@ export const routes: Routes = [
         title: 'Los Jazmines - Login',
       },
       {
+        path: 'auth/google/callback',
+        loadComponent: () =>
+          import('./@public/pages/forms/google-callback/google-callback.component'),
+        title: 'Los Jazmines - Google Callback',
+      },
+      {
         path: 'checkout',
         loadComponent: () =>
           import('./@public/pages/forms/checkout/checkout.component'),
@@ -90,6 +100,30 @@ export const routes: Routes = [
         path: 'about',
         loadComponent: () => import('./@public/pages/about/about.component'),
         title: 'Los Jazmines - About',
+      },
+      {
+        path: 'payment/success',
+        loadComponent: () =>
+          import('./@public/pages/payment/success/success.component').then(
+            (m) => m.PaymentSuccessComponent
+          ),
+        title: 'Los Jazmines - Payment Success',
+      },
+      {
+        path: 'payment/failure',
+        loadComponent: () =>
+          import('./@public/pages/payment/failure/failure.component').then(
+            (m) => m.PaymentFailureComponent
+          ),
+        title: 'Los Jazmines - Payment Failure',
+      },
+      {
+        path: 'payment/pending',
+        loadComponent: () =>
+          import('./@public/pages/payment/pending/pending.component').then(
+            (m) => m.PaymentPendingComponent
+          ),
+        title: 'Los Jazmines - Payment Pending',
       },
     ],
   },
@@ -118,12 +152,12 @@ export const routes: Routes = [
         title: 'User - Perfil',
       },
       {
-        path: 'order/:idOrder',
+        path: 'orders/:id',
         loadComponent: () =>
-          import('./@user/pages/order/order.component').then(
-            (m) => m.OrderComponent
+          import('./@user/pages/order/order-details/order-details.component').then(
+            (m) => m.OrderDetailsComponent
           ),
-        title: 'User - Order',
+        title: 'User - Order Details',
       },
     ],
   },
@@ -131,7 +165,7 @@ export const routes: Routes = [
   // @Rutas Admin
 
   {
-    path: 'admin',
+    path: 'a',
     loadComponent: () => import('./@admin/pages/admin.component'),
     title: 'Admin',
     children: [
@@ -158,7 +192,6 @@ export const routes: Routes = [
           import('./@admin/pages/products/products.component'),
         title: 'Admin - Products',
       },
-
       {
         path: 'products/:id',
         loadComponent: () => import('./@admin/pages/product/product.component'),
@@ -175,15 +208,39 @@ export const routes: Routes = [
           import('./@admin/pages/payments/payments.component'),
         title: 'Admin - Payments',
       },
+      {
+        path: 'mp-oauth',
+        loadComponent: () =>
+          import('./@admin/pages/payments/mp-oauth/mp-oauth.component'),
+        title: 'Admin - Mercado Pago OAuth',
+      },
+      {
+        path: 'messages',
+        loadComponent: () =>
+          import('./@admin/pages/messages/messages.component'),
+        title: 'Admin - Messages',
+      },
+      {
+        path: 'notifications',
+        loadComponent: () =>
+          import('./@admin/pages/notifications/notifications.component').then(
+            m => m.NotificationsComponent
+          ),
+        title: 'Admin - Notifications',
+      },
+      {
+        path: 'config',
+        loadComponent: () => import('./@admin/pages/config/config.component').then(m => m.ConfigComponent),
+        title: 'Admin - Config',
+      },
     ],
   },
-  
+
   // @Rutar Mercado Pago
   {
     path: 'mp',
     children: mpRoutes,
   },
-
   // @Rutas vacias y rutas comodín
   {
     path: '',

@@ -14,8 +14,9 @@ import { toggleRightSidebar } from './store/actions/right-sidebar.actions';
 import { selectIsRightSidebarOpen } from './store/selectors/right-sidebar.selectors';
 import * as userActions from '../../../../@shared/store/actions/user.actions';
 import { isNullableType } from 'graphql';
-import { TokenService } from '../../../../@core/services/token.service';
+import { AuthService } from '../../../../@apis/auth.service';
 import { Animations } from '@shared/animations';
+import { Inject } from '@angular/core';
 
 @Component({
   selector: 'app-right-sidebar',
@@ -36,13 +37,12 @@ export class RightSidebarComponent implements OnInit, OnDestroy {
   constructor(
     private store: Store<AppState>,
     private router: Router,
-    private _tokenService: TokenService
+    @Inject(AuthService) private _authService: AuthService
   ) {
     this.isRightSidebarOpen$ = this.store.select(selectIsRightSidebarOpen);
   }
 
   ngOnInit() {
-    3;
     this.getUser();
   }
 
@@ -55,22 +55,29 @@ export class RightSidebarComponent implements OnInit, OnDestroy {
       .select(selectCurrentUser)
       .subscribe((currentUser) => {
         if (currentUser) {
+          console.log('currentUser', currentUser);
           this.currentUser.set(currentUser);
+          
+          // Get admin status
           this.isAdmin$ = this.store.select(selectIsAdmin);
+          
+          // Log admin status for debugging
+          this.isAdmin$.subscribe(isAdmin => {
+            console.log('User is admin:', isAdmin);
+          });
+          
+          this.closeRightDrawer();
         }
       });
   }
 
   goToadmin() {
-    this.router.navigate(['/admin']);
+    this.router.navigate(['/a']);
     this.closeRightDrawer();
   }
 
   logout(): void {
-    // Disparar la acción de logout
-    this.store.dispatch(userActions.clearCurrentUser());
-    this._tokenService.removeToken();
-
+    this._authService.logout();
     this.router.navigate(['/']).then(() => {
       window.location.reload();
     });

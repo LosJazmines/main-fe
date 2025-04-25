@@ -1,9 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LucideModule } from '../../lucide/lucide.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MaterialModule } from '@shared/material/material.module';
+import { StoreConfigService } from '@apis/store-config.service';
+import { CategoryConfig } from '@core/models/category-config.model';
+import { TagConfig } from '@core/models/tag-config.model';
 
 @Component({
   selector: 'app-shop-filters',
@@ -13,92 +16,126 @@ import { MaterialModule } from '@shared/material/material.module';
   styleUrls: ['./shop-filters.component.scss'],
 })
 export class ShopFiltersComponent implements OnInit {
-  fixedPrices = [
-    { value: 'bajo', label: 'Menos de $100' },
-    { value: 'medio', label: '$100 - $500' },
-    { value: 'alto', label: 'Más de $500' }
-  ];
+  @Output() filtersChanged = new EventEmitter<any>();
 
   filters = {
-    selectedFixedPrice: null as string | null,
-    customPrice: { min: null as number | null, max: null as number | null },
     selectedCategory: null as string | null,
-    selectedFlowerType: null as string | null,
+    selectedTag: null as string | null,
+    priceRange: { min: null as number | null, max: null as number | null }
   };
 
-  categories: any[] = [
-    { id: 'arreglos-premium', label: 'Arreglos Premium' },
-    { id: 'ramos-especiales', label: 'Ramos Especiales' },
-    { id: 'jazmines-selectos', label: 'Jazmines Selectos' },
-    { id: 'decoracion-eventos', label: 'Decoración Eventos' },
-  ];
+  categories: CategoryConfig[] = [];
+  tags: TagConfig[] = [];
 
-  flowerTypes: any[] = [
-    { id: 'jazmines-blancos', label: 'Jazmines Blancos' },
-    { id: 'jazmines-amarillos', label: 'Jazmines Amarillos' },
-    { id: 'rosas', label: 'Rosas' },
-    { id: 'orquideas', label: 'Orquídeas' },
-    { id: 'lirios', label: 'Lirios' },
-  ];
-
-  constructor(private router: Router, private route: ActivatedRoute) { }
+  constructor(
+    private router: Router, 
+    private route: ActivatedRoute,
+    private storeConfigService: StoreConfigService
+  ) { }
 
   ngOnInit(): void {
-    // Opcional: cargar filtros iniciales desde la URL
+    this.loadCategoriesAndTags();
+    this.loadFiltersFromUrl();
+  }
+
+  private loadFiltersFromUrl(): void {
     this.route.queryParams.subscribe(params => {
-      this.filters.selectedCategory = params['category'] || null;
-      this.filters.selectedFlowerType = params['flowerType'] || null;
-      this.filters.selectedFixedPrice = params['fixedPrice'] || null;
-      this.filters.customPrice.min = params['minPrice'] ? +params['minPrice'] : null;
-      this.filters.customPrice.max = params['maxPrice'] ? +params['maxPrice'] : null;
+      const categorySlug = params['category'];
+      const tagSlug = params['tag'];
+      const minPrice = params['minPrice'];
+      const maxPrice = params['maxPrice'];
+
+      if (this.categories.length && categorySlug) {
+        const category = this.categories.find(cat => cat.slug === categorySlug);
+        this.filters.selectedCategory = category?.uuid || null;
+      }
+
+      if (this.tags.length && tagSlug) {
+        const tag = this.tags.find(t => t.slug === tagSlug);
+        this.filters.selectedTag = tag?.uuid || null;
+      }
+
+      this.filters.priceRange = {
+        min: minPrice ? +minPrice : null,
+        max: maxPrice ? +maxPrice : null
+      };
+
+      this.emitFiltersChanged();
+    });
+  }
+
+  private loadCategoriesAndTags(): void {
+    console.log('Starting to load categories and tags...');
+    
+    // Load categories
+    this.storeConfigService.getCategories().subscribe({
+      next: (categories) => {
+        console.log('Categories loaded:', categories);
+        this.categories = categories;
+      },
+      error: (error) => {
+        console.error('Error loading categories:', error);
+      }
+    });
+
+    // Load tags
+    this.storeConfigService.getTags().subscribe({
+      next: (tags) => {
+        console.log('Tags loaded from service:', tags);
+        this.tags = tags;
+      },
+      error: (error) => {
+        console.error('Error loading tags:', error);
+      }
     });
   }
 
   private updateQueryParams() {
+    const selectedCategory = this.categories.find(cat => cat.uuid === this.filters.selectedCategory);
+    const selectedTag = this.tags.find(tag => tag.uuid === this.filters.selectedTag);
+
     this.router.navigate([], {
       relativeTo: this.route,
       queryParams: {
-        category: this.filters.selectedCategory,
-        flowerType: this.filters.selectedFlowerType,
-        fixedPrice: this.filters.selectedFixedPrice,
-        minPrice: this.filters.customPrice.min,
-        maxPrice: this.filters.customPrice.max,
+        category: selectedCategory?.slug || null,
+        tag: selectedTag?.slug || null,
+        minPrice: this.filters.priceRange.min,
+        maxPrice: this.filters.priceRange.max,
       },
       queryParamsHandling: 'merge',
     });
+
+    this.emitFiltersChanged();
   }
 
-  selectFixedPrice(value: string) {
-    this.filters.selectedFixedPrice = value;
-    this.filters.customPrice.min = null;
-    this.filters.customPrice.max = null;
+  onPriceInput() {
     this.updateQueryParams();
   }
 
-  onCustomPriceInput() {
-    if (this.filters.customPrice.min !== null || this.filters.customPrice.max !== null) {
-      this.filters.selectedFixedPrice = null;
-      this.updateQueryParams();
-    }
-  }
-
-  selectCategory(categoryId: string) {
-    this.filters.selectedCategory = categoryId;
+  selectCategory(categoryUuid: string) {
+    this.filters.selectedCategory = categoryUuid;
     this.updateQueryParams();
   }
 
-  selectFlowerType(flowerTypeId: string) {
-    this.filters.selectedFlowerType = flowerTypeId;
+  selectTag(tagUuid: string) {
+    this.filters.selectedTag = tagUuid;
     this.updateQueryParams();
   }
 
   clearFilters() {
     this.filters = {
-      selectedFixedPrice: null,
-      customPrice: { min: null, max: null },
       selectedCategory: null,
-      selectedFlowerType: null,
+      selectedTag: null,
+      priceRange: { min: null, max: null }
     };
     this.updateQueryParams();
+  }
+
+  private emitFiltersChanged() {
+    this.filtersChanged.emit({
+      category: this.filters.selectedCategory,
+      tag: this.filters.selectedTag,
+      priceRange: this.filters.priceRange
+    });
   }
 }

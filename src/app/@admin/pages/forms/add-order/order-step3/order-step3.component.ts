@@ -46,6 +46,7 @@ export class OrderStep3Component {
       comentarios: [''],
       latitud: [''],
       longitud: [''],
+      metodoEnvio: ['DELIVERY'] // Valor por defecto
     });
   }
 
@@ -143,6 +144,7 @@ export class OrderStep3Component {
   }
 
   onSubmit() {
+    console.log('Valor del comentario en step3:', this.destinatarioForm.get('comentarios')?.value);
     console.log('Formulario enviado:', this.destinatarioForm.value);
 
     if (this.destinatarioForm.valid) {

@@ -87,7 +87,9 @@ export const MATERIAL_MODULES = [
   MatBadgeModule,
   MatSidenavModule,
   MatSlideToggleModule,
-  MatDividerModule
+  MatDividerModule,
+  MatIconModule,
+  MatTableModule
 ];
 
 @NgModule({

@@ -92,6 +92,27 @@ export class MessageService {
   }
 
   /**
+   * SnackBar Success
+   * @param message     : mensaje que recibe
+   * @param position    : posicion en que saldra
+   * @param duration    : tiempo que prermanesera a la vista
+   */
+  showSuccess(
+    message: string,
+    position: TypeSnackBarPosition,
+    duration?: number,
+    action?: string
+  ): void {
+    this.showSnackBar(
+      message,
+      position,
+      this.SNACKBAR_TYPE_INFO,
+      duration,
+      action
+    );
+  }
+
+  /**
    * Funcion para cerrar SnackBar
    * de forma inmediata
    */

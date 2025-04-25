@@ -1,63 +1,99 @@
 <div
-  class="backdrop-blur-md bg-[#588157]/90 flex flex-col w-[288px] h-[408px] group relative overflow-hidden rounded-[4px] shadow-sm transition-shadow hover:shadow-lg overflow-hidden"
+  class="backdrop-blur-md bg-[#588157]/90 flex flex-col w-full sm:w-[288px] h-[480px] group relative overflow-visible rounded-[4px] shadow-sm transition-shadow hover:shadow-lg"
+  (mouseenter)="onMouseEnter()"
+  (mouseleave)="onMouseLeave()"
 >
-  <!-- Badges y Botones -->
-  <!-- <div class="absolute right-2 top-2 z-10 flex gap-2">
-    <ng-container *ngIf="isNew">
-      <span class="rounded-md bg-background/80 px-2 py-1 text-xs font-medium text-black backdrop-blur-sm">New</span>
-    </ng-container>
-    <button class="h-8 w-8 rounded-full bg-background/80 text-black backdrop-blur-sm flex items-center justify-center">
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-black" viewBox="0 0 24 24" fill="none"
-        stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-          d="M3 3h2l.4 2M7 13h10l3.6-7H5.4M7 13L5.4 5M7 13l2 9m5-9l-2 9m5-9h2M10 21h4"></path>
+  <!-- Imagen principal -->
+  <div
+    class="relative w-full h-[288px] overflow-hidden bg-gray-100 aspect-square "
+  >
+    <img
+      [src]="
+        product.images && product.images.length > 0 ? product.images[0].url : ''
+      "
+      [alt]="product.name"
+      loading="lazy"
+      class="w-full h-full object-contain transition-transform duration-500 ease-in-out group-hover:scale-105"
+    />
+    <!-- Indicador de Sin Stock -->
+    <div *ngIf="product.stock === 0" class="absolute inset-0 bg-black/30 flex items-center justify-center">
+      <span class="text-white text-sm font-medium bg-[#3a5a40]/90 px-3 py-1 rounded-full backdrop-blur-sm">Sin stock</span>
+    </div>
+  </div>
+
+  <!-- Popup para imagen ampliada -->
+  <div
+    *ngIf="isImageZoomed"
+    class="absolute top-0 left-0 w-[500px] h-[600px] bg-white rounded-lg shadow-2xl p-4 z-50 transform -translate-x-1/2 -translate-y-1/2"
+    (click)="$event.stopPropagation()"
+  >
+    <button
+      (click)="toggleImageZoom()"
+      class="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
       </svg>
     </button>
-  </div> -->
-
-  <!-- Imagen del producto -->
-  <!-- <a href="#" class="w-full h-full relative aspect-square overflow-hidden"> </a> -->
-  <div class="w-full h-full relative aspect-square overflow-hidden">
-    <img
-      [src]="image"
-      [alt]="name"
-      class="w-full object-fill h-full transition-opacity duration-500 ease-in-out group-hover:opacity-80"
-    />
+    <div class="w-full h-full flex items-center justify-center">
+      <img
+        [src]="
+          product.images && product.images.length > 0 ? product.images[0].url : ''
+        "
+        [alt]="product.name"
+        class="max-w-full max-h-full object-contain rounded-lg"
+      />
+    </div>
   </div>
 
   <!-- Contenido del producto -->
-  <div class="p-4 flex flex-col justify-between">
-    <!-- Título y precio -->
-    <div>
-      <div class="flex items-center justify-between">
-        <h3 class="line-clamp-1 text-lg font-medium text-white">{{ name }}</h3>
-      </div>
-      <p class="text-xs uppercase text-muted-foreground text-white">
-        {{ category }}
-      </p>
+  <div
+    class="p-4 flex flex-col h-[192px] bg-gradient-to-b from-[#588157] to-[#3a5a40]"
+  >
+    <!-- Categoría -->
+    <div class="mb-1">
+      <span
+        class="text-xs uppercase text-white/80 font-medium bg-[#3a5a40] px-2 py-0.5 rounded-[4px]"
+      >
+        {{ product.category }}
+      </span>
     </div>
+
+    <!-- Nombre del producto -->
+    <h3 class="text-lg font-semibold text-white mb-1 line-clamp-1">
+      {{ product.name }}
+    </h3>
 
     <!-- Descripción -->
-    <div class="mt-2 !h-[40px]">
-      <p class="line-clamp-2 text-sm text-white">{{ description }}</p>
+    <p class="text-sm text-white/90 mb-2 line-clamp-2">
+      {{ product.description }}
+    </p>
+
+    <!-- Etiquetas -->
+    <div
+      *ngIf="product.tags && product.tags.length > 0"
+      class="flex flex-wrap gap-1 mb-3"
+    >
+      <span
+        *ngFor="let tag of product.tags; let i = index"
+        class="text-xs bg-[#a3b18a] text-[#344e41] px-2 py-0.5 rounded-[4px] flex items-center"
+      >
+        {{ tag?.name }}
+      </span>
     </div>
 
-    <div class="flex items-center justify-between gap-4">
-      <div class="">
-        <span class="font-semibold text-lg text-white"
-          >${{ price.toFixed(2) }}</span
-        >
+    <!-- Precio y botón -->
+    <div class="mt-auto flex items-center justify-between">
+      <div>
+        <span class="font-semibold text-lg text-white">
+          ${{ product.price.toFixed(2) }}
+        </span>
       </div>
       <button
-        (click)="addToCart($event)"
-        class="w-full md:max-w-[150px] bg-[#3a5a40] text-white py-2 rounded-[4px] hover:bg-black/50 flex items-center justify-center gap-4"
+        (click)="addToCart()"
+        [disabled]="product.stock === 0"
+        class="px-4 py-2 rounded-[4px] flex items-center gap-2 transition-colors bg-white text-[#3a5a40] hover:bg-[#dad7cd] hover:text-[#344e41] active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
       >
-        <!-- <svg xmlns="http://www.w3.org/2000/svg" class="mr-2 h-4 w-4" fill="none" viewBox="0 0 24 24"
-        stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-          d="M3 3h2l.4 2M7 13h10l3.6-7H5.4M7 13L5.4 5M7 13l2 9m5-9l-2 9m5-9h2M10 21h4"></path>
-      </svg> -->
-        <!-- <lucide-icon name="plus"></lucide-icon> -->
         <span>Agregar al carrito</span>
       </button>
     </div>

@@ -1,27 +1,50 @@
-export const navbarData = [
+export const navbar_admin = [
   {
-    routeLink: 'dashboard',
-    icon: 'dashboard',
+    route: 'a/dashboard',
+    icon: 'layout-dashboard',
     label: 'Dashboard',
+    roles: ['admin']
   },
   {
-    routeLink: 'orders',
-    icon: 'shopping_bag',
+    route: 'a/orders',
+    icon: 'clipboard-list',
     label: 'Orders',
+    roles: ['admin']
   },
   {
-    routeLink: 'products',
-    icon: 'inventory',
+    route: 'a/messages',
+    icon: 'messages-square',
+    label: 'Messages',
+    roles: ['admin']
+  },
+  {
+    route: 'a/notifications',
+    icon: 'bell',
+    label: 'Notifications',
+    roles: ['admin']
+  },
+  {
+    route: 'a/products',
+    icon: 'archive',
     label: 'Products',
+    roles: ['admin']
   },
   {
-    routeLink: 'users',
-    icon: 'groups',
+    route: 'a/users',
+    icon: 'users',
     label: 'Users',
+    roles: ['admin']
   },
   {
-    routeLink: 'payments',
-    icon: 'payments',
+    route: 'a/payments',
+    icon: 'banknote',
     label: 'Datos Bancarios',
+    roles: ['admin']
+  },
+  {
+    route: 'a/config',
+    icon: 'settings',
+    label: 'Configuración',
+    roles: ['admin']
   },
 ];

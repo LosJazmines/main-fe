@@ -1,3 +1,25 @@
+#form-checkout {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin: 1rem 0;
+
+  .form-control {
+    input {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 1rem;
+
+      &:focus {
+        outline: none;
+        border-color: #009ee3;
+      }
+    }
+  }
+}
+
 .mercado-pago-btn {
   background-color: #009ee3;
   color: white;
@@ -11,23 +33,24 @@
   align-items: center;
   justify-content: center;
   width: 100%;
+  padding: 12px;
+
+  &:hover:not(:disabled) {
+    background-color: #008cba;
+  }
+
+  &:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
 }
 
-.mercado-pago-btn:hover {
-  background-color: #008cba;
-}
-
-.mercado-pago-btn:active {
-  background-color: #007bb5;
-}
-
-.mercado-pago-btn .icon {
-  width: 24px;
-  height: 24px;
-  margin-right: 10px;
-}
 .mercado-pago-img {
   width: 32px;
   height: 32px;
   margin-right: 1rem;
+}
+
+.mercado-pago-spinner {
+  margin-right: 0.5rem;
 }

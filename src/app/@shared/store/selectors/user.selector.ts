@@ -1,5 +1,5 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
-import { UserState } from '../reducers/user.reducer';
+import { State as UserState } from '../reducers/user.reducer';
 
 const getUserFeatureState = createFeatureSelector<UserState>('currentUser');
 
@@ -19,7 +19,16 @@ export const getUserState = createSelector(
 // Selector para obtener los roles del usuario actual
 export const selectUserRoles = createSelector(
   selectCurrentUser,
-  (user) => user?.roles || []
+  (user) => {
+    if (!user) return [];
+    // Handle both role and roles properties
+    if (Array.isArray(user.roles)) {
+      return user.roles;
+    } else if (user.role) {
+      return [user.role];
+    }
+    return [];
+  }
 );
 
 // Selector para verificar si el usuario es ADMIN

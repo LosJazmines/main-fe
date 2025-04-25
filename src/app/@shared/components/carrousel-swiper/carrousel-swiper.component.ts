@@ -2,7 +2,6 @@ import {
   Component,
   CUSTOM_ELEMENTS_SCHEMA,
   Inject,
-  input,
   Input,
   OnInit,
   PLATFORM_ID,
@@ -12,6 +11,12 @@ import { register } from 'swiper/element/bundle';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 // register Swiper custom elements
 register();
+
+interface BannerImage {
+  url: string;
+  order: number;
+}
+
 @Component({
   selector: 'app-carrousel-swiper',
   standalone: true,
@@ -21,7 +26,7 @@ register();
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class CarrouselSwiperComponent implements OnInit {
-  @Input() images: any[] = [];
+  @Input() images: BannerImage[] = [];
 
   isBrowser: boolean;
 

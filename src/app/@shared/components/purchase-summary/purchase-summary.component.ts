@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import {
   Component,
   computed,
@@ -9,11 +9,13 @@ import {
   OnInit,
   Output,
   signal,
+  PLATFORM_ID,
+  Inject
 } from '@angular/core';
 import { LucideModule } from '../../lucide/lucide.module';
 import { PipesModule } from '../../../@core/pipes/pipes.module';
 import { MaterialModule } from '../../material/material.module';
-import { Subscription } from 'rxjs';
+import { Subscription, Observable, Subject, takeUntil, BehaviorSubject, firstValueFrom } from 'rxjs';
 import { selectShoppingCart } from '../../store/selectors/user.selector';
 import { AppState } from '../../store';
 import { Store } from '@ngrx/store';
@@ -21,20 +23,34 @@ import { MessageService } from '../../../@core/services/snackbar.service';
 import { ProductsService } from '../../../@apis/products.service';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
+import { environment } from '../../../../environments/environment';
+import { MercadoPagoService, MercadoPagoPreference } from '../../services/mercado-pago-service.service';
+import { MatDialog } from '@angular/material/dialog';
+import LoginComponent from '../../../@public/pages/forms/login/login.component';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { HttpClient } from '@angular/common/http';
+import { clearCart } from '../../store/actions/user.actions';
+import { OrderSuccessDialogComponent } from '../order-success-dialog/order-success-dialog.component';
+import * as OrderActions from '../../store/actions/order.actions';
+import { selectCanCreateOrder, selectDeliveryInfo, selectDeliveryMethod } from '../../store/selectors/order.selectors';
+import { OrderService } from '../../services/order.service';
+import { CartService } from '../../services/cart.service';
+import { DeliveryInfo } from '../../models/order.model';
+import { selectCurrentUser } from '../../store/selectors/user.selector';
 
-import { MercadoPagoService } from '../../services/mercado-pago-service.service';
 declare var MercadoPago: any;
 
-function loadMercadoPago(): Promise<void> {
-  return new Promise((resolve, reject) => {
-    const script = document.createElement('script');
-    script.src = 'https://sdk.mercadopago.com/js/v2';
-    script.onload = () => resolve();
-    script.onerror = () => reject(new Error('No se pudo cargar el SDK de Mercado Pago'));
-    document.body.appendChild(script);
-  });
+interface CartItem {
+  id: string;
+  quantity: number;
+  name?: string;
 }
 
+interface Product {
+  id: string;
+  name: string;
+  stock: number;
+}
 
 @Component({
   selector: 'app-purchase-summary',
@@ -46,12 +62,14 @@ function loadMercadoPago(): Promise<void> {
     MaterialModule,
     FormsModule,
     RouterModule,
+    MatProgressSpinnerModule
   ],
   templateUrl: './purchase-summary.component.html',
   styleUrl: './purchase-summary.component.scss',
 })
 export class PurchaseSummaryComponent implements OnInit, OnDestroy {
   private _unsuscribeAll!: Subscription;
+  private isBrowser: boolean;
   shoppingCart = signal<any[]>([]);
   shoppingCartLength = signal<number | null>(null);
   products = signal<any[]>([]);
@@ -78,22 +96,76 @@ export class PurchaseSummaryComponent implements OnInit, OnDestroy {
 
   private unsubscribeAll!: Subscription;
 
+  isLoading = false;
+  paymentMethod: 'mercado-pago' | 'web' = 'web';
+
+  // Observables from store
+  deliveryInfo$: Observable<DeliveryInfo | null>;
+  canCreateOrder$: Observable<boolean>;
+  deliveryMethod$: Observable<'PICKUP' | 'DELIVERY'>;
+
+  private destroy$ = new Subject<void>();
 
   constructor(
     private messageService: MessageService,
     private store: Store<AppState>,
     private productsService: ProductsService,
-    private mercadoPagoService: MercadoPagoService
-  ) { }
+    private mercadoPagoService: MercadoPagoService,
+    private router: Router,
+    private dialog: MatDialog,
+    private http: HttpClient,
+    @Inject(PLATFORM_ID) platformId: Object,
+    private orderService: OrderService,
+    private cartService: CartService
+  ) {
+    this.isBrowser = isPlatformBrowser(platformId);
+    this.deliveryInfo$ = this.store.select(selectDeliveryInfo);
+    this.canCreateOrder$ = this.store.select(selectCanCreateOrder);
+    this.deliveryMethod$ = this.store.select(selectDeliveryMethod);
+  }
 
   ngOnInit(): void {
     this.getShoppingCart();
+    
+    // Suscribirse a cambios en el método de entrega
+    this.deliveryMethod$.pipe(
+      takeUntil(this.destroy$)
+    ).subscribe(method => {
+      if (method === 'PICKUP') {
+        // Para pickup, establecemos la información de la sucursal
+        const pickupInfo: DeliveryInfo = {
+          direccion: 'Avenida España 995, Tandil, Buenos Aires',
+          ciudad: 'Tandil',
+          estado: 'Buenos Aires',
+          pais: 'Argentina',
+          codigoPostal: '7000',
+          telefonoMovil: '',
+          nombre: '',
+          metodoEnvio: 'PICKUP'
+        };
+        // Validar y actualizar el estado
+        this.store.dispatch(OrderActions.validateOrder({ isValid: true }));
+      }
+    });
+
+    // Escuchar cambios en la información de entrega
+    this.deliveryInfo$.pipe(
+      takeUntil(this.destroy$)
+    ).subscribe(deliveryInfo => {
+      if (deliveryInfo) {
+        this.store.dispatch(OrderActions.validateOrder({ 
+          isValid: this.isDeliveryInfoValid(deliveryInfo) 
+        }));
+      }
+    });
   }
 
   ngOnDestroy(): void {
-    if (this.unsubscribeAll) {
-      this.unsubscribeAll.unsubscribe();
+    if (this._unsuscribeAll) {
+      this._unsuscribeAll.unsubscribe();
     }
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   onContinuarCompra() {
@@ -165,74 +237,160 @@ export class PurchaseSummaryComponent implements OnInit, OnDestroy {
     }
   }
 
-  // Método para iniciar el proceso de pago
-  // pagar() {
-  //   const pagoData = {
-  //     monto: 100, // Ejemplo
-  //     descripcion: 'Producto de ejemplo',
-  //     metodo_pago: 'visa', // o el método adecuado
-  //     email: 'cliente@ejemplo.com'
-  //   };
-
-  //   this.mercadoPagoService.getPreference(pagoData).subscribe((response: any) => {
-  //     if (!response || !response.id) {
-  //       console.error('Error: No se recibió un ID de preferencia válido.');
-  //       return;
-  //     }
-
-  //     const mp = new MercadoPago(
-  //       'TEST-444977579419473-012917-5e99c6dc33b21b77449e3fc36153787d-284936648',
-  //       {
-  //         locale: 'es-AR',
-  //       }
-  //     );
-
-  //     const checkout = mp.checkout({
-  //       preference: {
-  //         id: response.id,
-  //       },
-  //       render: {
-  //         container: '.cho-container',
-  //         label: 'Pagar con Mercado Pago',
-  //       },
-  //     });
-
-  //     checkout.open();
-  //   });
-  // }
-
-
-  async pagar() {
-    // Carga el SDK de Mercado Pago
-    await loadMercadoPago();
-
-    // Datos de pago
-    const pagoData = {
-      monto: 100,
-      descripcion: 'Producto de ejemplo',
-      email: 'cliente@ejemplo.com'
-    };
-    
-
-    // Inicializa MercadoPago con tu clave pública
-    const mp = new window.MercadoPago('APP_USR-ab775a76-3448-4707-9b0d-22083e7c6f6d', { locale: 'es-AR' });
-
-    // Obtiene la preferencia desde el backend
-    this.mercadoPagoService.getPreference(pagoData).subscribe((response: any) => {
-      if (response.results.length === 0) {
-
-      } else {
-        window.location.href = response.results[0].link_mercadopago;
-      }
-
-      // Inicializa el checkout
-      const checkout = mp.checkout({
-        preference: { id: response.id },
-        autoOpen: true // Abre el checkout automáticamente
+  // Método para verificar la información de entrega
+  private checkDeliveryInfo() {
+    if (!this.isBrowser) {
+      this.canCreateOrder$.pipe(
+        takeUntil(this.destroy$)
+      ).subscribe(canCreateOrder => {
+        if (!canCreateOrder) {
+          this.deliveryInfo$.pipe(
+            takeUntil(this.destroy$)
+          ).subscribe(deliveryInfo => {
+            if (deliveryInfo) {
+              this.store.dispatch(OrderActions.setDeliveryMethod({ method: 'DELIVERY' }));
+              this.store.dispatch(OrderActions.validateOrder({ isValid: this.isDeliveryInfoValid(deliveryInfo) }));
+            } else {
+              this.store.dispatch(OrderActions.setDeliveryMethod({ method: 'DELIVERY' }));
+              this.store.dispatch(OrderActions.validateOrder({ isValid: false }));
+            }
+          });
+        }
       });
+    }
+  }
+
+  // Método para validar la información de entrega
+  private isDeliveryInfoValid(deliveryInfo: DeliveryInfo | null): boolean {
+    if (!deliveryInfo) return false;
+
+    if (deliveryInfo.metodoEnvio === 'PICKUP') {
+      // Validar que la dirección sea la de la sucursal
+      return !!(
+        deliveryInfo.direccion === 'Avenida España 995, Tandil, Buenos Aires' &&
+        deliveryInfo.ciudad === 'Tandil' &&
+        deliveryInfo.estado === 'Buenos Aires' &&
+        deliveryInfo.pais === 'Argentina'
+      );
+    }
+
+    // Para entrega a domicilio, validar todos los campos requeridos
+    return !!(
+      deliveryInfo.direccion &&
+      deliveryInfo.ciudad === 'Tandil' &&
+      deliveryInfo.estado === 'Buenos Aires' &&
+      deliveryInfo.pais === 'Argentina' &&
+      deliveryInfo.codigoPostal === '7000' &&
+      deliveryInfo.nombre &&
+      deliveryInfo.telefonoMovil
+    );
+  }
+
+  private async createMercadoPagoOrder(): Promise<void> {
+    let deliveryInfo: DeliveryInfo | null = null;
+    
+    this.deliveryInfo$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(info => deliveryInfo = info);
+
+    if (!deliveryInfo) {
+      throw new Error('No delivery information available');
+    }
+
+    // Validar stock antes de crear la orden
+    const cartItems = this.cartService.getCartItems();
+    for (const item of cartItems) {
+      const product = await this.productsService.getProductById(item.productId).toPromise() as Product;
+      if (!product || product.stock < item.quantity) {
+        throw new Error(`Stock insuficiente para el producto ${product?.name || item.productId}`);
+      }
+    }
+
+    const order = await this.orderService.createOrder({
+      items: cartItems,
+      deliveryInfo,
+      paymentMethod: this.paymentMethod
+    });
+
+    // Clear cart after successful order creation
+    this.cartService.clearCart();
+    this.dialog.open(OrderSuccessDialogComponent, {
+      data: order,
+      width: '500px',
+      disableClose: true
     });
   }
 
+  private async createWebOrder(): Promise<void> {
+    let deliveryInfo: DeliveryInfo | null = null;
+    
+    this.deliveryInfo$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(info => deliveryInfo = info);
+
+    if (!deliveryInfo) {
+      throw new Error('No delivery information available');
+    }
+
+    // Validar stock antes de crear la orden
+    const cartItems = this.cartService.getCartItems();
+    for (const item of cartItems) {
+      const product = await this.productsService.getProductById(item.productId).toPromise() as Product;
+      if (!product || product.stock < item.quantity) {
+        throw new Error(`Stock insuficiente para el producto ${product?.name || item.productId}`);
+      }
+    }
+
+    const order = await this.orderService.createOrder({
+      items: cartItems,
+      deliveryInfo,
+      paymentMethod: this.paymentMethod
+    });
+
+    this.cartService.clearCart();
+    this.dialog.open(OrderSuccessDialogComponent, {
+      data: order,
+      width: '500px',
+      disableClose: true
+    });
+  }
+
+  async pagar(): Promise<void> {
+    this.isLoading = true;
+
+    try {
+      // Check if user is authenticated
+      const user = await firstValueFrom(this.store.select(selectCurrentUser));
+      if (!user || !user.id) {
+        // Open login dialog
+        const dialogRef = this.dialog.open(LoginComponent, {
+          width: '400px',
+          disableClose: true
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+          if (result) {
+            // User logged in successfully, retry payment
+            this.pagar();
+          } else {
+            this.messageService.showError('Debes iniciar sesión para realizar una compra', 'bottom center');
+          }
+        });
+        return;
+      }
+
+      if (this.paymentMethod === 'mercado-pago') {
+        await this.createMercadoPagoOrder();
+      } else {
+        await this.createWebOrder();
+      }
+    } catch (error) {
+      console.error('Error creating order:', error);
+      this.messageService.showError('Error al crear la orden', 'bottom center');
+    } finally {
+      this.isLoading = false;
+    }
+  }
 
   send() {
     console.log('Enviando compra...');

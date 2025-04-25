@@ -1,93 +1,55 @@
-<div class="container-dashboard p-6 bg-gray-100 min-h-full">
+<div class="container-dashboard min-h-full">
   <!-- Título principal -->
-  <h1 class="text-3xl font-semibold text-gray-700 mb-6">Dashboard</h1>
+  <h1 class="text-3xl mb-6 text-[#3a5a40] !font-playfair">Dashboard</h1>
 
-  <!-- Resúmenes rápidos -->
   <div class="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-4 mb-8">
     <div
-      class="bg-white shadow rounded-lg p-4 flex items-center justify-between"
+      class="bg-[#3a5a40]/70 backdrop-blur-md !text-white shadow rounded-lg p-4 flex items-center justify-between"
     >
       <div>
-        <p class="text-sm text-gray-500">Órdenes Totales</p>
-        <h3 class="text-2xl font-bold text-gray-700">1,234</h3>
+        <p class="text-sm text-white">Órdenes Totales</p>
+        <h3 class="text-2xl font-bold text-white">1,234</h3>
       </div>
-      <div class="bg-blue-100 text-blue-500 p-3 rounded-full">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          class="w-6 h-6"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M4 16l4 4m0 0l4-4m-4 4V4"
-          />
-        </svg>
+      <div class="">
+        <lucide-icon class="text-white" name="clipboard-list"></lucide-icon>
       </div>
     </div>
 
     <div
-      class="bg-white shadow rounded-lg p-4 flex items-center justify-between"
+      class="bg-[#3a5a40]/70 backdrop-blur-md shadow rounded-lg p-4 flex items-center justify-between"
     >
       <div>
-        <p class="text-sm text-gray-500">Ingresos Totales</p>
-        <h3 class="text-2xl font-bold text-gray-700">$12,345</h3>
+        <p class="text-sm text-white">Ingresos Totales</p>
+        <h3 class="text-2xl font-bold text-white">$12,345</h3>
       </div>
-      <div class="bg-green-100 text-green-500 p-3 rounded-full">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          class="w-6 h-6"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M12 8v4m0 0h4m-4 0H8"
-          />
-        </svg>
+      <div class="">
+        <lucide-icon class="text-white" name="banknote"></lucide-icon>
       </div>
     </div>
 
     <div
-      class="bg-white shadow rounded-lg p-4 flex items-center justify-between"
+      class="bg-[#3a5a40]/70 backdrop-blur-md shadow rounded-lg p-4 flex items-center justify-between"
     >
       <div>
-        <p class="text-sm text-gray-500">Usuarios Registrados</p>
-        <h3 class="text-2xl font-bold text-gray-700">456</h3>
+        <p class="text-sm text-white">Usuarios Registrados</p>
+        <h3 class="text-2xl font-bold text-white">456</h3>
       </div>
-      <div class="bg-yellow-100 text-yellow-500 p-3 rounded-full">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          class="w-6 h-6"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M3 10h2m4 0h12m-6-6v12m0 0H5m6 0h6"
-          />
-        </svg>
+      <div class="">
+        <lucide-icon class="text-white" name="users"></lucide-icon>
       </div>
     </div>
 
     <div
-      class="bg-white shadow rounded-lg p-4 flex items-center justify-between"
+      class="bg-[#3a5a40]/70 backdrop-blur-md shadow rounded-lg p-4 flex items-center justify-between"
     >
       <div>
-        <p class="text-sm text-gray-500">Productos Disponibles</p>
-        <h3 class="text-2xl font-bold text-gray-700">789</h3>
+        <p class="text-sm text-white">Productos Disponibles</p>
+        <h3 class="text-2xl font-bold text-white">789</h3>
       </div>
-      <div class="bg-red-100 text-red-500 p-3 rounded-full">
-        <svg
+      <div class="">
+        <lucide-icon class="text-white" name="archive"></lucide-icon>
+
+        <!-- <svg
           xmlns="http://www.w3.org/2000/svg"
           class="w-6 h-6"
           fill="none"
@@ -100,12 +62,11 @@
             stroke-width="2"
             d="M9 12h6m0 0v6m0-6V6"
           />
-        </svg>
+        </svg> -->
       </div>
     </div>
   </div>
-
-  <!-- Filtro de Fechas y Buscar -->
+  <!-- 
   <div class="flex justify-between items-center mb-4">
     <input
       type="text"
@@ -119,7 +80,6 @@
     </div>
   </div>
 
-  <!-- Gráficos -->
   <div class="grid gap-6 grid-cols-1 lg:grid-cols-2 mb-8">
     <div class="bg-white shadow rounded-lg p-4">
       <h2 class="text-lg font-semibold text-gray-700 mb-4">Ventas por Mes</h2>
@@ -140,28 +100,23 @@
     </div>
   </div>
 
-  <!-- Filtro de Fechas y Estado -->
   <div class="container p-6 bg-gray-100 min-h-full w-full">
     <h1 class="text-3xl font-semibold text-gray-700 mb-6">Sistema de Gestión de Pedidos</h1>
   
-    <!-- Cards de Pedidos -->
     <div class="flex flex-wrap gap-6">
       <div *ngFor="let pedido of pedidos" class="flex flex-col bg-white p-4 rounded-lg shadow-md w-full sm:w-80 lg:w-96">
         
-        <!-- Header con ID y Fecha de Inicio -->
         <div class="flex justify-between items-center mb-4">
           <span class="text-xl font-semibold text-gray-700">Pedido #{{ pedido.id }}</span>
           <span class="text-sm text-gray-500">{{ pedido.fechaInicio | date:'dd/MM/yyyy' }}</span>
         </div>
   
-        <!-- Información del Pedido -->
         <div class="mb-4">
           <p class="text-sm text-gray-600"><strong>Cliente:</strong> {{ pedido.cliente }}</p>
           <p class="text-sm text-gray-600"><strong>Total:</strong> ${{ pedido.total }}</p>
           <p class="text-sm text-gray-600"><strong>Fecha de Entrega:</strong> {{ pedido.fechaEntrega | date:'dd/MM/yyyy' }}</p>
         </div>
   
-        <!-- Estado del Pedido -->
         <div class="mb-4">
           <span [ngClass]="{
               'bg-yellow-200': pedido.estado === 'Pendiente', 
@@ -173,15 +128,12 @@
           </span>
         </div>
   
-        <!-- Imagen del Producto -->
         <div class="flex justify-center mb-4">
           <img src="https://via.placeholder.com/100" alt="Producto" class="w-20 h-20 rounded-full">
         </div>
   
-        <!-- Acciones: Aceptar, Rechazar, Ver Pedido -->
         <div class="flex justify-between items-center gap-2">
           
-          <!-- Botón Aceptar -->
           <button *ngIf="pedido.estado === 'Pendiente'" 
                   (click)="actualizarEstado(pedido.id, 'Aceptado')" 
                   class="flex items-center justify-center bg-green-500 text-white px-4 py-2 rounded-lg text-sm hover:bg-green-600 transition">
@@ -191,7 +143,6 @@
             Aceptar
           </button>
   
-          <!-- Botón Rechazar -->
           <button *ngIf="pedido.estado === 'Pendiente'" 
                   (click)="actualizarEstado(pedido.id, 'Rechazado')" 
                   class="flex items-center justify-center bg-red-500 text-white px-4 py-2 rounded-lg text-sm hover:bg-red-600 transition">
@@ -201,7 +152,6 @@
             Rechazar
           </button>
   
-          <!-- Ver Pedido -->
           <a [routerLink]="'/pedidos/' + pedido.id" 
              class="text-blue-500 hover:underline text-sm font-medium flex items-center">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -214,7 +164,6 @@
       </div>
     </div>
   
-    <!-- Paginación (opcional) -->
     <div class="flex justify-between items-center mt-6">
       <span class="text-sm text-gray-500">Mostrando 1-10 de 100</span>
       <div>
@@ -222,6 +171,5 @@
         <button class="text-sm text-blue-500 hover:underline">Siguiente</button>
       </div>
     </div>
-  </div>
-  
+  </div> -->
 </div>

@@ -55,29 +55,23 @@
           }}</mat-icon>
         </mat-form-field> -->
 
-    <div class="mb-2 flex-1 relative w-full">
+    <div class="flex-1 w-full mb-2">
       <label for="password" class="block text-sm font-medium text-white/80"
         >Contraseña</label
       >
-      <div class="mt-1 relative">
-        <input
-          id="password"
-          formControlName="password"
-          [type]="!hide ? 'text' : 'password'"
-          class="p-2 w-full border border-gray-300 rounded-[4px] focus:outline-none focus:ring-2 focus:ring-[#A2E100]/20"
-          placeholder="Contraseña"
-        />
-        <button
-          type="button"
-          class="absolute inset-y-0 right-2 flex items-center text-primary"
-          (click)="hide = !hide"
+      <input
+        id="password"
+        formControlName="password"
+        type="password"
+        class="mt-1 p-2 w-full border border-gray-300 rounded-[4px] focus:outline-none focus:ring-2 focus:ring-[#A2E100]/20"
+        placeholder="Contraseña"
+      />
+      <div class="text-right mt-1">
+        <span
+          (click)="emitViewType('forgot-password')"
+          class="text-sm text-white/80 hover:text-[#A2E100]/50 cursor-pointer"
+          >¿Olvidaste tu contraseña?</span
         >
-          @if (!hide) {
-          <lucide-icon name="eye" class="h-5 w-5"></lucide-icon>
-          } @else {
-          <lucide-icon name="eye-off" class="h-5 w-5"></lucide-icon>
-          }
-        </button>
       </div>
     </div>
 
@@ -125,22 +119,13 @@
             <div  *ngIf="(_loandingService._loading$ | async)" class="loading"></div>
           </button> -->
       <div class="w-full">
-        <!-- <asl-google-signin-button
-          class="google-signin-btn"
-          type="standard"
-          size='medium'
-          >google</asl-google-signin-button
-        > -->
-        <!-- <button
-          class="w-full bg-white text-black border rounded py-2 px-4 flex items-center justify-center"
-          (click)="handleGoogleLogin()"
+        <button
+          class="google-button"
+          (click)="redirectToGoogleAuth()"
         >
-          <img src="google_logo.png" class="h-5 w-5 mr-2" />
+          <img src="assets/images/google-logo.svg" alt="Google logo" />
           <span>Acceder con Google</span>
-        </button> -->
-        <!-- @if (isInstagramBrowser) {
-        <div class="blocker" (click)="preventLoginInInstagram()"></div>
-        } -->
+        </button>
       </div>
     </div>
   </form>

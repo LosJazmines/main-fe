@@ -64,6 +64,111 @@
       class="w-[350px] h-full min-h-[452px] z-20"
       (setViewType)="setViewType($event)"
     ></app-register>
+    } @if( view_type() === 'forgot-password'){
+    <div class="w-[350px] h-full min-h-[452px] z-20 bg-primary rounded-[4px] px-8 py-4">
+      <h1 class="title !text-xl !font-playfair !mb-[24px] text-white">
+        Recuperar Contraseña
+      </h1>
+      <form [formGroup]="forgotPasswordForm" (ngSubmit)="onSubmitForgotPassword()" class="w-full">
+        <div class="flex-1 w-full mb-2">
+          <label for="email" class="block text-sm font-medium text-white/80">Email</label>
+          <input
+            id="email"
+            formControlName="email"
+            type="email"
+            class="mt-1 p-2 w-full border border-gray-300 rounded-[4px] focus:outline-none focus:ring-2 focus:ring-[#A2E100]/20"
+            placeholder="Email"
+          />
+          @if(forgotPasswordForm.get('email')?.invalid && forgotPasswordForm.get('email')?.touched){
+            <span class="text-red-500 text-sm">Email inválido</span>
+          }
+        </div>
+        <div class="flex flex-col gap-2 w-full">
+          <button
+            type="submit"
+            [disabled]="!forgotPasswordForm.valid || loading"
+            class="px-4 py-2 bg-[#3a5a40]/80 text-white rounded-[4px] shadow hover:bg-[#A2E100]/20 focus:outline-none transition disabled:opacity-50"
+          >
+            <span class="tracking-widest">
+              @if(loading){
+                Enviando...
+              } @else {
+                Enviar instrucciones
+              }
+            </span>
+          </button>
+        </div>
+      </form>
+      <div class="w-full flex items-center justify-center mt-8">
+        <p class="text-sm text-white mt-4 cursor-pointer w-full text-start">
+          ¿Recordaste tu contraseña? <br />
+          <span
+            (click)="setViewType('login')"
+            class="hover:text-[#A2E100]/50 text-sm"
+            >Volver al inicio de sesión.</span
+          >
+        </p>
+      </div>
+    </div>
+    } @if( view_type() === 'reset-password'){
+    <div class="w-[350px] h-full min-h-[452px] z-20 bg-primary rounded-[4px] px-8 py-4">
+      <h1 class="title !text-xl !font-playfair !mb-[24px] text-white">
+        Restablecer Contraseña
+      </h1>
+      <form [formGroup]="resetPasswordForm" (ngSubmit)="onSubmitResetPassword()" class="w-full">
+        <div class="flex-1 w-full mb-2">
+          <label for="password" class="block text-sm font-medium text-white/80">Nueva Contraseña</label>
+          <input
+            id="password"
+            formControlName="password"
+            type="password"
+            class="mt-1 p-2 w-full border border-gray-300 rounded-[4px] focus:outline-none focus:ring-2 focus:ring-[#A2E100]/20"
+            placeholder="Nueva contraseña"
+          />
+          @if(resetPasswordForm.get('password')?.invalid && resetPasswordForm.get('password')?.touched){
+            <span class="text-red-500 text-sm">La contraseña debe tener al menos 6 caracteres</span>
+          }
+        </div>
+        <div class="flex-1 w-full mb-2">
+          <label for="confirmPassword" class="block text-sm font-medium text-white/80">Confirmar Contraseña</label>
+          <input
+            id="confirmPassword"
+            formControlName="confirmPassword"
+            type="password"
+            class="mt-1 p-2 w-full border border-gray-300 rounded-[4px] focus:outline-none focus:ring-2 focus:ring-[#A2E100]/20"
+            placeholder="Confirmar contraseña"
+          />
+          @if(resetPasswordForm.hasError('mismatch') && resetPasswordForm.get('confirmPassword')?.touched){
+            <span class="text-red-500 text-sm">Las contraseñas no coinciden</span>
+          }
+        </div>
+        <div class="flex flex-col gap-2 w-full">
+          <button
+            type="submit"
+            [disabled]="!resetPasswordForm.valid || loading"
+            class="px-4 py-2 bg-[#3a5a40]/80 text-white rounded-[4px] shadow hover:bg-[#A2E100]/20 focus:outline-none transition disabled:opacity-50"
+          >
+            <span class="tracking-widest">
+              @if(loading){
+                Actualizando...
+              } @else {
+                Actualizar Contraseña
+              }
+            </span>
+          </button>
+        </div>
+      </form>
+      <div class="w-full flex items-center justify-center mt-8">
+        <p class="text-sm text-white mt-4 cursor-pointer w-full text-start">
+          ¿Recordaste tu contraseña? <br />
+          <span
+            (click)="setViewType('login')"
+            class="hover:text-[#A2E100]/50 text-sm"
+            >Volver al inicio de sesión.</span
+          >
+        </p>
+      </div>
+    </div>
     }
   </div>
 </div>

@@ -21,6 +21,10 @@ import { ProductsService } from '../../../@apis/products.service';
 import { LucideModule } from '@shared/lucide/lucide.module';
 import { filter_home } from '@apis/data/filter';
 import { RouterModule } from '@angular/router';
+import { PublicStoreConfigService } from '../../core/services/store-config.service';
+import { retry, delay, catchError } from 'rxjs/operators';
+import { of } from 'rxjs';
+
 // register Swiper custom elements
 register();
 @Component({
@@ -60,10 +64,18 @@ export default class HomeComponent implements OnInit {
 
   isBrowser: boolean;
 
+  imgHeader: { url: string; order: number }[] = [];
+  loading = true;
+  error: string | null = null;
+  retryCount = 0;
+  maxRetries = 3;
+  retryDelay = 2000; // 2 seconds
+
   constructor(
     private _productsService: ProductsService,
     @Inject(PLATFORM_ID) private platformId: Object,
-    @Inject(DOCUMENT) private document: Document
+    @Inject(DOCUMENT) private document: Document,
+    private storeConfigService: PublicStoreConfigService
   ) {
     this.isBrowser = isPlatformBrowser(this.platformId);
     this.temporada = this.obtenerTemporada();
@@ -76,7 +88,8 @@ export default class HomeComponent implements OnInit {
       Math.floor(Math.random() * this.coleccionesTipos.length)
       ];
 
-    this.getProducts();
+    this.getProductsFindActive();
+    this.loadBanners();
   }
 
   ngAfterViewInit() {
@@ -103,27 +116,6 @@ export default class HomeComponent implements OnInit {
   }
 
 
-  imgHeader: any[] = [
-    {
-      img_url: './../../../../assets/img/header/banner diario-980x460.jpg',
-    },
-    {
-      img_url: './../../../../assets/img/header/Banner mayo.-980x460.jpg',
-    },
-    {
-      img_url: './../../../../assets/img/header/banner mayo3-980x460.jpg',
-    },
-    {
-      img_url: './../../../../assets/img/header/banner diario-980x460.jpg',
-    },
-    {
-      img_url: './../../../../assets/img/header/Banner mayo.-980x460.jpg',
-    },
-    {
-      img_url: './../../../../assets/img/header/banner mayo3-980x460.jpg',
-    },
-  ];
-
   // Categoría seleccionada para el filtro
   selectedCategory: string = '';
   products = signal<any[]>([]);
@@ -138,22 +130,27 @@ export default class HomeComponent implements OnInit {
   //   );
   // }
 
-  private getProducts(): void {
-    this._productsService.getAllProducts().subscribe({
-      next: (response: any) => {
-        // Process the response here
-        // const products = [...response];
-        this.products.set([...response]);
-        // If you need to handle the response, you can do so here
-        // For example:
-        // this.products = response.products;
-      },
-      error: (error) => {
-        // In case of error, handle it here
-        console.error('Error fetching products:', error);
-      },
-    });
-
+  private getProductsFindActive(): void {
+    this._productsService.getProductsFindActive()
+      .pipe(
+        retry(3),
+        delay(2000),
+        catchError(error => {
+          console.error('Error fetching products:', error);
+          this.error = 'Error loading products. Please try again later.';
+          return of([]);
+        })
+      )
+      .subscribe({
+        next: (response: any) => {
+          this.products.set([...response]);
+          this.error = null;
+        },
+        error: (error) => {
+          console.error('Error fetching products:', error);
+          this.error = 'Error loading products. Please try again later.';
+        },
+      });
   }
 
   // Método para seleccionar una categoría
@@ -177,5 +174,33 @@ export default class HomeComponent implements OnInit {
     } else {
       return 'Invierno';
     }
+  }
+
+  loadBanners(): void {
+    this.loading = true;
+    this.error = null;
+
+    this.storeConfigService.getHomeBanners()
+      .pipe(
+        retry(3),
+        delay(2000),
+        catchError(error => {
+          console.error('Error loading banners:', error);
+          this.error = 'Error loading banners. Please try again later.';
+          return of([]);
+        })
+      )
+      .subscribe({
+        next: (banners) => {
+          this.imgHeader = banners.sort((a, b) => a.order - b.order);
+          this.loading = false;
+          this.error = null;
+        },
+        error: (error) => {
+          this.error = 'Error loading banners. Please try again later.';
+          this.loading = false;
+          console.error('Error loading banners:', error);
+        }
+      });
   }
 }
