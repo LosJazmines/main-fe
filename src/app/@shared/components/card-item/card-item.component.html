@@ -5,7 +5,7 @@
 >
   <!-- Imagen principal -->
   <div
-    class="relative w-full h-[288px] overflow-hidden bg-gray-100 aspect-square "
+    class="relative w-full h-[288px] overflow-hidden bg-gray-100 aspect-square"
   >
     <img
       [src]="
@@ -16,8 +16,14 @@
       class="w-full h-full object-contain transition-transform duration-500 ease-in-out group-hover:scale-105"
     />
     <!-- Indicador de Sin Stock -->
-    <div *ngIf="product.stock === 0" class="absolute inset-0 bg-black/30 flex items-center justify-center">
-      <span class="text-white text-sm font-medium bg-[#3a5a40]/90 px-3 py-1 rounded-full backdrop-blur-sm">Sin stock</span>
+    <div
+      *ngIf="product.stock === 0"
+      class="absolute inset-0 bg-black/30 flex items-center justify-center"
+    >
+      <span
+        class="text-white text-sm font-medium bg-[#3a5a40]/90 px-3 py-1 rounded-full backdrop-blur-sm"
+        >Sin stock</span
+      >
     </div>
   </div>
 
@@ -31,14 +37,27 @@
       (click)="toggleImageZoom()"
       class="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
     >
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="h-6 w-6"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M6 18L18 6M6 6l12 12"
+        />
       </svg>
     </button>
     <div class="w-full h-full flex items-center justify-center">
       <img
         [src]="
-          product.images && product.images.length > 0 ? product.images[0].url : ''
+          product.images && product.images.length > 0
+            ? product.images[0].url
+            : ''
         "
         [alt]="product.name"
         class="max-w-full max-h-full object-contain rounded-lg"
@@ -65,9 +84,9 @@
     </h3>
 
     <!-- Descripción -->
-    <p class="text-sm text-white/90 mb-2 line-clamp-2">
-      {{ product.description }}
-    </p>
+    <!-- <p class="text-sm text-white/90 mb-2 line-clamp-2">
+      {{ product.description | truncate : 34 }}
+    </p> -->
 
     <!-- Etiquetas -->
     <div

@@ -8,11 +8,12 @@ import { AppState } from '../../store';
 import { Store } from '@ngrx/store';
 import * as userActions from '../../store/actions/user.actions';
 import { IProduct } from '@core/interfaces/product';
+import { TruncatePipe } from '../../pipes/truncate.pipe';
 
 @Component({
   selector: 'app-card-item',
   standalone: true,
-  imports: [RouterModule, MaterialModule, LucideModule, CommonModule],
+  imports: [RouterModule, MaterialModule, LucideModule, CommonModule, TruncatePipe],
   templateUrl: './card-item.component.html',
   styleUrls: ['./card-item.component.scss'],
 })
